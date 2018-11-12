@@ -5,7 +5,6 @@ const MY_MSG = 1;
 const OTHERS_MSG = 2;
 const SYSTEM_MSG = 3;
 import config from '../config';
-
 import io from 'socket.io-client';
 
 class InputBox extends Component {
@@ -120,6 +119,7 @@ class Chat extends Component {
         newMsg: 0,
         curCnt: 0
     }
+    
     constructor(props) {
         super(props);
         this.socket = io(`${config.host}:${config.port}`,{

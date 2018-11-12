@@ -9,6 +9,8 @@ import io from 'socket.io-client';
 
 class InputBox extends Component {
 
+
+
     state = {
         v: ''
     }
@@ -117,16 +119,16 @@ class Chat extends Component {
     state = {
         msgList: [],
         newMsg: 0,
-        curCnt: 0
+        curCnt: 0,
     }
-    
     constructor(props) {
         super(props);
-        this.socket = io(`${config.host}:${config.port}`,{
+        this.socket = io(`${config.host}:${config.port}`, {
             transports: ['websocket'],
-          });
+        });
+        this.name = this.props.navigation.getParam('name');
 
-        this.socket.emit('join', this.props.name);
+        this.socket.emit('join', this.name);
         this.socket.on('joinChat', this.handleUpdateMsg);
         this.socket.on('update_msg', this.handleUpdateMsg);
         this.socket.on('update_msg_broadcast', this.handleUpdateMsg);
@@ -138,7 +140,7 @@ class Chat extends Component {
         this.socket.emit('bye', this.props.name);
         this.socket.disconnect();
     }
-    
+
     // 从服务器得到消息反馈 并显示在当前客户端
     handleUpdateMsg = msg => {
         console.log("get msg from server", msg);
@@ -162,8 +164,10 @@ class Chat extends Component {
             ToastAndroid.show("发送消息不能为空", ToastAndroid.SHORT);
             return;
         }
+
+
         const msgBody = {
-            name: this.props.name,
+            name: this.name,
             content: v,
             time: time()
         }
@@ -175,11 +179,14 @@ class Chat extends Component {
         list.scrollToEnd()
     }
     render() {
+        console.log("===>", this.props.navigation.getParam('name'));
+        const name = this.props.navigation.getParam('name');
+
+
         return (
             <View style={styles.chatMain}>
                 <View style={styles.headBar}>
-                    <Text style={styles.headTitle}>{this.props.name}|当前在线人数:{this.state.curCnt}</Text>
-
+                    <Text style={styles.headTitle}>{this.name}|当前在线人数:{this.state.curCnt}</Text>
                 </View>
 
                 <FlatList

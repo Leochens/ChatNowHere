@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableHighlight,ToastAndroid } from 'react-native';
 
 
 class Index extends Component {
@@ -8,8 +8,14 @@ class Index extends Component {
     }
 
     onGetName = () => {
-        const { onGetName } = this.props;
-        onGetName && onGetName(this.state.v);
+        const {v:name} = this.state;
+        if(name === ''){
+            ToastAndroid.show('用户名为空',ToastAndroid.SHORT);
+            return ;
+        }
+        this.props.navigation.navigate('Chat',{name});
+
+
     }
     handleChangeText = v => {
         this.setState({

@@ -7,10 +7,15 @@
     "test": "jest"
   },
   "dependencies": {
+    "axios": "^0.18.0",
+    "normalizr": "^3.3.0",
     "react": "16.6.0-alpha.8af6728",
     "react-native": "0.57.4",
     "react-native-exit-app": "^1.0.0",
     "react-navigation": "^2.18.2",
+    "react-redux": "^5.1.1",
+    "redux": "^4.0.1",
+    "redux-logger": "^3.0.6",
     "socket.io": "^1.7.3",
     "socket.io-client": "^2.1.1"
   },

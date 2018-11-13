@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableHighlight,ToastAndroid } from 'react-native';
-
-
 class Index extends Component {
     state = {
         v: ''
@@ -12,7 +10,7 @@ class Index extends Component {
             ToastAndroid.show('用户名为空',ToastAndroid.SHORT);
             return ;
         }
-        this.props.navigation.navigate('Chat',{name});
+        this.props.navigation.navigate('GroupChat',{name});
     }
     handleChangeText = v => {
         this.setState({

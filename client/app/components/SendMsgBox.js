@@ -1,5 +1,7 @@
 import React,{Component} from 'react';
 import {View,Text,StyleSheet,TouchableHighlight,TextInput} from 'react-native';
+import ZInputBox from './ZInputBox';
+import ZButton from './ZButton';
 
 class InputBox extends Component {
     state = {
@@ -9,10 +11,9 @@ class InputBox extends Component {
         this.setState({
             v
         });
-        console.log(v);
     }
     handleSendMsg = () => {
-        console.log('Input Box hit Send Button Onpress');
+
         const { onSendMsg } = this.props;
         onSendMsg && onSendMsg(this.state.v);
         this.setState({
@@ -22,14 +23,14 @@ class InputBox extends Component {
     render() {
         return (
             <View style={styles.inputBox}>
-                <TextInput
+                <ZInputBox
                     onChangeText={this.handleChangeText}
-                    value={this.state.v}
-                    style={styles.inputBoxInput}></TextInput>
-                <TouchableHighlight
-                    onPress={this.handleSendMsg}>
-                    <Text style={styles.inputBoxSend}>发送</Text>
-                </TouchableHighlight>
+                    value={this.state.v} />
+                <ZButton 
+                    onClick={this.handleSendMsg}
+                    text={'发送'}
+                    style={styles.inputBoxSend}
+                />
             </View>
         );
     }
@@ -57,10 +58,11 @@ const styles = StyleSheet.create({
         padding: 3,
     },
     inputBoxSend: {
-        fontSize: 15,
+        fontSize: 16,
         padding: 8,
         backgroundColor: '#9f9fff',
-        color: '#fff'
+        color: '#fff',
+        marginLeft: 5
     },
 });
 export default InputBox;

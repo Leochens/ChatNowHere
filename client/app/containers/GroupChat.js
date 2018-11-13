@@ -4,11 +4,11 @@ import config from '../config';
 import time from '../utils/time';
 
 import MsgItem from '../components/MsgItem';
-import InputBox from '../components/InputBox';
+import SendMsgBox from '../components/SendMsgBox';
 import { StyleSheet, View, Text, FlatList, ToastAndroid,BackHandler,AppState } from 'react-native';
 import { OTHERS_MSG, SYSTEM_MSG } from '../constaints';
 let lastBackPressed = Date.now();
-class Chat extends Component {
+class GroupChat extends Component {
     state = {
         msgList: [],
         curCnt: 0,
@@ -120,7 +120,7 @@ class Chat extends Component {
                     data={this.state.msgList}
                     onEndReached={this.onEndOfList}
                     renderItem={({ item }) => <MsgItem item={item} />} />
-                <InputBox
+                <SendMsgBox
                     onSendMsg={this.handleSendMsg} />
             </View>
         );
@@ -159,4 +159,4 @@ const styles = StyleSheet.create({
     },
 
 });
-export default Chat;
+export default GroupChat;

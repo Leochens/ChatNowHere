@@ -5,9 +5,9 @@ import time from '../utils/time';
 
 import MsgItem from '../components/MsgItem';
 import InputBox from '../components/InputBox';
-import { StyleSheet, View, Text, FlatList, ToastAndroid } from 'react-native';
-import { OTHERS_MSG } from '../constaints';
-
+import { StyleSheet, View, Text, FlatList, ToastAndroid,BackHandler,AppState } from 'react-native';
+import { OTHERS_MSG, SYSTEM_MSG } from '../constaints';
+let lastBackPressed = Date.now();
 class Chat extends Component {
     state = {
         msgList: [],
@@ -19,20 +19,48 @@ class Chat extends Component {
             transports: ['websocket'],
         });
         this.name = this.props.navigation.getParam('name');
-
-        this.socket.emit('join', this.name);
         this.socket.on('joinChat', this.handleUpdateMsg);
         this.socket.on('update_msg', this.handleUpdateMsg);
         this.socket.on('update_msg_broadcast', this.handleUpdateMsg);
         this.socket.on('offline', this.handleUpdateMsg);
-
+        this.socket.on('connect_error',this.connectFailed);
+        this.socket.on('connect',this.onConnectSuc);
+        this.socket.on('test',function(res){console.log('test===>>',res)})
     }
-
-    componentWillUnmount() {
-        this.socket.emit('bye', this.props.name);
+    componentDidMount(){
+        BackHandler.addEventListener('hardwareBackPress',this._onBackPressed);
+    }
+    connectFailed = () => {
+        this.handleUpdateMsg({content: '连接失败，请检查网络连接',type: SYSTEM_MSG});
         this.socket.disconnect();
     }
+    onConnectSuc = () => {
+        this.socket.emit('join', this.name);
 
+    }
+    _onBackPressed = () => {
+        if (lastBackPressed && lastBackPressed + 2000 >= Date.now()) {
+            BackHandler.exitApp();
+          }
+          lastBackPressed = Date.now();
+          ToastAndroid.show('再按一次退出群聊', ToastAndroid.SHORT);
+          return true;
+    }
+    componentWillUnmount() {
+        this.socket.emit('exit');
+    }
+
+    handleReconnect = () => {
+        // this.socket.disconnect();
+        this.socket.connect(`${config.host}:${config.port}`, {
+            transports: ['websocket'],
+        });
+        this.handleUpdateMsg({name: '系统',content: '您已掉线，客户端重连...',type: SYSTEM_MSG});
+        
+    }
+    exit = () => {
+        this.socket.emit('exit');
+    }
     // 从服务器得到消息反馈 并显示在当前客户端
     handleUpdateMsg = msg => {
         console.log("get msg from server", msg);
@@ -52,6 +80,11 @@ class Chat extends Component {
 
     // 当前用户发消息
     handleSendMsg = v => {
+        if(!this.socket.connected){
+            this.handleReconnect();
+            return ;
+        }
+
         if (v === '') {
             ToastAndroid.show("发送消息不能为空", ToastAndroid.SHORT);
             return;
@@ -79,6 +112,7 @@ class Chat extends Component {
             <View style={styles.chatMain}>
                 <View style={styles.headBar}>
                     <Text style={styles.headTitle}>{this.name}|当前在线人数:{this.state.curCnt}</Text>
+                    <Text onPress={()=>{this.exit();}}>dis</Text>
                 </View>
                 <FlatList
                     ref="_flatlist"

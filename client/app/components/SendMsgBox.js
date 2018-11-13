@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         // backgroundColor: '#fff',
-        padding: 10
+        padding: 10,
 
     },
     inputBoxInput: {

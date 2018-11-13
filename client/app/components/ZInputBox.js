@@ -10,23 +10,37 @@ class ZInputBox extends Component {
         onChangeText && onChangeText(v);
     }
     render() {
-        const { style: pStyle, value } = this.props;
+        const {
+            style: pStyle,
+            value,
+            secureTextEntry,
+            textContentType,
+            placeholder,
+            placeholderTextColor
+        } = this.props;
         return (
             <TextInput
+                placeholder={placeholder}
+                placeholderTextColor={placeholderTextColor}
                 onChangeText={this.handleChangeText}
+                secureTextEntry={secureTextEntry}
+                textContentType={textContentType}
                 value={value}
-                style={[styles.inputBox,pStyle]} 
-                value={value}/>
+                style={[styles.inputBox, pStyle]}
+                value={value} />
         )
     }
 }
 const styles = StyleSheet.create({
     inputBox: {
         flex: 1,
+        fontSize: 18,
         borderColor: '#ddd',
-        borderRadius: 3,
+        borderRadius: 6,
         borderWidth: 1,
-        padding: 3,
+        padding: 6,
+        minHeight: 45
+
     }
 });
 export default ZInputBox;

@@ -6,7 +6,6 @@ class Index extends Component {
     state = {
         v: ''
     }
-
     onGetName = () => {
         const {v:name} = this.state;
         if(name === ''){
@@ -14,8 +13,6 @@ class Index extends Component {
             return ;
         }
         this.props.navigation.navigate('Chat',{name});
-
-
     }
     handleChangeText = v => {
         this.setState({

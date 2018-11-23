@@ -13,6 +13,8 @@ export default RootStack = createStackNavigator({
             header: null
         })
     },
+    
+    
     Login: {
         screen: Login,
         navigationOptions: ({navigation})=>({

@@ -24,7 +24,7 @@ class MsgItem extends Component {
                                 ? styles.isMe
                                 : null,
                             {
-                                width: 15 * (item.content.length + 1)
+                                width: 15 * (item.content.length + 1),
                             }
                         ]}>
                     <View style={{ flex: 1 }}>
@@ -54,7 +54,9 @@ const normalMsgItemStyles = StyleSheet.create({
         paddingTop: 10,
         paddingBottom: 10,
         borderRadius: 10,
-        marginLeft: 10
+        marginLeft: 10,
+        borderTopLeftRadius: 0
+
     },
     msgItemName: {
         fontSize: 15,
@@ -74,7 +76,10 @@ const normalMsgItemStyles = StyleSheet.create({
         backgroundColor: '#f8f2dc',
         alignSelf: 'flex-end',
         paddingRight: 5,
-        marginRight: 10
+        marginRight: 10,
+        borderTopRightRadius: 0,
+        borderTopLeftRadius: 10
+
     },
     userInfo: {
         flexDirection: 'row',
@@ -92,8 +97,7 @@ const systemMsgItemStyles = StyleSheet.create({
         alignItems: 'center',
         width: '70%',
         alignSelf: 'center',
-        borderRadius: 10
-
+        borderRadius: 10,
     },
     msgItemName: {
         display: 'none'

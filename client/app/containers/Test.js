@@ -4,7 +4,21 @@ import {Text,View,TouchableHighlight,TextInput,Button,StyleSheet,FlatList,Toucha
 
 
     toIndex = () => {
-        this.refs.fl.scrollToEnd();
+        fetch('http://mokis.top:3001/userlogin',{
+            method: 'POST',
+            headers:{
+                "Content-Type": 'application/x-www-form-urlencoded'
+            },
+            // body: `data=${JSON.stringify({name: 'zhl',pwd: '123456'})}`
+            body: `name=zhl&pwd=${1}`
+        }).then(res => {
+            console.log(res);
+            alert(res);
+        }).catch(err => {
+            console.log(err);
+            alert(err)
+        });
+        alert('haha?')
     }
 
     render(){
@@ -13,11 +27,6 @@ import {Text,View,TouchableHighlight,TextInput,Button,StyleSheet,FlatList,Toucha
                 <Button
                 title="toEnd"
                     onPress={this.toIndex}/>
-                <FlatList
-                ref="fl"
-                data={[1,2,3,4,5,5,6,7,8,9,10,11,12,13]}
-                renderItem={({item})=><Text style={styles.item}>{item}</Text>}
-                />
             </View>
         );
     }

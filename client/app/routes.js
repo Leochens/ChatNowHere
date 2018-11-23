@@ -32,10 +32,14 @@ export default RootStack = createStackNavigator({
         })
     },
     Test: {
-        screen: Test
+        screen: Test,
+        navigationOptions: ({navigation}) => ({
+            header: null
+        })
     }
 },
 {
-    initialRouteName: 'Login',
+    initialRouteName: 'Index',
     headerMode: 'screen'
 });
+

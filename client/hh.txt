@@ -1,0 +1,648 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=8,chrome=1">
+<meta http-equiv="keywords" content="河北大学"/>
+<meta http-equiv="description" content="河北大学"/>
+<title>河北大学 - Hebei University</title>
+<link rel="stylesheet" type="text/css" href="/r/cms/hbu/hbu/css/index.css" media="all">
+<script src="/r/cms/hbu/hbu/js/jq.js" type="text/javascript"></script>
+<script src="/r/cms/hbu/hbu/js/slider.js"></script>
+<script src="/r/cms/hbu/hbu/js/gettime&tab.js"></script>
+<script src="/r/cms/hbu/hbu/js/navigation.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+$(function() {
+    $("#kfleft").click(function(){
+		var i=$("#haiiskefu").css("right");
+		if (i=='0px'){
+		    $("#kfleft").removeClass("kfleftoff");
+			$("#kfleft").addClass("kflefton");
+			$('#haiiskefu').animate({right:-50}, 200);	
+		} else {
+		    $("#kfleft").removeClass("kflefton");
+			$("#kfleft").addClass("kfleftoff");
+			$('#haiiskefu').animate({right:0}, 200);
+		}
+	});
+});
+
+$(document).ready(function(){				   	
+			$('.slider')._TMS({
+				show:0,
+				pauseOnHover:true,
+				prevBu:'.prev',
+				nextBu:'.next',
+				playBu:false,
+				duration:10000,
+				preset:'zoomer',
+				pagination:true,
+				pagNums:false,
+				slideshow:8000,
+				numStatus:false,
+				banners:'fade',
+				waitBannerAnimation:false,
+				progressBar:false
+			})		
+		});
+</script>
+
+<script type="text/javascript" language="javascript">
+
+
+  
+  function Setcookie (name, value)
+{ 
+
+   
+    var expdate = new Date();   //初始化时间
+    expdate.setTime(expdate.getTime() + 5 * 60 * 1000);   //时间
+    document.cookie = name+"="+value+";expires="+expdate.toGMTString()+";path=/";
+}
+   function chkcookies(){
+		var c = document.cookie.indexOf("toshow_wang=");   
+		if (c != -1)  { 
+			return true;  
+		}  else  {
+			Setcookie("toshow_wang", "is_show");
+			addCount();
+			setTimeout("noneAds()",10000); //停留时间自己适当调整
+		}  
+		return false;
+	}
+    var time = 500;
+    var h = 0;
+    function addCount()
+    {
+        if(time>0)
+        {
+            time--;
+            h = h+5;
+        }
+        else
+        {
+            return;
+        }
+        if(h>500)  //高度
+        {
+            return;
+        }
+        document.getElementById("ads").style.display = "";
+        document.getElementById("ads").style.height = h+"px";
+        setTimeout("addCount()",30); 
+    }
+    
+    window.onload = function showAds()
+    {
+		chkcookies();
+      
+    }
+    </script>
+    
+    <script type="text/javascript" language="javascript">
+    var T = 500;
+    var N = 500; //高度
+    function noneAds()
+    {
+        if(T>0)
+        {
+            T--;
+            N = N-5;
+        }
+        else
+        {
+            return;
+        }
+        if(N<0)
+        {
+            document.getElementById("ads").style.display = "none";
+            return;
+        }
+        
+        document.getElementById("ads").style.height = N+"px";
+        setTimeout("noneAds()",30); 
+    }
+    </script> 
+</head>
+<body>
+<!--浮动开始-->
+<script type="text/javascript">
+function addEvent(obj,evtType,func,cap){
+    cap=cap||false;
+ if(obj.addEventListener){
+     obj.addEventListener(evtType,func,cap);
+  return true;
+ }else if(obj.attachEvent){
+        if(cap){
+         obj.setCapture();
+         return true;
+     }else{
+      return obj.attachEvent("on" + evtType,func);
+  }
+ }else{
+  return false;
+    }
+}
+function getPageScroll(){
+    var xScroll,yScroll;
+ if (self.pageXOffset) {
+  xScroll = self.pageXOffset;
+ } else if (document.documentElement  &&  document.documentElement.scrollLeft){
+  xScroll = document.documentElement.scrollLeft;
+ } else if (document.body) {
+  xScroll = document.body.scrollLeft;
+ }
+ if (self.pageYOffset) {
+  yScroll = self.pageYOffset;
+ } else if (document.documentElement  &&  document.documentElement.scrollTop){
+  yScroll = document.documentElement.scrollTop;
+ } else if (document.body) {
+  yScroll = document.body.scrollTop;
+ }
+ arrayPageScroll = new Array(xScroll,yScroll);
+ return arrayPageScroll;
+}
+function GetPageSize(){
+    var xScroll, yScroll;
+    if (window.innerHeight  &&  window.scrollMaxY) { 
+        xScroll = document.body.scrollWidth;
+        yScroll = window.innerHeight + window.scrollMaxY;
+    } else if (document.body.scrollHeight > document.body.offsetHeight){
+        xScroll = document.body.scrollWidth;
+        yScroll = document.body.scrollHeight;
+    } else {
+        xScroll = document.body.offsetWidth;
+        yScroll = document.body.offsetHeight;
+    }
+    var windowWidth, windowHeight;
+    if (self.innerHeight) {
+        windowWidth = self.innerWidth;
+        windowHeight = self.innerHeight;
+    } else if (document.documentElement  &&  document.documentElement.clientHeight) {
+        windowWidth = document.documentElement.clientWidth;
+        windowHeight = document.documentElement.clientHeight;
+    } else if (document.body) {
+        windowWidth = document.body.clientWidth;
+        windowHeight = document.body.clientHeight;
+    } 
+    if(yScroll < windowHeight){
+        pageHeight = windowHeight;
+    } else { 
+        pageHeight = yScroll;
+    }
+    if(xScroll < windowWidth){ 
+        pageWidth = windowWidth;
+    } else {
+        pageWidth = xScroll;
+    }
+    arrayPageSize = new Array(pageWidth,pageHeight,windowWidth,windowHeight) 
+    return arrayPageSize;
+}
+var AdMoveConfig=new Object();
+AdMoveConfig.IsInitialized=false;
+AdMoveConfig.ScrollX=0;
+AdMoveConfig.ScrollY=0;
+AdMoveConfig.MoveWidth=0;
+AdMoveConfig.MoveHeight=0;
+AdMoveConfig.Resize=function(){
+    var winsize=GetPageSize();
+    AdMoveConfig.MoveWidth=winsize[2];
+    AdMoveConfig.MoveHeight=winsize[3];
+    AdMoveConfig.Scroll();
+}
+AdMoveConfig.Scroll=function(){
+    var winscroll=getPageScroll();
+    AdMoveConfig.ScrollX=winscroll[0];
+    AdMoveConfig.ScrollY=winscroll[1];
+}
+addEvent(window,"resize",AdMoveConfig.Resize);
+addEvent(window,"scroll",AdMoveConfig.Scroll);
+function AdMove(id){
+    if(!AdMoveConfig.IsInitialized){
+        AdMoveConfig.Resize();
+        AdMoveConfig.IsInitialized=true;
+    }
+    var obj=document.getElementById(id);
+    obj.style.position="absolute";
+    var W=AdMoveConfig.MoveWidth-obj.offsetWidth;
+    var H=AdMoveConfig.MoveHeight-obj.offsetHeight;
+    var x = W*Math.random(),y = H*Math.random();
+    var rad=(Math.random()+1)*Math.PI/6;
+    var kx=Math.sin(rad),ky=Math.cos(rad);
+    var dirx = (Math.random()<0.5?1:-1), diry = (Math.random()<0.5?1:-1);
+    var step = 1;
+    var interval;
+    this.SetLocation=function(vx,vy){x=vx;y=vy;}
+    this.SetDirection=function(vx,vy){dirx=vx;diry=vy;}
+    obj.CustomMethod=function(){
+        obj.style.left = (x + AdMoveConfig.ScrollX) + "px";
+        obj.style.top = (y + AdMoveConfig.ScrollY) + "px";
+        rad=(Math.random()+1)*Math.PI/6;
+        W=AdMoveConfig.MoveWidth-obj.offsetWidth;
+        H=AdMoveConfig.MoveHeight-obj.offsetHeight;
+        x = x + step*kx*dirx;
+        if (x < 0){dirx = 1;x = 0;kx=Math.sin(rad);ky=Math.cos(rad);} 
+        if (x > W){dirx = -1;x = W;kx=Math.sin(rad);ky=Math.cos(rad);}
+        y = y + step*ky*diry;
+        if (y < 0){diry = 1;y = 0;kx=Math.sin(rad);ky=Math.cos(rad);} 
+        if (y > H){diry = -1;y = H;kx=Math.sin(rad);ky=Math.cos(rad);}
+    }
+    this.Run=function(){
+        var delay = 20;/*(数值越大速度越慢)*/
+        interval=setInterval(obj.CustomMethod,delay);
+        obj.onmouseover=function(){clearInterval(interval);}
+        obj.onmouseout=function(){interval=setInterval(obj.CustomMethod, delay);}
+    }
+}
+ 
+ </script>
+
+
+
+<div id="gg2" style="position:absolute; z-index:999;">
+<a href="http://sjd.hbu.cn/" target="_blank" ><!--http://gbkh.hbu.cn/-->
+<img src="/r/cms/hbu/hbu/img/pic25.jpg" border="0" title="喜迎十九大" alt='喜迎十九大'>
+</a>
+</div>
+    <script type="text/javascript">
+        var ad1=new AdMove("gg2");
+        ad1.Run();
+    </script>
+<!--href="http://soft.hicc.cn/zzz/SearchInfo.aspx" target="_blank"-->
+
+<!-- 浮动图结束 -->
+<!--浮动结束--><!--<div  class="festival_wrap">
+
+	<div class="festival_main">
+		<span class="fex_title"></span>
+		<span class="fex_logo"></span>
+		<span class="fireworks"></span>
+		<span class="fireworks2"></span>
+		<span class="fireworks3"></span>
+		<span class="topchicken">
+			<i class="eyefl"></i>
+			<i class="eyefr"></i>
+		</span>
+		<span class="lantern"></span>
+		<span class="bigchicken"></span>
+		<span class="dumplings"></span>
+		<span class="snow1"></span>
+		<span class="snow2"></span>
+		<span class="snow3"></span>
+		<span class="snow4"></span>
+		<span class="snow5"></span>
+		<span class="close_fastival" ne-click="closeFestivel();"></span>
+	
+		<span class="festival_cloud"></span>
+		<span class="festival_tree"></span>
+		<span class="smallchicken">
+			<i class="chickenyz"></i>
+			<i class="chicken"></i>
+		</span>
+	</div>
+
+	<div  class="common_nav"></div>
+	
+	<div class="ne_area ne_index_area ne_festival_area ">-->
+	
+            
+           <!--<div id="ads" style="margin:auto; display:none; width:100%; top:0px; height:600px;  background-color:#fafafa; overflow:hidden; text-align:center;">
+         <a ><img src="/r/cms/hbu/hbu/img/xiaoqing1.jpg"" width="100%" height="600" alt="" /></a>
+ </div>-->
+
+<link rel="stylesheet" type="text/css" href="r/cms/hbu/hbu/css/index.css" media="all">
+<div class="header">
+        <div class="topLine" style="border-top: 7px solid #1287b4;"></div> 
+	 <div class="mainWrap">	
+      <div class="topWrap">
+            <a class="logo"><img src="/r/cms/hbu/hbu/img/logo.png" /></a>
+        </div>
+        <div class="nav yahei  clearfix">
+        <div class="search" style="position:relative;top:16px;right:4px;">
+                <div class="ext"><span class="ZG_headline_content"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<!--       <a href="http://old.hbu.cn" target="_blank">旧版入口</a>-->
+<a href="http://en.hbu.cn/" target="_blank">English</a></div>
+               <form action="/search.jspx" target="_blank" >
+            <input name="q" value="请输入关键词"  style="line-height:20px;" type="text" onfocus="if(this.value=='请输入关键词')this.value=''" onblur="if(this.value=='')this.value='请输入关键词'" maxlength="24" autocomplete="off"   class="inp" />
+<span id="fid_box" style="position:absolute;right:30px;top:32px;*top:32px;*right:34px;*width:84px;*height:28px;overflow:hidden;">
+		<select name="channelId" id="fid"  style="height:28px;margin:0;background:none;border:none;box-shadow:none; *margin:-2px -2px 0px -2px; "   >
+ <option value="111">河大要闻</option>
+<option value="112">综合新闻</option>
+
+ <option value="113">通知公告</option>
+
+ <option value="114">学术动态</option>
+<option value="115">媒体看河大</option>
+
+		 		</select>
+		</span>
+<input type="submit" class="btn"  value=""/>  
+</form>          
+</div>
+<div class="search" style="position:relative;top:0px;right:2px;*top:20px;*right:45px;*height:65px;*clear:both;*width:700px;">
+         <ul id="nav" >
+		  <li><a  href="/" target="_top" style="margin-left:15px;">首&nbsp;&nbsp;&nbsp;页</a></li>
+             <li><a class="" href="/xxgk/index.jhtml" target="_top">学校概况</a>
+		<ul style="display: none;">
+                        <li><a href="/xxjj/index.jhtml">学校简介</a></li>
+                        <li><a href="/xxzc/index.jhtml">学校章程</a></li>
+                        <li><a href="/lrld/index.jhtml">历任领导</a></li>
+                        <li><a href="/xrld/index.jhtml">现任领导</a></li>
+                       
+                        <li><a href="/virtualschool/hbu.html">虚拟校园</a></li>
+                        <li><a href="http://photo.hbu.cn/">校园风光</a></li>
+                </ul>
+	     </li>
+			
+               <li><a class="" href="http://hbu.cn/gljg.jhtml">机构设置</a>
+<!--<ul style="display: none;" class="tabs1">
+                        <li><a href="#guanlifuwubumen2">教学单位</a></li>
+                        <li><a href="#yuanxishezhi3">科研机构</a></li>
+                        <li><a href="#yuanxishezhi2">职能部门</a></li>
+                        <li><a href="#jiaoxuefuzhu2">直属单位</a></li>
+                        <li><a href="#qunzhongtuanti2">其他部门</a></li>
+                        <li><a href="#qunzhongtuanti">学术机构</a></li>
+                         <li><a href="#qunzhongtuanti1">挂靠单位</a></li>
+                </ul>-->
+                </li> 
+                <li><a class=""  href="/szdw/index.jhtml">师资队伍</a>
+                                 </li>
+                <li><a class="" href="/xkzy/index.jhtml">学科专业</a>
+                 <ul style="display: none;">
+                        <li><a href="/bkzy/index.jhtml">本科专业</a></li>
+                        <li><a href="/ssxk/index.jhtml">硕士学位授权学科</a></li>
+                        <li><a href="/sszyxw/index.jhtml">硕士专业学位</a></li>
+                        <li><a href="/bsxk/index.jhtml">博士学位授权学科</a></li>
+                        <li><a href="/zdxk/index.jhtml">重点学科</a></li>
+                        <li><a href="/bshldz/index.jhtml">博士后流动站</a></li>
+		        <li><a href="/bshgzz/index.jhtml">博士后工作站</a></li>
+                    </ul>
+                </li>
+                <!--<li><a  target="_blank">科学研究</a></li>-->
+                <li><a class="" href="/zsxx/index.jhtml">招生信息</a>
+                                 </li>
+              
+                <li><a class="" target="_blank" href="http://rczp.hbu.edu.cn/index.asp">人才招聘</a></li>
+                                 <li><a href="http://oice.hbu.cn/gjhz/index.jhtml" target="_blank" class="">合作办学</a></li>
+				<!--<li><a  href="http://oice.hbu.edu.cn/" target="_blank" class="">国际合作</a></li>-->
+				<li><a  href="http://xxgk.hbu.cn" class="last" target="_blank">信息公开</a></li>
+            </ul>
+			</div>
+
+          </div>
+       </div></div>
+
+<script>
+$('#input_q').on('input change propertychange',function(){
+ var text = $('#input_q').val();
+ var post_Str= text.replace(/\(/g, "");
+ var post_Str1= post_Str.replace(/\)/g, "");
+ var post_Str2= post_Str1.replace(/\%/g, "");
+ var post_Str3= post_Str2.replace(/\+/g, "");
+ var post_Str4= post_Str3.replace(/\&/g, "");
+ var post_Str5= post_Str4.replace(/\</g, "");
+ var post_Str6= post_Str5.replace(/\>/g, "");
+ var post_Str7= post_Str6.replace(/\"/g, "");
+ var post_Str8= post_Str7.replace(/\'/g, "");
+ $('#input_q').val(post_Str8);
+})
+</script>
+<div id="index_slide">		
+        <div class="slider">
+            <ul class="items"> 
+				<li><img src="/u/cms/hbu/201711/0710002093p6.jpg" alt="实事求是" /><div class="banner"><p><strong>实事求是</strong><span>SEEKING TRUTH FROM FACTS </span></p><!--<a href="http://202.206.3.217:8080/xxbs.jhtml" target="_blank">Read More</a>--></div></li>
+				<li><img src="/u/cms/hbu/201711/07100137jqv9.jpg" alt="博学  求真  惟恒  创新" /><div class="banner"><p><strong>博学  求真  惟恒  创新</strong><span>LEARNING EXTENSIVELY  PENETRATING COURAGEOUSLY  PURSUING PERMANENTLY  INNOVATING CONSTANTLY</span></p><!--<a href="http://202.206.3.217:8080/xxbs.jhtml" target="_blank">Read More</a>--></div></li>
+				<li><img src="/u/cms/hbu/201711/07100234zsb9.jpg" alt="富强 民主 文明 和谐 自由 平等 公正 法治 爱国 敬业 诚信 友善" /><div class="banner"><p><strong>富强 民主 文明 和谐 自由 平等 公正 法治 爱国 敬业 诚信 友善</strong><span></span></p><!--<a href="http://hbu.cn/syjd/201.jhtml" target="_blank">Read More</a>--></div></li>
+                                 </ul>	
+	</div>	
+        <a href="#" class="prev"></a><a href="#" class="next"></a>
+</div>
+<div style="width:100%;background: none repeat scroll 0% 0% ;">
+<div style="margin:28px auto 0;width:1000px;min-height:560px;">
+	<div class="contentleft"> 
+		  <div class="leftText">
+						<dl class="tabs_index">
+							<dd id="PhoteSpan" class="active"><a id="Photea">河大要闻</a></dd>
+							<dd id="ZhceSpan" ><a id="Zhcea">综合新闻</a></dd>
+						</dl>
+						<div style="display: block;position:relative;" id="Phote">
+						 <div class="index_more"><a href="/hdyw/index.jhtml" >more >></a></div>
+<!--河大要闻替换jeecms标签开始-->					 
+						 <ul class="index_list" style="*margin-top:-32px;">
+	 <li class="toptext2"><a href="http://hbutv.hbu.cn/2018/1001/14393.shtml" title="《百家讲坛》特别节目“我们的大学·河北大学”"  target="_blank"><dl class="list"><dd class="pic"><img src="/u/cms/hbu/201810/081522306t4t.jpg" alt="《百家讲坛》特别节目“我们的大学·河北大学”" /></dd></dl>
+	   《百家讲坛》特别节目“我们的大学·河北大学”   </a></li> 	
+         <li><span>[11-23]</span><a href="http://www.news.hbu.cn/2018/1123/14649.shtml" title="我校举办网络空间安全专题报告会" target="_blank">我校举办网络空间安全专题报告会</a></li>
+         <li><span>[11-22]</span><a href="http://www.news.hbu.cn/2018/1122/14646.shtml" title="我校举办全国教育大会精神专题报告会" target="_blank">我校举办全国教育大会精神专题报告会</a></li>
+         <li><span>[11-22]</span><a href="http://www.news.hbu.cn/2018/1122/14645.shtml" title="河北大学2018年全国剪纸研习班举行开班典礼" target="_blank">河北大学2018年全国剪纸研习班举行开班典礼</a></li>
+         <li><span>[11-21]</span><a href="http://www.news.hbu.cn/2018/1121/14643.shtml" title="“雄安历史文献系列丛书”成果发布会在雄安新区成功举办" target="_blank">“雄安历史文献系列丛书”成果发布会在雄安新区成功举办</a></li>
+         <li><span>[11-20]</span><a href="http://www.news.hbu.cn/2018/1120/14640.shtml" title="我校成功举办“高雅艺术进校园——舞蹈大师课”" target="_blank">我校成功举办“高雅艺术进校园——舞蹈大师课”</a></li>
+         <li><span>[11-20]</span><a href="http://www.news.hbu.cn/2018/1120/14639.shtml" title="我校召开扶贫成效考核第三方评估工作动员会" target="_blank">我校召开扶贫成效考核第三方评估工作动员会</a></li>
+         <li><span>[11-16]</span><a href="http://www.news.hbu.cn/2018/1116/14635.shtml" title="河北省立法研究会2018年研讨会在我校召开" target="_blank">河北省立法研究会2018年研讨会在我校召开</a></li>
+         <li><span>[11-15]</span><a href="http://www.news.hbu.cn/2018/1115/14632.shtml" title="校党委书记郭健宣讲全国教育大会精神" target="_blank">校党委书记郭健宣讲全国教育大会精神</a></li>
+         <li><span>[11-13]</span><a href="http://www.news.hbu.cn/2018/1113/14626.shtml" title="国务院学位委员会图书情报与档案管理学科专题调研工作组来我校调研" target="_blank">国务院学位委员会图书情报与档案管理学科专题调研工作组来...</a></li>
+						 </ul>					 
+<!--河大要闻替换jeecms标签结束-->	 
+					   </div>
+					   <div style="display: none;position:relative;" id="Zhce" >
+					    <div class="index_more"><a href="/zhxw/index.jhtml" >more >></a></div>
+<!--综合新闻替换jeecms标签开始-->					 
+						<ul class="index_list" style="*margin-top:-32px;">
+	<li class="toptext2"><a href="http://www.news.hbu.cn/xygj/2018/0523/14001.shtml" title="“科学的春天”成就了我的科学梦"  target="_blank"><dl class="list"><dd class="pic"><img src="/u/cms/hbu/201805/23162137wu32.jpg" alt="“科学的春天”成就了我的科学梦" /></dd>	</dl>
+		 “科学的春天”成就了我的科学梦</a>
+        </li>    		
+       <li><span>[11-23]</span><a href="http://www.news.hbu.cn/xygj/2018/1123/14648.shtml" title="我校赴苏沪两地进行用人单位走访活动" target="_blank">我校赴苏沪两地进行用人单位走访活动</a></li>			
+       <li><span>[11-23]</span><a href="http://www.news.hbu.cn/xygj/2018/1123/14647.shtml" title="我校举行大学生园区消防安全教育培训活动" target="_blank">我校举行大学生园区消防安全教育培训活动</a></li>			
+       <li><span>[11-21]</span><a href="http://www.news.hbu.cn/xygj/2018/1121/14642.shtml" title="化学与环境科学学院赴椴木沟村走访慰问驻村扶贫干部" target="_blank">化学与环境科学学院赴椴木沟村走访慰问驻村扶贫干部</a></li>			
+       <li><span>[11-21]</span><a href="http://www.news.hbu.cn/xygj/2018/1121/14641.shtml" title="我校召开学生教学信息员表彰暨聘任大会" target="_blank">我校召开学生教学信息员表彰暨聘任大会</a></li>			
+       <li><span>[11-19]</span><a href="http://www.news.hbu.cn/xygj/2018/1119/14637.shtml" title="我校师生在省高校第十九届“世纪之星”外语演讲大赛中再创佳绩" target="_blank">我校师生在省高校第十九届“世纪之星”外语演讲大赛中再创...</a></li>			
+       <li><span>[11-20]</span><a href="http://www.news.hbu.cn/xygj/2018/1120/14638.shtml" title="我校举办第二届计算机文化节主题报告会" target="_blank">我校举办第二届计算机文化节主题报告会</a></li>			
+       <li><span>[11-16]</span><a href="http://www.news.hbu.cn/xygj/2018/1116/14634.shtml" title="谱青春旋律　唱爱国情怀——第八届红歌大赛圆满落幕" target="_blank">谱青春旋律　唱爱国情怀——第八届红歌大赛圆满落幕</a></li>			
+       <li><span>[11-16]</span><a href="http://www.news.hbu.cn/xygj/2018/1116/14633.shtml" title="我校两门课程入选教育厅就业创业优质课" target="_blank">我校两门课程入选教育厅就业创业优质课</a></li>			
+       <li><span>[11-14]</span><a href="http://www.news.hbu.cn/xygj/2018/1114/14627.shtml" title="微软亚洲研究院首席研发经理邹欣应邀来我校作报告" target="_blank">微软亚洲研究院首席研发经理邹欣应邀来我校作报告</a></li>			
+					         </ul>
+<!--综合新闻替换jeecms标签结束-->
+
+
+					  </div>
+		  </div>
+	</div>
+	<div class="contentright">
+		<div class="rightText">
+		<dl class="tabs_index">
+							<dd id="BanShiSpan" class="active"><a id="BanShia">通知公告</a></dd>
+							<dd id="FuWuSpan" ><a id="FuWua">学术动态</a></dd>
+						</dl>
+						
+						<div style="display: block;position:relative;" id="BanShi">
+						<div class="index_more_tz"><a href="/tzgg/index.jhtml" >more >></a></div>
+<!--通知公告替换jeecms标签开始-->					 
+						 <ul class="index_list" style="margin-top:-13px;">
+						             <li><span>[11-21]</span><a href="http://hbu.cn/tzgg/5116.jhtml" title="关于收看《点赞中国》“五个一百”网络正能量精品展播特别节目的通知"  target=_blank>关于收看《点赞中国》“五个一百”网络正能量精品展播特别...</a></li>
+						             <li><span>[11-20]</span><a href="http://dct.hbu.edu.cn/info_show.asp?infoid=445" title="关于举办大学生科技成果和企业人工智能与虚拟现实产品展示活动的通知"  target=_blank>关于举办大学生科技成果和企业人工智能与虚拟现实产品展示...</a></li>
+						             <li><span>[11-20]</span><a href="http://oice.hbu.cn/tzgg/1276.jhtml" title="关于2019年度因公临时出国（境）计划申报立项的通知"  target=_blank>关于2019年度因公临时出国（境）计划申报立项的通知</a></li>
+						             <li><span>[11-19]</span><a href="http://hbu.cn/tzgg/4747.jhtml" title="关于组织报送“网聚正能量•感知新河北”优秀网络短视频的通知"  target=_blank>关于组织报送“网聚正能量•感知新河北”优秀网络短视频的...</a></li>
+						             <li><span>[11-19]</span><a href="http://hbu.cn/tzgg/4746.jhtml" title="关于做好全省教育大会宣传工作的通知"  target=_blank>关于做好全省教育大会宣传工作的通知</a></li>
+						             <li><span>[11-16]</span><a href="http://hbu.cn/tzgg/4742.jhtml" title="关于开展外逃人员大起底工作的通知 "  target=_blank>关于开展外逃人员大起底工作的通知 </a></li>
+						             <li><span>[11-13]</span><a href="http://hbu.cn/tzgg/4733.jhtml" title="关于召开基层党委书记例会的通知"  target=_blank>关于召开基层党委书记例会的通知</a></li>
+						             <li><span>[11-09]</span><a href="http://hbu.cn/tzgg/4719.jhtml" title="关于开展“弘扬宪法精神 增强法治观念”河北大学第六届大学生普及法律知识竞赛的通知"  target=_blank>关于开展“弘扬宪法精神 增强法治观念”河北大学第六届大...</a></li>
+						 </ul> 
+<!--通知公告替换jeecms标签结束-->
+						</div>
+						  <div style="display: none;position:relative;" id="FuWu" >
+						  <div class="index_more_tz"><a href="/xsdt/index.jhtml" id="PageView" onclick="_czc.push(["_trackEvent", "学术动态", "点击", "", "", "PageView"]);" >more >></a></div>
+<!--学术动态替换jeecms标签开始-->					 
+							<ul class="index_list" style="margin-top:-13px;">
+							   <li><span>[11-23]</span><a href="http://hbu.cn/xsdt/5138.jhtml" title="学术预告（信息化时代外语课程生态化研究）"  target=_blank>学术预告（信息化时代外语课程生态化研究）</a></li>
+							   <li><span>[11-23]</span><a href="http://hbu.cn/xsdt/5137.jhtml" title="学术预告（大数据与外语信息化学习方式研究）"  target=_blank>学术预告（大数据与外语信息化学习方式研究）</a></li>
+							   <li><span>[11-23]</span><a href="http://hbu.cn/xsdt/5133.jhtml" title="学术预告（欧亚大陆视阈下的中国古代相马术）"  target=_blank>学术预告（欧亚大陆视阈下的中国古代相马术）</a></li>
+							   <li><span>[11-23]</span><a href="http://hbu.cn/xsdt/5132.jhtml" title="学术预告（形象史学的经验与前景）"  target=_blank>学术预告（形象史学的经验与前景）</a></li>
+							   <li><span>[11-21]</span><a href="http://hbu.cn/xsdt/5115.jhtml" title="学术预告（皮尔士与维特根斯坦：理想记法）"  target=_blank>学术预告（皮尔士与维特根斯坦：理想记法）</a></li>
+							   <li><span>[11-20]</span><a href="http://hbu.cn/xsdt/4993.jhtml" title="学术预告：网络空间安全专题报告会"  target=_blank>学术预告：网络空间安全专题报告会</a></li>
+							   <li><span>[11-20]</span><a href="http://hbu.cn/xsdt/4992.jhtml" title="学术预告（宋史）"  target=_blank>学术预告（宋史）</a></li>
+							   <li><span>[11-20]</span><a href="http://hbu.cn/xsdt/4765.jhtml" title="活动预告：宋志平校友报告会"  target=_blank>活动预告：宋志平校友报告会</a></li>
+							</ul> 
+<!--学术动态替换jeecms标签结束-->
+						 </div>
+		  </div>
+		  <div class="rbottom_box">
+		    <dl class="tabs_index" style="position:relative;">
+				<dd class="active"><a>媒体看河大</a></dd>
+<div class="index_more_mt"><span  onclick="window.open('/mtkhd/index.jhtml')">more >></span></div>
+							</dl>
+		
+			 <div style="margin-top:-5px;">	
+
+<!--媒体看河大替换jeecms标签开始-->					 
+				 <ul >
+	 <li><span>[人民网]</span><a href="http://www.rmxiongan.com/n2/2018/1122/c383557-32320398.html" title="《雄安历史文献系列丛书》面世 全面呈现雄安历史文化风土人情" target="_blank">《雄安历史文献系列丛书》面世 全面呈现...
+		<dl><dd style="float:right;margin-top:-25px;"><img src="/u/cms/hbu/201811/23094944qgx9.png" alt="《雄安历史文献系列丛书》面世 全面呈现雄安历史文化风土人情" width="100px" height="125px"/></dd></dl></a></li>			
+       <li><span>[科学网]</span><a href="http://news.sciencenet.cn/htmlnews/2018/11/420259.shtm?bsh_bid=3024551997&from=singlemessage&isappinstalled=0" title="河北大学在色谱分离分析新材料领域取得新进展" target="_blank">河北大学在色谱分离分析新材料领域取得...</a></li>				
+       <li><span>[科学网]</span><a href="http://news.sciencenet.cn/htmlnews/2018/11/420233.shtm" title="“雄安历史文献系列丛书”成果发布会在雄安举办" target="_blank">“雄安历史文献系列丛书”成果发布会在...</a></li>				
+       <li><span>[中国新闻网 ]</span><a href="http://www.chinanews.com/wap/detail/zw/gn/2018/11-21/8682552.shtml?from=singlemessage" title="《雄安历史文献系列丛书》在雄安新区发布" target="_blank">《雄安历史文献系列丛书》在雄安新区发布</a></li>				
+				</ul>		  
+<!--媒体看河大替换jeecms标签结束-->
+
+
+	  
+			  </div>
+		  </div>
+	</div>
+  </div>
+</div>
+<div class="footer">
+
+        <div class="footWrap" >
+         <div class="mainWrap">
+                 <ul class="clearfix">
+                     <li>
+                         <h4><a>教育教学</a></h4>
+                         <a href="http://zhjw.hbu.edu.cn/" target="_blank">教务系统</a>
+                        <a href="http://course.hbu.edu.cn/" target="_blank">精品课程</a>
+			<a href="http://bb.hbu.edu.cn/" target="_blank">教学平台</a>
+                        <a href="http://e6.hbu.edu.cn/" target="_blank">e6平台</a>
+                       <a href="http://hbu.enetedu.com/" target="_blank">教师在线</a>
+
+                        </li>
+                        <li>
+                         <h4><a>图书资料</a></h4>
+						 <a href="http://lib.hbu.edu.cn/" target="_blank">图书馆</a>
+						 <a href="http://archives.hbu.edu.cn/" target="_blank">档案馆</a>
+                         <a href="http://hbdxqks.hbu.cn/" target="_blank">学术期刊</a>						 
+                        </li>
+                        <li>
+                         <h4><a>校园文化</a></h4>
+                        <a href="http://hb.hbu.edu.cn/" target="_blank">航标网</a>
+						<a href="http://redline.hbu.edu.cn/" target="_blank">红色战线</a>
+						<a href="http://tuanwei.hbu.edu.cn/" target="_blank">弘毅</a>						
+                        </li>
+                        <li>
+                         <h4><a>就业创业</a></h4>
+                          <a href="http://cxcy.hbu.cn/" target="_blank">就业创业</a>
+						 <!--<a href="http://job.hbu.edu.cn/" target="_blank">就业指导</a>-->
+                        </li>
+                        <li>
+                         <h4><a>办公系统</a></h4>
+                               <a href="http://oa.hbu.edu.cn" target="_blank">OA系统</a>
+                            <a href="http://office.hbu.cn" target="_blank">旧版系统</a>
+                                               
+                        </li>
+                        <li>
+                         <h4><a>认证登陆</a></h4>
+                           <a href="http://portal.hbu.edu.cn" target="_blank">统一认证</a>
+                           <a href="http://202.206.1.231" target="_blank">上网认证</a>
+                           <a href="http://vpn.hbu.cn" target="_blank">VPN登陆</a>
+
+                        </li>
+                        <li>
+                         <h4><a>网络应用</a></h4>
+                             <a href="http://cwc-query.hbu.cn/dddl/login.aspx" target="_blank">财务系统</a>
+ <a href="http://plat.hbu.cn/" target="_blank">缴费平台</a>
+<a href="http://fagui.hbu.cn/" target="_blank">政策法规</a>
+                           <a href="http://dangxiao.hbu.edu.cn" target="_blank">网络党校</a>
+                             <a href="http://zczx.hbu.cn/" target="_blank">招标公告</a>
+                        
+
+ 
+
+                          
+                        </li>
+                        <li>
+                         <h4><a >后勤服务</a></h4>
+<a href="http://anquan.xytjy.cn/" target="_blank">安全平台</a>
+                           <a href="http://hqjt.hbu.edu.cn/hq/" target="_blank">后勤服务</a>
+                           <a href="http://hqjt.hbu.edu.cn/cy/" target="_blank">餐饮服务</a>
+                        </li>
+                    </ul>
+            </div>
+        </div>
+
+<div class="copyrights">
+  <div class="mainWrap">
+     <div class="footerNav">
+       <span class="copy">版权所有：<a href="/hbuweb/index.do" target="_blank">河北大学</a></span>
+       <span class="info" alain="right">地址：河北省保定市五四东路180号 &nbsp;&nbsp;邮编：071002 &nbsp;&nbsp;冀ICP备05007415号 &nbsp;&nbsp;
+         <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=13060602000986" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;">
+           <img src="/r/cms/hbu/hbu/img/bak.png" style="float:left;"/>
+           <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;cursor:pointer">冀公网安备 13060602000986号</p>
+         </a>
+       </span>
+       <span style="float:right;position:absolute;margin-top:-35px;"><script type="text/javascript">document.write(unescape("%3Cspan id='_ideConac' %3E%3C/span%3E%3Cscript   src='http://dcs.conac.cn/js/05/000/0000/60850121/CA050000000608501210002.js' type='text/javascript'%3E%3C/script%3E"));</script></span>
+     </div>
+  </div>
+</div>
+
+
+</div>
+
+<div id="haiiskefu">
+	<div  id="kfleft" class="kfleftoff" title=""></div>
+	<ul>
+		<li><a rel="nofollow" href="http://sjd.hbu.cn" title="" target="_blank"></a></li>
+		<li><a rel="nofollow" href="http://qzlx.news.hbu.cn/" title="" target="_blank"></a></li>
+		<li><a rel="nofollow" href="http://ysyx.hbu.cn/" title="" target="_blank"></a></li>   <!--http://zhsl.hbu.cn/-->
+		<li><a rel="nofollow" href="http://syl.hbu.cn/" title="" target="_blank"></a></li>
+                <li><a rel="nofollow" href="http://xaxq.hbu.cn/" title="" target="_blank"></a></li>
+		<li><a rel="nofollow" href="http://shpg.hbu.edu.cn/" title="" target="_blank"></a></li>
+                <li><a rel="nofollow" href="http://news.hbu.cn" title="" target="_blank"></a></li>
+		<li><a rel="nofollow" href="http://www.hicc.cn/" title="" target="_blank"></a></li>
+		<li><a rel="nofollow" href="http://xyh.hbu.cn/" title="" target="_blank"></a></li>    <!--干部考核http://gbkh.hbu.cn/-->    
+                <li><a rel="nofollow" href="http://plat.hbu.cn/" title="" target="_blank"></a></li> 
+                <li><a rel="nofollow" href="http://hbutv.hbu.cn/hbutv/ycvideo/" title="" target="_blank"></a></li>       
+                <li><a rel="nofollow" href="http://mail.hbu.cn/" title="" target="_blank"></a></li>
+                <!--<li><a rel="nofollow" href="http://gbkh.hbu.cn/" title="" target="_blank"></a></li> -->    
+	</ul>
+</div>
+
+         
+<!--
+	</div>
+</div>-->
+
+
+
+
+
+</body>
+</html>

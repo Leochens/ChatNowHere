@@ -3,17 +3,17 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var port = process.env.PORT || 3001;
-var bodyParser = require('body-parser');
+// var bodyParser = require('body-parser');
 
 var wss = require('./wss');
 var conn = require('./dbconnect');
-app.use(bodyParser.urlencoded({ entended: true }));
+// app.use(bodyParser.urlencoded({ entended: true }));
 app.get('/', function (req, res) {
     console.log('http req');
     res.send('hello ， this is zhl\'s server ');
 })
 
-conn.connect();
+// conn.connect();
 
 
 app.get('/userlogin/:username/:password', function (req, res) {

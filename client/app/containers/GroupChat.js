@@ -16,6 +16,7 @@ import time from '../utils/time';
 import MsgItem from '../components/MsgItem';
 import SendMsgBox from '../components/SendMsgBox';
 import { OTHERS_MSG, SYSTEM_MSG, MSG_LIST, MY_MSG } from '../constaints';
+import MoreButton from '../components/MoreButton';
 let lastBackPressed = Date.now();
 class GroupChat extends Component {
     state = {
@@ -38,7 +39,11 @@ class GroupChat extends Component {
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this._onBackPressed);
     }
-    componentWillUnmount(){
+    componentDidUpdate() {
+        const list = this.refs._flatlist;
+        list.scrollToEnd()
+    }
+    componentWillUnmount() {
         this.socket.disconnect();
     }
     connectFailed = () => {
@@ -47,7 +52,6 @@ class GroupChat extends Component {
     }
     onConnectSuc = () => {
         this.socket.emit('join', this.name);
-
     }
     _onBackPressed = () => {
         if (lastBackPressed && lastBackPressed + 2000 >= Date.now()) {
@@ -64,9 +68,6 @@ class GroupChat extends Component {
         });
         this.handleUpdateMsg({ name: '系统', content: '您已掉线，客户端重连...', type: SYSTEM_MSG });
 
-    }
-    exit = () => {
-        this.socket.emit('exit');
     }
     // 从服务器得到消息反馈 并显示在当前客户端
     handleUpdateMsg = msg => {
@@ -115,8 +116,6 @@ class GroupChat extends Component {
             ToastAndroid.show("发送消息不能为空", ToastAndroid.SHORT);
             return;
         }
-
-
         const msgBody = {
             name: this.name,
             content: v,
@@ -125,34 +124,48 @@ class GroupChat extends Component {
         console.log('client send msg', msgBody);
         this.socket.emit('send_msg', msgBody);
     }
-    componentDidUpdate() {
-        const list = this.refs._flatlist;
-        list.scrollToEnd()
+
+    sendMsgToAdmin = () => {
+
+        const msg = {
+            name: this.name,
+            content: '你好，管理员',
+            type: 2
+        }
+        this.socket.emit('sayTo',{toName: 'JJ',msg});
+    }
+
+    // 获得当前在线用户列表
+    getOnlineUsers = () => {
+        this.socket.emit('getOnlineUsers',{},function(users){
+            console.log(users);
+        });
+        alert("查看控制台");
     }
     render() {
         console.log("===>", this.props.navigation.getParam('name'));
         const name = this.props.navigation.getParam('name');
-
-
         return (
             <View
                 style={styles.chatMain}>
                 <LinearGradient
-                    colors={['#CE9FFC', '#7367F0']} 
-                    start={{ x: 0, y: 0 }} 
-                    end={{ x: 1, y: 0.5 }} 
+                    colors={['#CE9FFC', '#7367F0']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0.5 }}
                     style={styles.headBar} >
-                    <View>
-                        <Text style={styles.headTitle}>{this.name}|在世界群聊</Text>
-                    </View>
+                    <Text style={styles.headTitle}>{this.name}|在世界群聊</Text>
+                    <MoreButton
+                        // onClick={this.sendMsgToAdmin}
+                        onClick={this.getOnlineUsers}
+                        text={'...'} />
                 </LinearGradient>
-                
-                    <FlatList
-                        ref="_flatlist"
-                        style={styles.chatList}
-                        data={this.state.msgList}
-                        onEndReached={this.onEndOfList}
-                        renderItem={({ item }) => <MsgItem item={item} />} />
+
+                <FlatList
+                    ref="_flatlist"
+                    style={styles.chatList}
+                    data={this.state.msgList}
+                    onEndReached={this.onEndOfList}
+                    renderItem={({ item }) => <MsgItem item={item} />} />
                 <SendMsgBox
                     onSendMsg={this.handleSendMsg} />
             </View>

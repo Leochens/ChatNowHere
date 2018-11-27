@@ -39,7 +39,6 @@ function wss(io) {
                     socket.emit('joinChat', { msgs, type: MSG_LIST });
                     socket.broadcast.emit('joinChat', packMsg(msg, SYSTEM_MSG, socket.id, curCnt));
                     socket.name = name;
-                    hashName[name] = socket.id;
                     console.log(`${socket.name} id: ${socket.id} 加入 | 时间: ${msg.time}  | 当前在线: ${curCnt}`);
                 }
             );
@@ -48,6 +47,10 @@ function wss(io) {
         socket.on('send_msg', function (msg) {
             socket.emit('update_msg', packMsg(msg, MY_MSG, socket.id, curCnt));
             insertMsg(msg, OTHERS_MSG);
+            // 如果列表中没有该成员 则添加
+            if(!hashName.includes(msg.name))
+                hashName.push(msg.name);
+
             console.log(`${socket.name} id: ${socket.id} 发送:  ${msg.content} | 当前在线: ${curCnt}`);
             socket.broadcast.emit('update_msg_broadcast', packMsg(msg, OTHERS_MSG, socket.id, curCnt));
         });

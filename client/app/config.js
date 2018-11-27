@@ -1,4 +1,4 @@
 export default config = {
-    host: 'http://192.168.1.106',
+    host: 'http://mokis.top',
     port: '3001',
 }

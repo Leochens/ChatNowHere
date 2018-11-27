@@ -8,8 +8,11 @@ import {
     FlatList,
     ToastAndroid,
     BackHandler,
-    BVLinearGradient
+    BVLinearGradient,
+    TouchableOpacity,
+    ImageComponent
 } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons'; //引入图标
 import config from '../config';
 import time from '../utils/time';
 
@@ -17,11 +20,15 @@ import MsgItem from '../components/MsgItem';
 import SendMsgBox from '../components/SendMsgBox';
 import { OTHERS_MSG, SYSTEM_MSG, MSG_LIST, MY_MSG } from '../constaints';
 import MoreButton from '../components/MoreButton';
+import ZButton from '../components/ZButton';
+
+import listIcon from '../resource/list.png';
 let lastBackPressed = Date.now();
 class GroupChat extends Component {
     state = {
         msgList: [],
         curCnt: 0,
+        users: []
     }
     constructor(props) {
         super(props);
@@ -35,6 +42,7 @@ class GroupChat extends Component {
         this.socket.on('offline', this.handleUpdateMsg);
         this.socket.on('connect_error', this.connectFailed);
         this.socket.on('connect', this.onConnectSuc);
+        this.peekOnlineUsers();
     }
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this._onBackPressed);
@@ -62,6 +70,22 @@ class GroupChat extends Component {
         return true;
     }
 
+    peekUsers = () => {
+        const that = this;
+        that.socket.emit('getOnlineUsers', {}, function (users) {
+            console.log('peek users', users);
+            that.setState({
+                users
+            });
+        });
+    }
+    // 每隔5秒刷新在线列表 也可以用作心跳包
+    peekOnlineUsers = () => {
+        this.peekUsers();
+        setInterval(
+            this.peekUsers, 5000
+        );
+    }
     handleReconnect = () => {
         this.socket.connect(`${config.host}:${config.port}`, {
             transports: ['websocket'],
@@ -111,7 +135,6 @@ class GroupChat extends Component {
             this.handleReconnect();
             return;
         }
-
         if (v === '') {
             ToastAndroid.show("发送消息不能为空", ToastAndroid.SHORT);
             return;
@@ -132,19 +155,18 @@ class GroupChat extends Component {
             content: '你好，管理员',
             type: 2
         }
-        this.socket.emit('sayTo',{toName: 'JJ',msg});
+        this.socket.emit('sayTo', { toName: 'JJ', msg });
     }
 
     // 获得当前在线用户列表
     getOnlineUsers = () => {
-        this.socket.emit('getOnlineUsers',{},function(users){
-            console.log(users);
-        });
-        alert("查看控制台");
+        this.props.navigation.navigate('UserList', { users: this.state.users });
+
     }
     render() {
         console.log("===>", this.props.navigation.getParam('name'));
-        const name = this.props.navigation.getParam('name');
+        // const name = this.props.navigation.getParam('name');
+        // alert(name);
         return (
             <View
                 style={styles.chatMain}>
@@ -154,10 +176,16 @@ class GroupChat extends Component {
                     end={{ x: 1, y: 0.5 }}
                     style={styles.headBar} >
                     <Text style={styles.headTitle}>{this.name}|在世界群聊</Text>
-                    <MoreButton
-                        // onClick={this.sendMsgToAdmin}
-                        onClick={this.getOnlineUsers}
-                        text={'...'} />
+                    <TouchableOpacity
+                        style={{
+                            position: 'absolute',
+                            right: 10
+                        }}>
+                        <Icon
+                            onPress={this.getOnlineUsers}
+                            name='md-list' size={30} color='#fff' />
+                    </TouchableOpacity>
+
                 </LinearGradient>
 
                 <FlatList

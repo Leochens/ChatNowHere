@@ -1,12 +1,21 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
+import LinearGradient from 'react-native-linear-gradient';
+import {
+    StyleSheet,
+    View,
+    Text,
+    FlatList,
+    ToastAndroid,
+    BackHandler,
+    BVLinearGradient
+} from 'react-native';
 import config from '../config';
 import time from '../utils/time';
 
 import MsgItem from '../components/MsgItem';
 import SendMsgBox from '../components/SendMsgBox';
-import { StyleSheet, View, Text, FlatList, ToastAndroid,BackHandler,AppState } from 'react-native';
-import { OTHERS_MSG, SYSTEM_MSG } from '../constaints';
+import { OTHERS_MSG, SYSTEM_MSG, MSG_LIST, MY_MSG } from '../constaints';
 let lastBackPressed = Date.now();
 class GroupChat extends Component {
     state = {
@@ -23,15 +32,17 @@ class GroupChat extends Component {
         this.socket.on('update_msg', this.handleUpdateMsg);
         this.socket.on('update_msg_broadcast', this.handleUpdateMsg);
         this.socket.on('offline', this.handleUpdateMsg);
-        this.socket.on('connect_error',this.connectFailed);
-        this.socket.on('connect',this.onConnectSuc);
-        this.socket.on('test',function(res){console.log('test===>>',res)})
+        this.socket.on('connect_error', this.connectFailed);
+        this.socket.on('connect', this.onConnectSuc);
     }
-    componentDidMount(){
-        BackHandler.addEventListener('hardwareBackPress',this._onBackPressed);
+    componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', this._onBackPressed);
+    }
+    componentWillUnmount(){
+        this.socket.disconnect();
     }
     connectFailed = () => {
-        this.handleUpdateMsg({content: '连接失败，请检查网络连接',type: SYSTEM_MSG});
+        this.handleUpdateMsg({ content: '连接失败，请检查网络连接', type: SYSTEM_MSG });
         this.socket.disconnect();
     }
     onConnectSuc = () => {
@@ -40,23 +51,19 @@ class GroupChat extends Component {
     }
     _onBackPressed = () => {
         if (lastBackPressed && lastBackPressed + 2000 >= Date.now()) {
-            BackHandler.exitApp();
-          }
-          lastBackPressed = Date.now();
-          ToastAndroid.show('再按一次退出群聊', ToastAndroid.SHORT);
-          return true;
-    }
-    componentWillUnmount() {
-        this.socket.emit('exit');
+            return false;
+        }
+        lastBackPressed = Date.now();
+        ToastAndroid.show('再按一次退出群聊', ToastAndroid.SHORT);
+        return true;
     }
 
     handleReconnect = () => {
-        // this.socket.disconnect();
         this.socket.connect(`${config.host}:${config.port}`, {
             transports: ['websocket'],
         });
-        this.handleUpdateMsg({name: '系统',content: '您已掉线，客户端重连...',type: SYSTEM_MSG});
-        
+        this.handleUpdateMsg({ name: '系统', content: '您已掉线，客户端重连...', type: SYSTEM_MSG });
+
     }
     exit = () => {
         this.socket.emit('exit');
@@ -64,13 +71,32 @@ class GroupChat extends Component {
     // 从服务器得到消息反馈 并显示在当前客户端
     handleUpdateMsg = msg => {
         console.log("get msg from server", msg);
-        const msgList = this.state.msgList.slice();
+        let msgList = this.state.msgList.slice();
 
         const { type } = msg;
-        if (type === OTHERS_MSG)
-            ToastAndroid.show(`新消息${msg.name}:${msg.content}`, ToastAndroid.SHORT);
 
-        msgList.push(msg);
+        switch (type) {
+            case MSG_LIST:
+                msgList = msgList.concat(msg.msgs);
+                msgList.push({
+                    name: '系统',
+                    content: '以上是为您拉取的20条历史信息',
+                    type: SYSTEM_MSG
+                });
+                break;
+            case OTHERS_MSG:
+                ToastAndroid.show(`新消息${msg.name}:${msg.content}`, ToastAndroid.SHORT);
+                msgList.push(msg);
+                break;
+            case MY_MSG:
+                msgList.push(msg);
+                break;
+            case SYSTEM_MSG:
+                msgList.push(msg);
+                break;
+            default: break;
+        }
+
         this.setState({
             msgList,
             curCnt: msg.curCnt
@@ -80,9 +106,9 @@ class GroupChat extends Component {
 
     // 当前用户发消息
     handleSendMsg = v => {
-        if(!this.socket.connected){
+        if (!this.socket.connected) {
             this.handleReconnect();
-            return ;
+            return;
         }
 
         if (v === '') {
@@ -109,17 +135,24 @@ class GroupChat extends Component {
 
 
         return (
-            <View style={styles.chatMain}>
-                <View style={styles.headBar}>
-                    <Text style={styles.headTitle}>{this.name}|当前在线人数:{this.state.curCnt}</Text>
-                    <Text onPress={()=>{this.exit();}}>dis</Text>
-                </View>
-                <FlatList
-                    ref="_flatlist"
-                    style={styles.chatList}
-                    data={this.state.msgList}
-                    onEndReached={this.onEndOfList}
-                    renderItem={({ item }) => <MsgItem item={item} />} />
+            <View
+                style={styles.chatMain}>
+                <LinearGradient
+                    colors={['#CE9FFC', '#7367F0']} 
+                    start={{ x: 0, y: 0 }} 
+                    end={{ x: 1, y: 0.5 }} 
+                    style={styles.headBar} >
+                    <View>
+                        <Text style={styles.headTitle}>{this.name}|在世界群聊</Text>
+                    </View>
+                </LinearGradient>
+                
+                    <FlatList
+                        ref="_flatlist"
+                        style={styles.chatList}
+                        data={this.state.msgList}
+                        onEndReached={this.onEndOfList}
+                        renderItem={({ item }) => <MsgItem item={item} />} />
                 <SendMsgBox
                     onSendMsg={this.handleSendMsg} />
             </View>
@@ -140,7 +173,8 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        marginBottom: 50
+        marginBottom: 50,
+        backgroundColor: '#F1E7FF'
     },
     headBar: {
         position: 'absolute',
@@ -155,7 +189,9 @@ const styles = StyleSheet.create({
     },
     headTitle: {
         fontSize: 15,
-        color: '#fff'
+        color: '#fff',
+
+
     },
 
 });

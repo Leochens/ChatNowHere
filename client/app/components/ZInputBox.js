@@ -35,11 +35,12 @@ const styles = StyleSheet.create({
     inputBox: {
         flex: 1,
         fontSize: 18,
-        borderColor: '#ddd',
+        borderColor: 'transparent',
         borderRadius: 6,
         borderWidth: 1,
         padding: 6,
-        minHeight: 45
+        minHeight: 45,
+        backgroundColor: '#F7F1FF'
 
     }
 });

@@ -1,16 +1,26 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableHighlight,ToastAndroid } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+
+import {
+    StyleSheet,
+    Text,
+    View,
+    TextInput,
+    TouchableOpacity,
+    ToastAndroid,
+    BVLinearGradient
+} from 'react-native';
 class Index extends Component {
     state = {
         v: ''
     }
     onGetName = () => {
-        const {v:name} = this.state;
-        if(name === ''){
-            ToastAndroid.show('用户名为空',ToastAndroid.SHORT);
-            return ;
+        const { v: name } = this.state;
+        if (name === '') {
+            ToastAndroid.show('用户名为空', ToastAndroid.SHORT);
+            return;
         }
-        this.props.navigation.navigate('GroupChat',{name});
+        this.props.navigation.navigate('GroupChat', { name });
     }
     handleChangeText = v => {
         this.setState({
@@ -19,62 +29,84 @@ class Index extends Component {
     }
     render() {
         return (
-            <View style={styles.indexMain}>
-                <Text style={{fontSize: 30,padding: 10,color: '#a39f83'}}>「陌聊」</Text>
-                <Text style={styles.tip}>输入你的昵称</Text>
-                <TextInput
-                    style={styles.nameInput}
-                    value={this.state.v}
-                    onChangeText={this.handleChangeText}
-                ></TextInput>
-                <TouchableHighlight
-                    onPress={this.onGetName}>
-                    <Text style={styles.getInBtn}>加入群聊</Text>
-                </TouchableHighlight>
-                <View style={styles.copyright}>
-                    <Text >
-                        张鹤麟 | Leochens 
+            <LinearGradient
+                colors={['#CE9FFC', '#7367F0']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0.5 }}
+                style={styles.wrapper}>
+
+                <View style={styles.indexMain}>
+                    <Text style={{ fontSize: 35, padding: 10, color: '#fff' }}>「陌聊」</Text>
+                    <Text style={{
+                        marginBottom: 35,
+                        color: '#fff'
+                    }} >
+                        陌生人，一起来唠唠吧
                     </Text>
-                    <Text >
-                        陌生人，一起来唠唠吧。
+                    <TextInput
+                        placeholder={'输入你的昵称'}
+                        placeholderTextColor={'#bbb'}
+                        style={styles.nameInput}
+                        value={this.state.v}
+                        onChangeText={this.handleChangeText}
+                    ></TextInput>
+                    <TouchableOpacity
+                        onPress={this.onGetName}>
+                        <Text style={styles.getInBtn}>加入</Text>
+                    </TouchableOpacity>
+                    <View style={styles.copyright}>
+                        <Text style={styles.copytext}>
+                            张鹤麟 | Leochens
                     </Text>
-                    <Text >
-                        技术栈: react-native, socket.io-client, express, java
+
+                        <Text style={styles.copytext}>
+                            技术栈: react-native, socket.io-client, express, java
                     </Text>
+                    </View>
                 </View>
-            </View>
+            </LinearGradient>
+
         );
     }
 }
 const styles = StyleSheet.create({
+    wrapper: {
+        height: '100%',
+        width: '100%'
+    },
     indexMain: {
         height: '100%',
         width: '100%',
-        // justifyContent: 'center',
         alignItems: 'center',
-        // marginTop: 100
         paddingTop: 100
     },
-    tip: {
-        fontWeight: '500',
-        fontSize: 20
-    },
+
     nameInput: {
-        borderBottomColor: "#f00",
+        borderBottomColor: "#aaa",
         borderBottomWidth: 1,
-        width: 200
+        width: 200,
+        textAlign: 'center',
+        padding: 4,
+        fontSize: 20
     },
     getInBtn: {
         marginTop: 20,
-        backgroundColor: 'rgb(255, 200, 166)',
-        padding: 5,
-        borderRadius: 3
+        backgroundColor: '#FF7365',
+        padding: 10,
+        paddingLeft: 60,
+        paddingRight: 60,
+        color: '#fff',
+        borderRadius: 10
     },
     copyright: {
         position: 'absolute',
         bottom: 25,
-        justifyContent:'center',
-        alignItems:'center'
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    copytext: {
+        color: '#333'
+
     }
 
 });

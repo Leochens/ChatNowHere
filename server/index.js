@@ -3,18 +3,15 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var port = process.env.PORT || 3001;
-// var bodyParser = require('body-parser');
-
+var conn = require('./dbconnect');
 var wss = require('./wss');
 var conn = require('./dbconnect');
-// app.use(bodyParser.urlencoded({ entended: true }));
+conn.connect();
+
 app.get('/', function (req, res) {
     console.log('http req');
     res.send('hello ， this is zhl\'s server ');
-})
-
-// conn.connect();
-
+});
 
 app.get('/userlogin/:username/:password', function (req, res) {
     console.log('接受到userlogin请求 | get');

@@ -46,16 +46,10 @@ const styles = StyleSheet.create({
 
         flexDirection: 'row',
         alignItems: 'center',
-        // backgroundColor: '#fff',
+        backgroundColor: '#E5D2FF',
         padding: 10,
-
-    },
-    inputBoxInput: {
-        flex: 1,
-        borderColor: '#ddd',
-        borderRadius: 3,
-        borderWidth: 1,
-        padding: 3,
+        paddingTop: 5,
+        marginTop: 3
     },
     inputBoxSend: {
         fontSize: 16,

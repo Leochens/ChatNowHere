@@ -17,6 +17,12 @@ const time = ()=> {
 } 
 const packMsg = (msg, type, socketId,curCnt) => { return { ...msg, type, socketId, curCnt } };
 
+
+const slashes = (msg) => {
+    
+}
+
+
 module.exports = {
     time,
     packMsg

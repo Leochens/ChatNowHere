@@ -10,7 +10,6 @@ import {
     BackHandler,
     BVLinearGradient,
     TouchableOpacity,
-    ImageComponent
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'; //引入图标
 import config from '../config';
@@ -19,10 +18,6 @@ import time from '../utils/time';
 import MsgItem from '../components/MsgItem';
 import SendMsgBox from '../components/SendMsgBox';
 import { OTHERS_MSG, SYSTEM_MSG, MSG_LIST, MY_MSG } from '../constaints';
-import MoreButton from '../components/MoreButton';
-import ZButton from '../components/ZButton';
-
-import listIcon from '../resource/list.png';
 let lastBackPressed = Date.now();
 class GroupChat extends Component {
     state = {

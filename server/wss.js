@@ -17,6 +17,8 @@ insertMsg = (msg, type) => {
         }
     );
 }
+
+
 function wss(io) {
     io.on('connection', function (socket) {
         console.log('connected: ' + socket.handshake.address + ' socketId=' + socket.id + ' curCnt:' + curCnt);

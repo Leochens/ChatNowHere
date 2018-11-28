@@ -10,6 +10,10 @@ import {
     ToastAndroid,
     BVLinearGradient
 } from 'react-native';
+
+import { NativeModules } from 'react-native';
+
+
 class Index extends Component {
     state = {
         v: ''
@@ -28,6 +32,9 @@ class Index extends Component {
         });
     }
     render() {
+        // NativeModules.ZToast.show('hello ZToast', NativeModules.ZToast.LONG);
+        NativeModules.ZService.test();
+
         return (
             <LinearGradient
                 colors={['#CE9FFC', '#7367F0']}

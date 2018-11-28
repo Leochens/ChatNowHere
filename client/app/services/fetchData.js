@@ -1,0 +1,4 @@
+
+async export default fetchData = () => {
+    
+}

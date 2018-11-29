@@ -3,7 +3,7 @@ const router = express.Router();
 const Handlers = require('./handlers');
 const bodyParser = require('body-parser');//获取post参数
 
-router.use(bodyParser.urlencoded({ extended: true }));
+router.use(bodyParser.urlencoded({ extended: false }));
 
 
 router.get('/', function (req, res) {
@@ -17,10 +17,12 @@ router.get('/', function (req, res) {
  */
 router.post('/login', function (req, res) {
 
-    console.log('post|请求参数:', req.body);
-    const data = req.body;
-    Handlers.handleLogin(data, res);
+    const data = JSON.parse(Object.keys(req.body)[0]);
+
+    console.log('post|请求参数:', data);
+    Handlers.handleLogin(data, res,req);
 })
+
 
 /**
  * username
@@ -32,7 +34,11 @@ router.post('/login', function (req, res) {
  */
 router.post('/register', function (req, res) {
     console.log('post|请求参数:', req.body);
+
     const data = req.body;
+
+
+
     Handlers.handleRegister(data, res);
 });
 

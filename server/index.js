@@ -3,11 +3,13 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var port = process.env.PORT || 3001;
-var wss = require('./wss2');
+var wss = require('./wss/wss2');
 var conn = require('./dbconnect');
 var indexRoute = require('./routes/index');
 var dbTestRoute = require('./routes/dbTest');
+// 重启后要先把连接表清空
 conn.connect();
+
 
 app.all('*', function(req, res, next) {  
     res.header("Access-Control-Allow-Origin", "*");  

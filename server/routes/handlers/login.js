@@ -19,12 +19,13 @@ function handleLogin(data, res,req) {
             if(result.length){
                 resData.msg =  "登录成功" ;
                 resData.uid = result[0].id;
+                resData.username = username;
                 resData.status = 200;
             } else{
                 resData.status = 100;
                 resData.msg = "登录失败";
             }
-            console.log(result);
+            // console.log(result);
 
             res.send(resData);
 

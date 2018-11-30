@@ -7,10 +7,17 @@ import Login from './containers/Login';
 import Regist from './containers/Regist';
 import Main from './containers/Main';
 import UserList from './containers/OnlineUsersList';
+import ChatList from './containers/ChatList';
 
 export default RootStack = createStackNavigator({
     Index: {
         screen: Index,
+        navigationOptions: ({navigation})=>({
+            header: null
+        })
+    },
+    ChatList: {
+        screen: ChatList,
         navigationOptions: ({navigation})=>({
             header: null
         })

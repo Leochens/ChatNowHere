@@ -5,6 +5,8 @@ import ZInputBox from '../components/ZInputBox';
 import axios from 'axios';
 
 import socket from '../socket';
+import NavBar from '../components/NavBar';
+
 class Login extends Component {
     constructor(props) {
         super(props);
@@ -13,8 +15,8 @@ class Login extends Component {
         this.socket.on('apply_socket_err', this.handleApplySocketErr);
     }
     state = {
-        username: '',
-        password: ''
+        username: 'hlw',
+        password: '123'
     }
 
     handleApplySocketErr = err => console.log(err);
@@ -45,7 +47,7 @@ class Login extends Component {
                 console.log(this.socket.connected);
                 console.log(res.data);
                 // this.socket.emit('join', { username: res.data.username, uid: res.data.uid });
-                navigate('Index');
+                navigate('ChatList');
             }else{
                 console.log('登录失败');
             }
@@ -74,12 +76,13 @@ class Login extends Component {
                     <ZInputBox
                         onChangeText={this.getUsername}
                         textContentType="nickname"
+                        value={this.state.username}
                         placeholder={'用户名'}
                         placeholderTextColor={'#888'}
                         style={styles.inputBox} />
                     <ZInputBox
                         onChangeText={this.getPassword}
-
+                        value={this.state.password}
                         textContentType="password"
                         placeholder={'密码'}
                         placeholderTextColor={'#888'}

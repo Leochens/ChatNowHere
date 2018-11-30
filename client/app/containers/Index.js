@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-
 import {
     StyleSheet,
     Text,
@@ -15,8 +14,6 @@ import { NativeModules } from 'react-native';
 import { connect } from 'react-redux';
 
 class Index extends Component {
-
-    
 
     render() {
         console.log(this.props);

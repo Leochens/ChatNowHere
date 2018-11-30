@@ -1,4 +1,4 @@
 export default config = {
-    host: 'http://mokis.top',
+    host: 'http://localhost',
     port: '3001',
 }

@@ -53,7 +53,7 @@ export default RootStack = createStackNavigator({
     }
 },
 {
-    initialRouteName: 'Index',
+    initialRouteName: 'Login',
     headerMode: 'screen'
 });
 

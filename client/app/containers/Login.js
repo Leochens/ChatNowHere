@@ -2,28 +2,57 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableHighlight, ToastAndroid } from 'react-native';
 import ZButton from '../components/ZButton';
 import ZInputBox from '../components/ZInputBox';
+import axios from 'axios';
 
-
+import socket from '../socket';
 class Login extends Component {
+    constructor(props) {
+        super(props);
+        this.socket = socket;
+        this.socket.on('apply_socket_suc', this.handleApplySocketSuc);
+        this.socket.on('apply_socket_err', this.handleApplySocketErr);
+    }
     state = {
         username: '',
         password: ''
     }
-    handleLogin = () => {
-        const { navigate } = this.props.navigation; 
-        const {password,username} = this.state;
 
-        if(!username || !password){
-            ToastAndroid.show("请输入完全",ToastAndroid.SHORT);
+    handleApplySocketErr = err => console.log(err);
+    handleApplySocketSuc = res => console.log(res);
+
+    handleLogin = () => {
+        const { navigate } = this.props.navigation;
+        const { password, username } = this.state;
+
+        if (!username || !password) {
+            ToastAndroid.show("请输入完全", ToastAndroid.SHORT);
             return;
         }
-        navigate('Index');
 
-        // if(username == 'zhl' && password == '123456'){
-        //     navigate('Index');
-        // }else{
-        //     ToastAndroid.show("用户名或密码错误",ToastAndroid.SHORT);
-        // }
+        axios(
+            'http://192.168.1.104:3001/dbtest/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: {
+                    username: this.state.username,
+                    password: this.state.password
+                }
+            }
+        ).then(res => {
+            if(res.data.status === 200){
+                console.log(this.socket.connected);
+                console.log(res.data);
+                // this.socket.emit('join', { username: res.data.username, uid: res.data.uid });
+                navigate('Index');
+            }else{
+                console.log('登录失败');
+            }
+
+        })
+            .catch(err => console.log(err));
+
     }
     getUsername = username => {
         this.setState({

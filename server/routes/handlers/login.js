@@ -25,10 +25,7 @@ function handleLogin(data, res,req) {
                 resData.status = 100;
                 resData.msg = "登录失败";
             }
-            // console.log(result);
-
             res.send(resData);
-
         }
     }
     conn.query(sql, callback);

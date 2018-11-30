@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image,FlatList } from 'react-native';
+import { Text, View, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
 import NavBar from '../components/NavBar';
 
 
@@ -57,40 +57,44 @@ class ListItem extends Component {
             },
             right: {
                 marginRight: 16
+            },
+            bubble: {
+                backgroundColor: bubble ? '#DE4233' : '#fff',
+                width: 16,
+                height: 16,
+                borderRadius: 8,
+                textAlign: 'center',
+                color: '#fff',
+                lineHeight: 16,
+                fontSize: 8,
+
+
             }
         })
         return (
-            <View style={styles.item}>
-                <View>
-                    <Image
-                        style={styles.userPic}
-                        source={{ uri: userPic }} />
-                </View>
-                <View style={styles.middle}>
-                    <Text style={styles.username}>{username}</Text>
-                    <Text style={styles.lastMsg}>{lastMsg}</Text>
-                </View>
-                <View style={styles.right}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 8, paddingTop: 8 }}>
-                        <Text style={{ fontSize: 10, color: '#999' }}>{time}</Text>
+            <TouchableOpacity>
+
+                <View style={styles.item}>
+                    <View>
+                        <Image
+                            style={styles.userPic}
+                            source={{ uri: userPic }} />
                     </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 8, paddingTop: 8 }}>
-                        <Text style={{
-                            backgroundColor: bubble?'#DE4233':'#fff',
-                            width: 16,
-                            height: 16,
-                            borderRadius: 8,
-                            textAlign: 'center',
-                            color: '#fff',
-                            lineHeight: 16,
-                            fontSize: 8,
-                            
+                    <View style={styles.middle}>
+                        <Text style={styles.username}>{username}</Text>
+                        <Text style={styles.lastMsg}>{lastMsg}</Text>
+                    </View>
+                    <View style={styles.right}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 8, paddingTop: 8 }}>
+                            <Text style={{ fontSize: 10, color: '#999' }}>{time}</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 8, paddingTop: 8 }}>
+                            <Text style={styles.bubble}>{bubble}</Text>
 
-                        }}>{bubble}</Text>
-
+                        </View>
                     </View>
                 </View>
-            </View>
+            </TouchableOpacity>
         );
     }
 
@@ -99,7 +103,12 @@ class ListItem extends Component {
 
 const styles = StyleSheet.create({
     chatList: {
-        backgroundColor:'#fff'
+        backgroundColor: '#fff'
+    },
+    wrapper: {
+        height: '100%',
+        width: '100%',
+        backgroundColor: '#fff'
     }
 });
 class ChatList extends Component {
@@ -128,14 +137,125 @@ class ChatList extends Component {
         {
             username: '郭阳阳',
             userPic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2192128832,912984590&fm=26&gp=0.jpg',
-            time: '9:32',
-            bubble: 0,
+            time: '19:32',
+            bubble: '99+',
             lastMsg: '[图片]'
-        }]
+        },
+        {
+            username: '张鹤麟',
+            userPic: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2016202132,237163917&fm=26&gp=0.jpg',
+            time: '12:05',
+            bubble: 3,
+            lastMsg: '你干嘛呢'
+        },
+        {
+            username: '李一丹',
+            userPic: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=410781527,1881401538&fm=200&gp=0.jpg',
+            time: '14:21',
+            bubble: 1,
+            lastMsg: '吃饭吗'
+        },
+        {
+            username: '郝龙威',
+            userPic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=269983461,437926237&fm=200&gp=0.jpg',
+            time: '11:41',
+            bubble: 1,
+            lastMsg: '啦啦啦啦啦'
+        },
+        {
+            username: '郭阳阳',
+            userPic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2192128832,912984590&fm=26&gp=0.jpg',
+            time: '19:32',
+            bubble: '99+',
+            lastMsg: '[图片]'
+        }, {
+            username: '张鹤麟',
+            userPic: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2016202132,237163917&fm=26&gp=0.jpg',
+            time: '12:05',
+            bubble: 3,
+            lastMsg: '你干嘛呢'
+        },
+        {
+            username: '李一丹',
+            userPic: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=410781527,1881401538&fm=200&gp=0.jpg',
+            time: '14:21',
+            bubble: 1,
+            lastMsg: '吃饭吗'
+        },
+        {
+            username: '郝龙威',
+            userPic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=269983461,437926237&fm=200&gp=0.jpg',
+            time: '11:41',
+            bubble: 1,
+            lastMsg: '啦啦啦啦啦'
+        },
+        {
+            username: '郭阳阳',
+            userPic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2192128832,912984590&fm=26&gp=0.jpg',
+            time: '19:32',
+            bubble: '99+',
+            lastMsg: '[图片]'
+        }, {
+            username: '张鹤麟',
+            userPic: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2016202132,237163917&fm=26&gp=0.jpg',
+            time: '12:05',
+            bubble: 3,
+            lastMsg: '你干嘛呢'
+        },
+        {
+            username: '李一丹',
+            userPic: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=410781527,1881401538&fm=200&gp=0.jpg',
+            time: '14:21',
+            bubble: 1,
+            lastMsg: '吃饭吗'
+        },
+        {
+            username: '郝龙威',
+            userPic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=269983461,437926237&fm=200&gp=0.jpg',
+            time: '11:41',
+            bubble: 1,
+            lastMsg: '啦啦啦啦啦'
+        },
+        {
+            username: '郭阳阳',
+            userPic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2192128832,912984590&fm=26&gp=0.jpg',
+            time: '19:32',
+            bubble: '99+',
+            lastMsg: '[图片]'
+        }, {
+            username: '张鹤麟',
+            userPic: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2016202132,237163917&fm=26&gp=0.jpg',
+            time: '12:05',
+            bubble: 3,
+            lastMsg: '你干嘛呢'
+        },
+        {
+            username: '李一丹',
+            userPic: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=410781527,1881401538&fm=200&gp=0.jpg',
+            time: '14:21',
+            bubble: 1,
+            lastMsg: '吃饭吗'
+        },
+        {
+            username: '郝龙威',
+            userPic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=269983461,437926237&fm=200&gp=0.jpg',
+            time: '11:41',
+            bubble: 1,
+            lastMsg: '啦啦啦啦啦'
+        },
+        {
+            username: '郭阳阳',
+            userPic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2192128832,912984590&fm=26&gp=0.jpg',
+            time: '19:32',
+            bubble: '99+',
+            lastMsg: '[图片]'
+        },
+
+        ]
     }
     render() {
         return (
-            <View>
+            <View style={styles.wrapper}>
                 <NavBar
                     title="消息"
                     showBack={false} />

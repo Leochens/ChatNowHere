@@ -8,6 +8,8 @@ import Regist from './containers/Regist';
 import Main from './containers/Main';
 import UserList from './containers/OnlineUsersList';
 import ChatList from './containers/ChatList';
+import SingleChat from './containers/SingleChat';
+
 
 export default RootStack = createStackNavigator({
     Index: {
@@ -16,8 +18,15 @@ export default RootStack = createStackNavigator({
             header: null
         })
     },
+
     ChatList: {
         screen: ChatList,
+        navigationOptions: ({navigation})=>({
+            header: null
+        })
+    },
+    SingleChat: {
+        screen: SingleChat,
         navigationOptions: ({navigation})=>({
             header: null
         })
@@ -60,7 +69,7 @@ export default RootStack = createStackNavigator({
     }
 },
 {
-    initialRouteName: 'Login',
+    initialRouteName: 'SingleChat',
     headerMode: 'screen'
 });
 

@@ -25,7 +25,7 @@ class Login extends Component {
     handleLogin = () => {
         const { navigate } = this.props.navigation;
         const { password, username } = this.state;
-        const {actionLoginSuc } = this.props;
+        const {actionLoginSuc,actionLoginFai } = this.props;
         if (!username || !password) {
             ToastAndroid.show("请输入完全", ToastAndroid.SHORT);
             return;
@@ -46,9 +46,10 @@ class Login extends Component {
             if(res.data.status === 200){
                 console.log(this.socket.connected);
                 console.log(res.data);
-                actionLoginSuc(res.data);
+                actionLoginSuc(res.data);// 发登录成功的action
                 navigate('ChatList');
             }else{
+                actionLoginFai && actionLoginFai();
                 console.log('登录失败');
             }
 
@@ -128,7 +129,8 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = dispatch => {
     return {
-        actionLoginSuc: bindActionCreators(ActionCreators.actionLoginSuc,dispatch)
+        actionLoginSuc: bindActionCreators(ActionCreators.actionLoginSuc,dispatch),
+        actionLoginFai: bindActionCreators(ActionCreators.actionLoginFai,dispatch)
     }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Login);

@@ -18,7 +18,8 @@ const userinfo = (state = {
             }
         }
         case `${ACTION_USER_LOGIN}_FAI`: { // 登录失败
-
+            // const {msg} = action.data;
+            return state;
         }
         default: return state;
     }

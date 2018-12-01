@@ -17,3 +17,10 @@ export const actionLoginSuc = (data) => {
         data
     }
 }
+export const actionLoginFai = (data) => {
+
+    return {
+        type: `${ACTIONS.ACTION_USER_LOGIN}_FAI`,
+        data
+    }
+}

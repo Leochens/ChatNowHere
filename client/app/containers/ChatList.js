@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
 import NavBar from '../components/NavBar';
 import socket from '../socket';
+import { connect } from 'react-redux';
 
 
 class ListItem extends Component {
@@ -115,35 +116,32 @@ const styles = StyleSheet.create({
     }
 });
 class ChatList extends Component {
-
+    state = {
+        chatList: []
+    }
     constructor(props) {
         super(props);
+        const { username, uid } = props;
         this.socket = socket;
         this.socket.on('fetch_receive_msg', this.handleUpdateMsgList);
         this.socket.on('apply_socket_suc', this.handleApplySocketSuc);
         this.socket.on('apply_socket_err', this.handleApplySocketErr);
-
+        this.socket.emit('join', { username, uid });
     }
     handleApplySocketErr = err => console.log(err);
     handleApplySocketSuc = res => {
         console.log(res)
-        this.socket.emit('join', { username: res.data.username, uid: res.data.uid });
-
     };
-    handleUpdateMsgList = (msgList, confirm) => {
-        console.log(msgList);
-
+    handleUpdateMsgList = (newChatList, confirm) => {
+        console.log(newChatList);
+        console.log('fetch newChatList');
         let chatList = this.state.chatList.slice();
-        chatList = msgList.concat(msgList);
+        chatList = newChatList.concat(chatList);
         this.setState({
             chatList
         })
         // confirm(); //用户收到信息后回调它告诉服务端确认成功
     }
-    state = {
-        chatList: []
-    }
-
     render() {
         return (
             <View style={styles.wrapper}>
@@ -161,4 +159,10 @@ class ChatList extends Component {
     }
 }
 
-export default ChatList;
+const mapStateToProps = state => {
+    return {
+        username: state.userinfo.username,
+        uid: state.userinfo.uid
+    }
+}
+export default connect(mapStateToProps)(ChatList);

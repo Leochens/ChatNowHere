@@ -1,7 +1,10 @@
 package com.client;
 
 import android.app.Application;
+import android.database.sqlite.SQLiteDatabase;
+import android.widget.Toast;
 
+import com.client.db.ReactSQLiteModule;
 import com.facebook.react.ReactApplication;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
@@ -28,7 +31,8 @@ public class MainApplication extends Application implements ReactApplication {
             new VectorIconsPackage(),
             new LinearGradientPackage(),
               new ZHLToast(),
-              new ServicePackage()
+              new ServicePackage(),
+              new ReactSQLiteModule()
       );
     }
 
@@ -46,6 +50,7 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+
     SoLoader.init(this, /* native exopackage */ false);
   }
 }

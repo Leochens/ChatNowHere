@@ -1,18 +1,25 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableHighlight, ToastAndroid } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableHighlight, ToastAndroid, NativeModules } from 'react-native';
 import ZButton from '../components/ZButton';
 import ZInputBox from '../components/ZInputBox';
 import axios from 'axios';
 
 import socket from '../socket';
 import NavBar from '../components/NavBar';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import * as ActionCreators from '../actions';
 class Login extends Component {
     constructor(props) {
         super(props);
         this.socket = socket;
+        NativeModules.ReactSQLite.createDatabase('zhl.db');
+
+        [1, 2, 3, 4, 5].forEach(item => NativeModules.ReactSQLite.insertUser('zhl' + item, '12345alalalal' + item, item, 'http://hahaha.com/u.jpg'));
+
+        NativeModules.ReactSQLite.getAll(res => {
+            console.log("本地数据库", res);
+        });
     }
     state = {
         username: 'hlw',
@@ -21,7 +28,7 @@ class Login extends Component {
     handleLogin = () => {
         const { navigate } = this.props.navigation;
         const { password, username } = this.state;
-        const {actionLoginSuc,actionLoginFai } = this.props;
+        const { actionLoginSuc, actionLoginFai } = this.props;
         if (!username || !password) {
             ToastAndroid.show("请输入完全", ToastAndroid.SHORT);
             return;
@@ -39,12 +46,12 @@ class Login extends Component {
                 }
             }
         ).then(res => {
-            if(res.data.status === 200){
+            if (res.data.status === 200) {
                 console.log(this.socket.connected);
                 console.log(res.data);
                 actionLoginSuc(res.data);// 发登录成功的action
                 navigate('ChatList');
-            }else{
+            } else {
                 actionLoginFai && actionLoginFai();
                 console.log('登录失败');
             }
@@ -125,8 +132,8 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = dispatch => {
     return {
-        actionLoginSuc: bindActionCreators(ActionCreators.actionLoginSuc,dispatch),
-        actionLoginFai: bindActionCreators(ActionCreators.actionLoginFai,dispatch)
+        actionLoginSuc: bindActionCreators(ActionCreators.actionLoginSuc, dispatch),
+        actionLoginFai: bindActionCreators(ActionCreators.actionLoginFai, dispatch)
     }
 }
-export default connect(mapStateToProps,mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

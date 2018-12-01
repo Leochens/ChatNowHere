@@ -1,5 +1,8 @@
 package com.client;
 
+import android.database.sqlite.SQLiteDatabase;
+import android.widget.Toast;
+
 import com.facebook.react.ReactActivity;
 
 public class MainActivity extends ReactActivity {

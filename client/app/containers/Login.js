@@ -13,15 +13,11 @@ class Login extends Component {
     constructor(props) {
         super(props);
         this.socket = socket;
-        
     }
     state = {
         username: 'hlw',
         password: '123'
     }
-
- 
-
     handleLogin = () => {
         const { navigate } = this.props.navigation;
         const { password, username } = this.state;

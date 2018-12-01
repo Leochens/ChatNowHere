@@ -103,8 +103,6 @@ class ListItem extends Component {
     }
 
 }
-
-
 const styles = StyleSheet.create({
     chatList: {
         backgroundColor: '#fff'

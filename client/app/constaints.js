@@ -6,3 +6,6 @@ export const MSG_LIST = 4;
 
 
 export const ACTION_USER_LOGIN = 'ACTION_USER_LOGIN';
+
+
+

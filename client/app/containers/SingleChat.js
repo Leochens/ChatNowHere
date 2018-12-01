@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, FlatList, Image } from 'react-native';
 import NavBar from '../components/NavBar';
+import SendMsgBox from '../components/SendMsgBox';
 const styles = StyleSheet.create({
     wrapper: {
         backgroundColor: '#fff',
@@ -85,6 +86,7 @@ class MessageItem extends Component {
     }
 }
 
+
 export default class Head extends Component {
     state = {
         msgList: [
@@ -116,6 +118,8 @@ export default class Head extends Component {
                     data={this.state.msgList}
                     renderItem={({ item }) => <MessageItem data={item} />}
                 ></FlatList>
+                <SendMsgBox
+                    onSendMsg={this.handleSendMsg} />
             </View>
         );
     }

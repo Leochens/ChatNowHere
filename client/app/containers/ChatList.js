@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
 import NavBar from '../components/NavBar';
+import socket from '../socket';
 
 
 class ListItem extends Component {
 
+
     static defaultProps = {
         data: {
-            username: 'Leochens',
-            lastMsg: 'hello world',
+            from_name: 'Leochens',
+            // lastMsg: 'hello world',
+            content: 'hello world',
             time: '13:01',
             bubble: 1,
             userPic: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=517389657,4030031755&fm=200&gp=0.jpg'
@@ -17,8 +20,8 @@ class ListItem extends Component {
     render() {
         const {
             data: {
-                username,
-                lastMsg,
+                from_name,
+                content,
                 time,
                 userPic,
                 bubble
@@ -81,8 +84,8 @@ class ListItem extends Component {
                             source={{ uri: userPic }} />
                     </View>
                     <View style={styles.middle}>
-                        <Text style={styles.username}>{username}</Text>
-                        <Text style={styles.lastMsg}>{lastMsg}</Text>
+                        <Text style={styles.username}>{from_name}</Text>
+                        <Text style={styles.lastMsg}>{content}</Text>
                     </View>
                     <View style={styles.right}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 8, paddingTop: 8 }}>
@@ -112,147 +115,35 @@ const styles = StyleSheet.create({
     }
 });
 class ChatList extends Component {
-    state = {
-        chatList: [{
-            username: '张鹤麟',
-            userPic: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2016202132,237163917&fm=26&gp=0.jpg',
-            time: '12:05',
-            bubble: 3,
-            lastMsg: '你干嘛呢'
-        },
-        {
-            username: '李一丹',
-            userPic: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=410781527,1881401538&fm=200&gp=0.jpg',
-            time: '14:21',
-            bubble: 1,
-            lastMsg: '吃饭吗'
-        },
-        {
-            username: '郝龙威',
-            userPic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=269983461,437926237&fm=200&gp=0.jpg',
-            time: '11:41',
-            bubble: 1,
-            lastMsg: '啦啦啦啦啦'
-        },
-        {
-            username: '郭阳阳',
-            userPic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2192128832,912984590&fm=26&gp=0.jpg',
-            time: '19:32',
-            bubble: '99+',
-            lastMsg: '[图片]'
-        },
-        {
-            username: '张鹤麟',
-            userPic: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2016202132,237163917&fm=26&gp=0.jpg',
-            time: '12:05',
-            bubble: 3,
-            lastMsg: '你干嘛呢'
-        },
-        {
-            username: '李一丹',
-            userPic: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=410781527,1881401538&fm=200&gp=0.jpg',
-            time: '14:21',
-            bubble: 1,
-            lastMsg: '吃饭吗'
-        },
-        {
-            username: '郝龙威',
-            userPic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=269983461,437926237&fm=200&gp=0.jpg',
-            time: '11:41',
-            bubble: 1,
-            lastMsg: '啦啦啦啦啦'
-        },
-        {
-            username: '郭阳阳',
-            userPic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2192128832,912984590&fm=26&gp=0.jpg',
-            time: '19:32',
-            bubble: '99+',
-            lastMsg: '[图片]'
-        }, {
-            username: '张鹤麟',
-            userPic: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2016202132,237163917&fm=26&gp=0.jpg',
-            time: '12:05',
-            bubble: 3,
-            lastMsg: '你干嘛呢'
-        },
-        {
-            username: '李一丹',
-            userPic: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=410781527,1881401538&fm=200&gp=0.jpg',
-            time: '14:21',
-            bubble: 1,
-            lastMsg: '吃饭吗'
-        },
-        {
-            username: '郝龙威',
-            userPic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=269983461,437926237&fm=200&gp=0.jpg',
-            time: '11:41',
-            bubble: 1,
-            lastMsg: '啦啦啦啦啦'
-        },
-        {
-            username: '郭阳阳',
-            userPic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2192128832,912984590&fm=26&gp=0.jpg',
-            time: '19:32',
-            bubble: '99+',
-            lastMsg: '[图片]'
-        }, {
-            username: '张鹤麟',
-            userPic: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2016202132,237163917&fm=26&gp=0.jpg',
-            time: '12:05',
-            bubble: 3,
-            lastMsg: '你干嘛呢'
-        },
-        {
-            username: '李一丹',
-            userPic: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=410781527,1881401538&fm=200&gp=0.jpg',
-            time: '14:21',
-            bubble: 1,
-            lastMsg: '吃饭吗'
-        },
-        {
-            username: '郝龙威',
-            userPic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=269983461,437926237&fm=200&gp=0.jpg',
-            time: '11:41',
-            bubble: 1,
-            lastMsg: '啦啦啦啦啦'
-        },
-        {
-            username: '郭阳阳',
-            userPic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2192128832,912984590&fm=26&gp=0.jpg',
-            time: '19:32',
-            bubble: '99+',
-            lastMsg: '[图片]'
-        }, {
-            username: '张鹤麟',
-            userPic: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2016202132,237163917&fm=26&gp=0.jpg',
-            time: '12:05',
-            bubble: 3,
-            lastMsg: '你干嘛呢'
-        },
-        {
-            username: '李一丹',
-            userPic: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=410781527,1881401538&fm=200&gp=0.jpg',
-            time: '14:21',
-            bubble: 1,
-            lastMsg: '吃饭吗'
-        },
-        {
-            username: '郝龙威',
-            userPic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=269983461,437926237&fm=200&gp=0.jpg',
-            time: '11:41',
-            bubble: 1,
-            lastMsg: '啦啦啦啦啦'
-        },
-        {
-            username: '郭阳阳',
-            userPic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2192128832,912984590&fm=26&gp=0.jpg',
-            time: '19:32',
-            bubble: '99+',
-            lastMsg: '[图片]'
-        },
 
-        ]
+    constructor(props) {
+        super(props);
+        this.socket = socket;
+        this.socket.on('fetch_receive_msg', this.handleUpdateMsgList);
+        this.socket.on('apply_socket_suc', this.handleApplySocketSuc);
+        this.socket.on('apply_socket_err', this.handleApplySocketErr);
+
     }
+    handleApplySocketErr = err => console.log(err);
+    handleApplySocketSuc = res => {
+        console.log(res)
+        this.socket.emit('join', { username: res.data.username, uid: res.data.uid });
+
+    };
+    handleUpdateMsgList = (msgList, confirm) => {
+        console.log(msgList);
+
+        let chatList = this.state.chatList.slice();
+        chatList = msgList.concat(msgList);
+        this.setState({
+            chatList
+        })
+        // confirm(); //用户收到信息后回调它告诉服务端确认成功
+    }
+    state = {
+        chatList: []
+    }
+
     render() {
         return (
             <View style={styles.wrapper}>
@@ -265,8 +156,6 @@ class ChatList extends Component {
                     data={this.state.chatList}
                     // onEndReached={this.onEndOfList}
                     renderItem={({ item }) => <ListItem data={item} />} />
-
-
             </View>
         );
     }

@@ -6,33 +6,33 @@ import axios from 'axios';
 
 import socket from '../socket';
 import NavBar from '../components/NavBar';
-
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import * as ActionCreators from '../actions';
 class Login extends Component {
     constructor(props) {
         super(props);
         this.socket = socket;
-        this.socket.on('apply_socket_suc', this.handleApplySocketSuc);
-        this.socket.on('apply_socket_err', this.handleApplySocketErr);
+        
     }
     state = {
         username: 'hlw',
         password: '123'
     }
 
-    handleApplySocketErr = err => console.log(err);
-    handleApplySocketSuc = res => console.log(res);
+ 
 
     handleLogin = () => {
         const { navigate } = this.props.navigation;
         const { password, username } = this.state;
-
+        const {actionLoginSuc } = this.props;
         if (!username || !password) {
             ToastAndroid.show("请输入完全", ToastAndroid.SHORT);
             return;
         }
 
         axios(
-            'http://192.168.1.104:3001/dbtest/login', {
+            'http://192.168.43.17:3001/dbtest/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -46,7 +46,7 @@ class Login extends Component {
             if(res.data.status === 200){
                 console.log(this.socket.connected);
                 console.log(res.data);
-                // this.socket.emit('join', { username: res.data.username, uid: res.data.uid });
+                actionLoginSuc(res.data);
                 navigate('ChatList');
             }else{
                 console.log('登录失败');
@@ -123,4 +123,12 @@ const styles = StyleSheet.create({
     loginBtn: {},
     copyright: {}
 });
-export default Login;
+const mapStateToProps = state => {
+    return state;
+}
+const mapDispatchToProps = dispatch => {
+    return {
+        actionLoginSuc: bindActionCreators(ActionCreators.actionLoginSuc,dispatch)
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(Login);

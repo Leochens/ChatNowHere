@@ -28,8 +28,7 @@ class InputBox extends Component {
                     value={this.state.v} />
                 <ZButton 
                     onClick={this.handleSendMsg}
-                    text={'发送'}
-                    style={styles.inputBoxSend}
+
                 />
             </View>
         );
@@ -47,16 +46,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#E5D2FF',
-        padding: 10,
-        paddingTop: 5,
-        marginTop: 3
-    },
-    inputBoxSend: {
-        fontSize: 16,
         padding: 8,
-        backgroundColor: '#9f9fff',
-        color: '#fff',
-        marginLeft: 5
     },
 });
 export default InputBox;

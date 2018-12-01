@@ -34,14 +34,14 @@ class ZInputBox extends Component {
 const styles = StyleSheet.create({
     inputBox: {
         flex: 1,
-        fontSize: 18,
+        fontSize: 16,
         borderColor: 'transparent',
-        borderRadius: 6,
+        borderRadius: 8,
         borderWidth: 1,
-        padding: 6,
-        minHeight: 45,
+        padding: 8,
+        minHeight: 48,
         backgroundColor: '#F7F1FF'
-
+        
     }
 });
 export default ZInputBox;

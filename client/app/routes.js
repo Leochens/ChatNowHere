@@ -69,7 +69,7 @@ export default RootStack = createStackNavigator({
     }
 },
 {
-    initialRouteName: 'SingleChat',
+    initialRouteName: 'Login',
     headerMode: 'screen'
 });
 

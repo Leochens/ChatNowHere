@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 
 class ZButton extends Component {
@@ -9,29 +10,32 @@ class ZButton extends Component {
         onClick && onClick();
     }
     render() {
-        const { style: pStyle, text,width,align } = this.props;
+        const { style: pStyle, text, width, align } = this.props;
         return (
+
             <TouchableOpacity
-                style={{width,alignSelf: align}}
+                style={{
+                    width: 32,
+                    height: 32,
+                    padding: 8,
+                    borderRadius: 16,
+                    textAlign: 'center',
+                    borderRadius: 16,
+                    color: '#fff',
+                    margin: 8,
+                    marginRight:0,
+                    backgroundColor:'#9f9fff'
+                }}
                 onPress={this.onBtnClick}>
-                <Text
-                    style={[styles.btn, pStyle]}>
-                    {text}
-                </Text>
+                <FontAwesome style={{color:'#fff'}} name="send" size={16} />
             </TouchableOpacity>
         )
     }
 }
 const styles = StyleSheet.create({
     btn: {
-        paddingTop: 7,
-        paddingBottom: 7,
-        paddingLeft: 4,
-        paddingRight: 4,
-        textAlign:'center',
-        borderRadius: 10,
-        color: '#fff',
-        backgroundColor: '#9f9fff',
+
+        // backgroundColor: '#9f9fff',
     }
 });
 export default ZButton;

@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Image, FlatList, TouchableOpacity } from 'react
 import NavBar from '../components/NavBar';
 import socket from '../socket';
 import { connect } from 'react-redux';
-
+import ReactSQLite from '../nativeModules/ReactSQLite';
 
 class ListItem extends Component {
 
@@ -18,6 +18,7 @@ class ListItem extends Component {
             userPic: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=517389657,4030031755&fm=200&gp=0.jpg'
         }
     }
+
     render() {
         const {
             data: {
@@ -124,19 +125,74 @@ class ChatList extends Component {
         this.socket.on('fetch_receive_msg', this.handleUpdateMsgList);
         this.socket.on('apply_socket_suc', this.handleApplySocketSuc);
         this.socket.on('apply_socket_err', this.handleApplySocketErr);
+        this.socket.on('receive_msg', this.handleUpdateMsg);
         this.socket.emit('join', { username, uid });
     }
     handleApplySocketErr = err => console.log(err);
     handleApplySocketSuc = res => {
         console.log(res)
     };
+
+    handleUpdateMsg = (msg, confirm) => {
+        console.log("get msg : ", msg);
+        const chatList = this.state.chatList.slice();
+        const idMap = {};
+        const from_ids = chatList.map(msg => msg.from_id); // 获得当前消息列表中用户的每个用户的id
+        chatList.forEach((msg, idx) => { idMap[msg.from_id] = idx });// 建立用户id和当前数组id的映射关系 方便查找
+        
+        if(from_ids.includes(msg.from_id)){
+            let bubble = chatList[idMap[msg.from_id]].bubble;
+            const tmp = this.msgMapToChatItem(msg)
+            console.log('tmp',tmp);
+            chatList[idMap[msg.from_id]] = { 
+                ...tmp,
+                bubble: bubble+1
+             }
+        }else{
+            chatList.push(this.msgMapToChatItem(msg));
+        }
+        ReactSQLite.addMsg(msg);
+        this.setState({
+            chatList
+        });
+        confirm();
+    }
+    msgMapToChatItem = msg => ({
+        from_id: msg.from_id,
+        from_name: msg.from_name,
+        content: msg.content,
+        time: msg.create_time,
+        bubble: 1,
+        userPic: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=517389657,4030031755&fm=200&gp=0.jpg'
+    })
+
+    getCleanChatList = list => {
+        const chatList = this.state.chatList.slice();
+        const idMap = {};
+        let from_ids = chatList.map(msg => msg.from_id); // 获得当前消息列表中用户的每个用户的id
+        list.forEach(msg => {
+            from_ids = chatList.map(msg => msg.from_id); // 获得当前消息列表中用户的每个用户的id
+            chatList.forEach((msg, idx) => { idMap[msg.from_id] = idx });// 建立用户id和当前数组id的映射关系 方便查找 
+            if (from_ids.includes(msg.from_id)) { // 如果当前列表中有该用户发的消息，那么就覆盖该消息，并把消息数加一
+                chatList[idMap[msg.from_id]] = {
+                    ...this.msgMapToChatItem(msg),
+                    bubble: chatList[idMap[msg.from_id]].bubble + 1
+                };
+            } else {   // 如果没有就添加该消息到消息列表
+                chatList.push(this.msgMapToChatItem(msg));
+            }
+        });
+
+        return chatList;
+    }
+
     handleUpdateMsgList = (newChatList, confirm) => {
         console.log(newChatList);
         console.log('fetch newChatList');
-        let chatList = this.state.chatList.slice();
-        chatList = newChatList.concat(chatList);
+        // chatList = newChatList.concat(chatList);
+        ReactSQLite.addMsgList(newChatList);
         this.setState({
-            chatList
+            chatList: this.getCleanChatList(newChatList)
         })
         // confirm(); //用户收到信息后回调它告诉服务端确认成功
     }

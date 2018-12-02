@@ -10,5 +10,6 @@ const test = (state = {
 
 export default combineReducers({
     test,
-    userinfo
+    userinfo,
+    
 });

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableHighlight, ToastAndroid,NativeModules } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableHighlight, ToastAndroid, NativeModules } from 'react-native';
 import ZButton from '../components/ZButton';
 import ZInputBox from '../components/ZInputBox';
 import axios from 'axios';
@@ -16,13 +16,6 @@ class Login extends Component {
         super(props);
         this.socket = socket;
         ReactSQLite.createDatabase('zhl.db');
-        ReactSQLite.addUser("zhl",'123456',1, 'http://mokis.top/pp.jpg');
-        ReactSQLite.getUserInfo(2,function(res){
-            console.log("hahaha",res);
-        });
-        ReactSQLite.getAllRecentLoginUsers(res=>{
-            console.log("rss",res); // 这里传不到原生端 早起来修一下
-        })
     }
     state = {
         username: 'hlw',
@@ -52,13 +45,15 @@ class Login extends Component {
             if (res.data.status === 200) {
                 console.log(this.socket.connected);
                 console.log(res.data);
-                actionLoginSuc(res.data);// 发登录成功的action
+                actionLoginSuc({
+                    ...res.data,
+                    password, user_pic: 'http://mokis.top/cat.jpg'
+                });// 发登录成功的action
                 navigate('ChatList');
             } else {
                 actionLoginFai && actionLoginFai();
                 console.log('登录失败');
             }
-
         })
             .catch(err => console.log(err));
 

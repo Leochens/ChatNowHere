@@ -13,19 +13,26 @@ import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableNativeArray;
+import com.facebook.react.bridge.ReadableNativeMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.uimanager.ViewManager;
+import com.facebook.react.uimanager.annotations.ReactProp;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.NavigableMap;
 
 
 public class ReactSQLiteModule implements ReactPackage{
@@ -99,12 +106,53 @@ public class ReactSQLiteModule implements ReactPackage{
             suc.invoke(array);
         }
 
+        // 存登录过的用户
         @ReactMethod
-        public void addUser(String username,String password,int uid,String user_pic){
-
+        public void addUser(ReadableMap map ){
+            String username = map.getString("username");
+            String password = map.getString("password");
+            int uid = map.getInt("uid");
+            String user_pic = map.getString("user_pic");
+            Log.d("zhlsql","插入数据");
             // 有就替换 没有就创建 避免异常
             db.execSQL("REPLACE INTO user(username,password,uid,user_pic) VALUES (?,?,?,?)",new Object[]{username,password,uid,user_pic});
         }
+
+        // 存消息
+        @ReactMethod
+        public void addMsg(ReadableMap map){
+            Log.d("zhlsql",map.toString());
+            String from_name = map.getString("from_name");
+            String to_name = map.getString("to_name");
+            int from_id = map.getInt("from_id");
+            int to_id = map.getInt("to_id");
+            String content = map.getString("content");
+            int type = map.getInt("type");
+            int msg_status = map.getInt("msg_status");
+            String create_time = map.getString("create_time");
+            db.execSQL("REPLACE INTO message(from_name,to_name,from_id,to_id,content,type,msg_status,create_time) VALUES(?,?,?,?,?,?,?,?) ",
+                    new Object[]{from_name,to_name,from_id,to_id,content,type,msg_status,create_time});
+        }
+        @ReactMethod
+        public void addMsgList(ReadableArray msgList){
+
+            for(int i = 0;i<msgList.size();i++){
+                ReadableMap map = msgList.getMap(i);
+                Log.d("zhlsql",map.toString());
+
+                String from_name = map.getString("from_name");
+                String to_name = map.getString("to_name");
+                int from_id = map.getInt("from_id");
+                int to_id = map.getInt("to_id");
+                String content = map.getString("content");
+                int type = map.getInt("type");
+                int msg_status = map.getInt("msg_status");
+                String create_time = map.getString("create_time");
+                db.execSQL("REPLACE INTO message(from_name,to_name,from_id,to_id,content,type,msg_status,create_time) VALUES(?,?,?,?,?,?,?,?) ",
+                    new Object[]{from_name,to_name,from_id,to_id,content,type,msg_status,create_time});
+            }
+        }
+
         @Override
         public String getName() {
             return "ReactSQLite";

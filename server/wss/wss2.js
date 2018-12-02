@@ -1,5 +1,5 @@
 var conn = require('../dbconnect');
-
+const time = require('../untils/').time;
 /**
  * 根据uid删除user_connect表中的socket连接
  * @param {mix} socket 套接字
@@ -102,6 +102,7 @@ function handleSaveMessage(msg) {
         to_name,
         content,
         type,
+        create_time,
         msg_status
     ) VALUES(
         '${msg.from_id}',
@@ -110,6 +111,7 @@ function handleSaveMessage(msg) {
         '${msg.to_name}',
         '${msg.content}',
         '${msg.type}',
+        '${msg.create_time}',
         '${msg.msg_status}'
     );`;
 
@@ -230,19 +232,20 @@ function onConnectSuc(io, socket) {
         console.log("当前用户", socket.username, socket.uid);
         const msgBody = {
             from_id: socket.uid,
-            to_id: toId,
+            to_id: parseInt(toId),
             from_name: socket.username,
             to_name: toName,
             content,
             type: 2,
-            msg_status: 1
+            msg_status: 1,
+            create_time: time()
         }
 
         isUserHasConnection('username', toName)
             .then(res => {
                 const { socket_id } = res;
                 try {
-                    sockets[socket_id].emit('update_msg', msgBody,
+                    sockets[socket_id].emit('receive_msg', msgBody,
                         // 回调函数 对方在线的话 就发送成功 status置2
                         function () {
                             handleSaveMessage({
@@ -250,11 +253,14 @@ function onConnectSuc(io, socket) {
                                 msg_status: 2
                             }).catch(err => console.log(err));
                             console.log('发送成功');
-                        });
+                        }
+                        );
+                
                 } catch (e) { // 发送失败
-                    handleSaveMessage(msgBody).catch(err => console.log(err));
                     console.log(toName + ' 不在线。将此信息存入未发送消息表');
                 }
+                handleSaveMessage(msgBody).catch(err => console.log(err));
+
             })
             .catch(err => {
                 console.log(err);

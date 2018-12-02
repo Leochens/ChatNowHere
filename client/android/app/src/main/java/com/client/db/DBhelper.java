@@ -33,7 +33,7 @@ public class DBhelper extends SQLiteOpenHelper {
                 ")";
         String createMessage = "create table message ("+
                 "id integer PRIMARY KEY AUTOINCREMENT NOT NULL," +// 本地序号
-                "mid integer," +// 服务器端消息id
+//                "mid integer," +// 服务器端消息id
                 "from_id integer," +// 发消息者id
                 "from_name varchar," +// 发消息人用户名
                 "to_id integer," +// 接受者id

@@ -58,11 +58,20 @@ public class ReactSQLiteModule implements ReactPackage{
 
         @ReactMethod
         public void createDatabase(String name){
-            Toast.makeText(getReactApplicationContext(),"进入原生模块，创建数据库",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getReactApplicationContext(),"进入原生模块，创建数据库"+name,Toast.LENGTH_SHORT).show();
             dh = new DBhelper(getReactApplicationContext(),name,null,1);
             db = dh.getWritableDatabase();
         }
 
+        @ReactMethod
+        public void setUserInfo(ReadableMap map){
+            int uid = map.getInt("uid");
+            String username = map.getString("username");
+            String password = map.getString("password");
+            String user_pic = map.getString("user_pic");
+            db.execSQL("REPLACE INTO user(uid,username,password,user_pic) VALUES(?,?,?,?)",
+                    new Object[]{uid,username,password,user_pic});
+        }
         @ReactMethod
         public void getUserInfo(int _uid,Callback suc){
             Cursor cursor = db.rawQuery("SELECT * FROM user WHERE uid = "+_uid,null);
@@ -73,6 +82,7 @@ public class ReactSQLiteModule implements ReactPackage{
                 String password = cursor.getString(cursor.getColumnIndex("password"));
                 int uid = cursor.getInt(cursor.getColumnIndex("uid"));
                 String user_pic = cursor.getString(cursor.getColumnIndex("user_pic"));
+
                 map.putString("username",username);
                 map.putString("password",password);
                 map.putInt("uid",uid);
@@ -106,32 +116,50 @@ public class ReactSQLiteModule implements ReactPackage{
             suc.invoke(array);
         }
 
-        // 存登录过的用户
-        @ReactMethod
-        public void addUser(ReadableMap map ){
-            String username = map.getString("username");
-            String password = map.getString("password");
-            int uid = map.getInt("uid");
-            String user_pic = map.getString("user_pic");
-            Log.d("zhlsql","插入数据");
-            // 有就替换 没有就创建 避免异常
-            db.execSQL("REPLACE INTO user(username,password,uid,user_pic) VALUES (?,?,?,?)",new Object[]{username,password,uid,user_pic});
-        }
-
         // 存消息
         @ReactMethod
         public void addMsg(ReadableMap map){
             Log.d("zhlsql",map.toString());
-            String from_name = map.getString("from_name");
-            String to_name = map.getString("to_name");
-            int from_id = map.getInt("from_id");
-            int to_id = map.getInt("to_id");
+
+            int friend_id = map.getInt("friend_id");
+            String friend_name = map.getString("friend_name");
+            String create_time = map.getString("create_time");
             String content = map.getString("content");
+            String send_type = map.getString("send_type");
             int type = map.getInt("type");
             int msg_status = map.getInt("msg_status");
-            String create_time = map.getString("create_time");
-            db.execSQL("REPLACE INTO message(from_name,to_name,from_id,to_id,content,type,msg_status,create_time) VALUES(?,?,?,?,?,?,?,?) ",
-                    new Object[]{from_name,to_name,from_id,to_id,content,type,msg_status,create_time});
+
+            String sql = "REPLACE INTO message (friend_id,friend_name,create_time,content,send_type,type,msg_status) VALUES(?,?,?,?,?,?,?)";
+            db.execSQL(sql,new Object[]{friend_id,friend_name,create_time,content,send_type,type,msg_status});
+        }
+
+        @ReactMethod
+        public void getChatRecords(String _flag,Callback sucCallback){
+            Cursor cursor = db.rawQuery("SELECT * FROM message WHERE flag='"+_flag+"'",null);
+
+            WritableArray list = new WritableNativeArray();
+
+            while (cursor.moveToNext()){
+                WritableMap map = new WritableNativeMap();
+
+                int friend_id = cursor.getInt(cursor.getColumnIndex("friend_id"));
+                String friend_name = cursor.getString(cursor.getColumnIndex("friend_name"));
+                String create_time = cursor.getString(cursor.getColumnIndex("create_time"));
+                String content = cursor.getString(cursor.getColumnIndex("content"));
+                int send_type = cursor.getInt(cursor.getColumnIndex("send_type"));
+                int type = cursor.getInt(cursor.getColumnIndex("type"));
+                int msg_status = cursor.getInt(cursor.getColumnIndex("msg_status"));
+
+                map.putInt("friend_id",friend_id);
+                map.putString("friend_name",friend_name);
+                map.putString("create_time",create_time);
+                map.putString("content",content);
+                map.putInt("send_type",send_type);
+                map.putInt("type",type);
+                map.putInt("msg_status",msg_status);
+                list.pushMap(map);
+            }
+            sucCallback.invoke(list);
         }
         @ReactMethod
         public void addMsgList(ReadableArray msgList){
@@ -140,34 +168,34 @@ public class ReactSQLiteModule implements ReactPackage{
                 ReadableMap map = msgList.getMap(i);
                 Log.d("zhlsql",map.toString());
 
-                String from_name = map.getString("from_name");
-                String to_name = map.getString("to_name");
-                int from_id = map.getInt("from_id");
-                int to_id = map.getInt("to_id");
+                int friend_id = map.getInt("friend_id");
+                String friend_name = map.getString("friend_name");
+                String create_time = map.getString("create_time");
                 String content = map.getString("content");
+                int send_type = map.getInt("send_type");
                 int type = map.getInt("type");
                 int msg_status = map.getInt("msg_status");
-                String create_time = map.getString("create_time");
-                db.execSQL("REPLACE INTO message(from_name,to_name,from_id,to_id,content,type,msg_status,create_time) VALUES(?,?,?,?,?,?,?,?) ",
-                    new Object[]{from_name,to_name,from_id,to_id,content,type,msg_status,create_time});
+                db.execSQL("REPLACE INTO message(friend_id,friend_name,create_time,content,send_type,type,msg_status) VALUES(?,?,?,?,?,?,?) ",
+                        new Object[]{friend_id,friend_name,create_time,content,send_type,type,msg_status});
             }
         }
 
         // 提供一个用户的uid，更新uid用户的最新消息为chatItem
         @ReactMethod
         public void updateChatListItem(ReadableMap chatItem){
-            int uid = chatItem.getInt("from_id");
-            String username = chatItem.getString("from_name");
-            String user_pic = chatItem.getString("user_pic");
+            int friend_id = chatItem.getInt("friend_id");
+            String friend_name = chatItem.getString("friend_name");
+            String friend_pic = chatItem.getString("friend_pic");
             String last_msg_content = chatItem.getString("content");
             String last_msg_time = chatItem.getString("time");
             int new_msg_count = chatItem.getInt("bubble");
-            int login_user_id = chatItem.getInt("login_user_id");
-            String login_user_name = chatItem.getString("login_user_name");
-            db.execSQL("REPLACE INTO chat_list(uid,username,user_pic,last_msg_content,last_msg_time,new_msg_count,login_user_id,login_user_name)" +
-                "VALUES(?,?,?,?,?,?,?,?)",new Object[]{uid,username,user_pic,last_msg_content,last_msg_time,new_msg_count,login_user_id,login_user_name});
-            Log.d("zhlsql","当前登录用户"+login_user_name+"更新了"+username+"的last_msg_content:"+last_msg_content+"当前与此人的未查看消息数为"+new_msg_count);
+
+            db.execSQL("REPLACE INTO chat_list(friend_id,friend_name,friend_pic,last_msg_content,last_msg_time,new_msg_count) VALUES(?,?,?,?,?,?)",
+                    new Object[]{friend_id,friend_name,friend_pic,last_msg_content,last_msg_time,new_msg_count});
+            Log.d("zhlsql","当前登录用户更新了"+friend_name+"的last_msg_content:"+last_msg_content+"当前与此人的未查看消息数为"+new_msg_count);
         }
+
+
         @Override
         public String getName() {
             return "ReactSQLite";

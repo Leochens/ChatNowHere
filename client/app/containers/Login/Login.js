@@ -1,60 +1,66 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableHighlight, ToastAndroid, NativeModules } from 'react-native';
-import ZButton from '../components/ZButton';
-import ZInputBox from '../components/ZInputBox';
-import axios from 'axios';
+import styles from './style';
 
-import socket from '../socket';
-import NavBar from '../components/NavBar';
+import ZButton from '../../components/ZButton';
+import ZInputBox from '../../components/ZInputBox';
+import axios from 'axios';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import ReactSQLite from '../../nativeModules/ReactSQLite';
+import * as ActionCreators from '../../actions';
 
-import ReactSQLite from '../nativeModules/ReactSQLite';
-import * as ActionCreators from '../actions';
+const doLogin = (username, password) => {
+    return axios(
+        'http://192.168.43.17:3001/dbtest/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            data: {
+                username,
+                password
+            }
+        }
+    )
+}
+
+
 class Login extends Component {
-    constructor(props) {
-        super(props);
-        this.socket = socket;
-        ReactSQLite.createDatabase('zhl.db');
-    }
+
     state = {
         username: 'hlw',
-        password: '123'
+        password: '123',
+        user_pic: 'http://img1.imgtn.bdimg.com/it/u=175648863,1057903348&fm=26&gp=0.jpg'
     }
+    checkFiled = () => {
+        const { password, username } = this.state;
+        return (username && password);
+    }
+
     handleLogin = () => {
         const { navigate } = this.props.navigation;
         const { password, username } = this.state;
         const { actionLoginSuc, actionLoginFai } = this.props;
-        if (!username || !password) {
+        if (!this.checkFiled()) {
             ToastAndroid.show("请输入完全", ToastAndroid.SHORT);
             return;
         }
-
-        axios(
-            'http://192.168.43.17:3001/dbtest/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                data: {
-                    username: this.state.username,
-                    password: this.state.password
+        doLogin(username, password)
+            .then(res => {
+                const { username, uid } = res.data;
+                const { password, user_pic } = this.state;
+                ReactSQLite.createDatabase(`${username}_${uid}.db`); // 给新用户建库s
+                if (res.data.status === 200) {
+                    const userinfo = { username, password, user_pic, uid }; // 打包发给reducer
+                    actionLoginSuc(userinfo);// 发登录成功的action
+                    navigate('ChatList');// 跳转到聊天列表
+                    console.log("登录成功");
+                } else {
+                    actionLoginFai && actionLoginFai();
+                    console.log('登录失败');
                 }
-            }
-        ).then(res => {
-            if (res.data.status === 200) {
-                console.log(this.socket.connected);
-                console.log(res.data);
-                actionLoginSuc({
-                    ...res.data,
-                    password, user_pic: 'http://mokis.top/cat.jpg'
-                });// 发登录成功的action
-                navigate('ChatList');
-            } else {
-                actionLoginFai && actionLoginFai();
-                console.log('登录失败');
-            }
-        })
+            })
             .catch(err => console.log(err));
 
     }
@@ -102,29 +108,7 @@ class Login extends Component {
     }
 }
 
-const styles = StyleSheet.create({
-    main: {
-        height: '100%',
-        width: '100%',
-        marginTop: 60
-    },
-    formMain: {
-        marginTop: 30
-    },
-    title: {
-        textAlign: 'center',
-        fontSize: 26,
-        color: '#0d1740'
-    },
-    inputBox: {
-        margin: 10,
-        marginTop: 0,
-        width: '70%',
-        alignSelf: 'center'
-    },
-    loginBtn: {},
-    copyright: {}
-});
+
 const mapStateToProps = state => {
     return state;
 }
@@ -135,3 +119,8 @@ const mapDispatchToProps = dispatch => {
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
+
+
+
+
+

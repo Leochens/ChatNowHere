@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableHighlight, ToastAndroid } from 'react-native';
-import ZButton from '../components/ZButton';
-import ZInputBox from '../components/ZInputBox';
+import ZButton from '../../components/ZButton';
+import ZInputBox from '../../components/ZInputBox';
 
 
 class Regist extends Component {

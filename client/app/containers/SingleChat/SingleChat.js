@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, FlatList, Image } from 'react-native';
-import NavBar from '../components/NavBar';
-import SendMsgBox from '../components/SendMsgBox';
+import NavBar from '../../components/NavBar';
+import SendMsgBox from '../../components/SendMsgBox';
+import ReactSQLite from '../../nativeModules/ReactSQLite';
+import socket from '../../socket';
+import { connect } from 'react-redux';
+
 const styles = StyleSheet.create({
     wrapper: {
         backgroundColor: '#fff',
@@ -10,12 +14,12 @@ const styles = StyleSheet.create({
     }
 })
 
-
 class MessageItem extends Component {
 
+    
     static defaultProps = {
         data: {
-            userPic: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2778724530,551237406&fm=26&gp=0.jpg',
+            user_pic: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2778724530,551237406&fm=26&gp=0.jpg',
             content: '你好啊',
             type: 1,
         }
@@ -87,36 +91,67 @@ class MessageItem extends Component {
 }
 
 
-export default class Head extends Component {
-    state = {
-        msgList: [
-            { type: 2, content: '啦啦啦啦', userPic: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3566067247,2734291894&fm=26&gp=0.jpg' },
-            {
-                userPic: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2778724530,551237406&fm=26&gp=0.jpg',
-                content: '你好啊',
-                type: 1,
-            },
-            {
-                userPic: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2778724530,551237406&fm=26&gp=0.jpg',
-                content: '你在干嘛',
-                type: 1,
-            },
-            {
-                userPic: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2778724530,551237406&fm=26&gp=0.jpg',
-                content: '我好想你啊',
-                type: 1,
-            },
-            { type: 2, content: '我也想你', userPic: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3566067247,2734291894&fm=26&gp=0.jpg' },
+class SingleChat extends Component {
 
-        ],
+    state = {
+        msgList: [],
+    }
+
+    componentDidMount(){
+        const from_id = this.props.navigation.getParam('from_id');
+        const from_name = this.props.navigation.getParam('from_name');
+        const login_user_id = this.props.navigation.getParam('login_user_id');
+
+        socket.on('receive_msg_in_chat',this.handleReceiveMsg);
+        console.log('私聊路由跳转参数',from_id,from_name,login_user_id);
+        ReactSQLite.getChatRecords("s"+from_id+"_"+login_user_id,res=>{
+            console.log("聊天记录为",res);
+            this.setState({
+                msgList: res
+            })
+        });
+    }
+
+    handleReceiveMsg = msg => {
+        const msgList = this.state.msgList.slice();
+        console.log("更新消息",msg);
+        msgList.push(msg);
+        ReactSQLite.addMsg(msg);// 消息存本地
+        this.setState({
+            msgList
+        })
+    }
+
+    handleSendMsg = v => {
+        const from_id = this.props.navigation.getParam('from_id');
+        const from_name = this.props.navigation.getParam('from_name');
+
+        const msgBody = {
+            toName:  from_name,
+            content: v,
+            toId: from_id
+        }
+        socket.emit('sayTo',msgBody);
     }
     render() {
+        const myPic = this.props.userinfo.user_pic;
+        const from_name = this.props.navigation.getParam('from_name');
+        // const friendPic = 
+        // const login_user_id = this.props.navigation.getParam('from_user_');
         return (
             <View style={styles.wrapper}>
-                <NavBar title="擎冬" />
+                <NavBar title={from_name} />
                 <FlatList
+                style={{
+                    marginBottom: 80
+                }}
                     data={this.state.msgList}
-                    renderItem={({ item }) => <MessageItem data={item} />}
+                    renderItem={({ item }) => <MessageItem data={
+                        {
+                            ...item,
+                            user_pic: myPic
+                        }
+                    } />}
                 ></FlatList>
                 <SendMsgBox
                     onSendMsg={this.handleSendMsg} />
@@ -124,3 +159,10 @@ export default class Head extends Component {
         );
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        userinfo: state.userinfo
+    }
+}
+export default connect(mapStateToProps)(SingleChat);

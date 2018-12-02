@@ -12,7 +12,7 @@ const userinfo = (state = {
         }
         case `${ACTION_USER_LOGIN}_SUC`: { // 登录成功
             const { username, uid,password,user_pic } = action.data;
-            ReactSQLite.addUser({username,password,uid,user_pic});// 登录成功后在sqlite中存储用户信息
+            ReactSQLite.setUserInfo({uid,username,password,user_pic});// 登录成功后在sqlite中存储用户信息
             return {
                 username,
                 uid,

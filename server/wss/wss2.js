@@ -103,7 +103,8 @@ function handleSaveMessage(msg) {
         content,
         type,
         create_time,
-        msg_status
+        msg_status,
+        flag
     ) VALUES(
         '${msg.from_id}',
         '${msg.to_id}',
@@ -112,7 +113,8 @@ function handleSaveMessage(msg) {
         '${msg.content}',
         '${msg.type}',
         '${msg.create_time}',
-        '${msg.msg_status}'
+        '${msg.msg_status}',
+        '${msg.flag}'
     );`;
 
     return new Promise((resolve, reject) => {
@@ -238,9 +240,17 @@ function onConnectSuc(io, socket) {
             content,
             type: 2,
             msg_status: 1,
-            create_time: time()
+            create_time: time(),
+            flag: `s${toId}_${socket.uid}` // s{from_id}_{to_id} 私聊标识符
         }
-
+        socket.emit('receive_msg_in_chat',{...msgBody,type:1},function(){
+            handleSaveMessage({
+                ...msgBody,
+                type:1,
+                msg_status: 2
+            }).catch(err => console.log(err));
+        }); // 把发送者自己的消息传回去 改一下类型
+        
         isUserHasConnection('username', toName)
             .then(res => {
                 const { socket_id } = res;

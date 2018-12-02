@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
-import NavBar from '../components/NavBar';
-import socket from '../socket';
+import NavBar from '../../components/NavBar';
+import socket from '../../socket';
 import { connect } from 'react-redux';
-import ReactSQLite from '../nativeModules/ReactSQLite';
+import ReactSQLite from '../../nativeModules/ReactSQLite';
 
 class ListItem extends Component {
     static defaultProps = {

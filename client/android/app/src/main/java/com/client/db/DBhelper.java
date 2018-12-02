@@ -44,7 +44,9 @@ public class DBhelper extends SQLiteOpenHelper {
                 "msg_status integer"+ // 消息状态 1 发送者发送成功 2 发送成功并且接受者接受成功
                 ")";
         String createChatList = "create table chat_list (" +
-                "uid integer PRIMARY KEY AUTOINCREMENT NOT NULL," +// 用户服务器端id
+                "uid integer UNIQUE," +// 用户服务器端id
+                "login_user_id integer PRIMARY KEY NOT NULL,"+
+                "login_user_name varchar,"+
                 "username varchar, " +// 消息列表项的用户名
                 "user_pic varchar," +// 用户头像
                 "last_msg_content varchar," +// 最后一条消息的内容
@@ -54,9 +56,7 @@ public class DBhelper extends SQLiteOpenHelper {
         db.execSQL(createUser);
         db.execSQL(createMessage);
         db.execSQL(createChatList);
-
     }
-
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {//数据库升级时调用此方法
         Log.d("MainActivity", "数据库升级成功");

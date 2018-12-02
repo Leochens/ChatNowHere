@@ -162,9 +162,11 @@ public class ReactSQLiteModule implements ReactPackage{
             String last_msg_content = chatItem.getString("content");
             String last_msg_time = chatItem.getString("time");
             int new_msg_count = chatItem.getInt("bubble");
-            db.execSQL("REPLACE INTO chat_list(uid,username,user_pic,last_msg_content,last_msg_time,new_msg_count)" +
-                "VALUES(?,?,?,?,?,?)",new Object[]{uid,username,user_pic,last_msg_content,last_msg_time,new_msg_count});
-            Log.d("zhlsql","更新"+username+"的last_msg_content:"+last_msg_content);
+            int login_user_id = chatItem.getInt("login_user_id");
+            String login_user_name = chatItem.getString("login_user_name");
+            db.execSQL("REPLACE INTO chat_list(uid,username,user_pic,last_msg_content,last_msg_time,new_msg_count,login_user_id,login_user_name)" +
+                "VALUES(?,?,?,?,?,?,?,?)",new Object[]{uid,username,user_pic,last_msg_content,last_msg_time,new_msg_count,login_user_id,login_user_name});
+            Log.d("zhlsql","当前登录用户"+login_user_name+"更新了"+username+"的last_msg_content:"+last_msg_content+"当前与此人的未查看消息数为"+new_msg_count);
         }
         @Override
         public String getName() {

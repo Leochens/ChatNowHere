@@ -6,8 +6,6 @@ import { connect } from 'react-redux';
 import ReactSQLite from '../nativeModules/ReactSQLite';
 
 class ListItem extends Component {
-
-
     static defaultProps = {
         data: {
             from_name: 'Leochens',
@@ -18,7 +16,6 @@ class ListItem extends Component {
             user_pic: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=517389657,4030031755&fm=200&gp=0.jpg'
         }
     }
-
     render() {
         const {
             data: {
@@ -78,7 +75,6 @@ class ListItem extends Component {
         })
         return (
             <TouchableOpacity>
-
                 <View style={styles.item}>
                     <View>
                         <Image
@@ -162,6 +158,8 @@ class ChatList extends Component {
     }
     msgMapToChatItem = msg => ({
         from_id: msg.from_id,
+        login_user_id: this.props.uid,
+        login_user_name:this.props.username,
         from_name: msg.from_name,
         content: msg.content,
         time: msg.create_time,

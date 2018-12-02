@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableHighlight, ToastAndroid, NativeModules } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableHighlight, ToastAndroid,NativeModules } from 'react-native';
 import ZButton from '../components/ZButton';
 import ZInputBox from '../components/ZInputBox';
 import axios from 'axios';
@@ -8,18 +8,21 @@ import socket from '../socket';
 import NavBar from '../components/NavBar';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
+import ReactSQLite from '../nativeModules/ReactSQLite';
 import * as ActionCreators from '../actions';
 class Login extends Component {
     constructor(props) {
         super(props);
         this.socket = socket;
-        NativeModules.ReactSQLite.createDatabase('zhl.db');
-
-        [1, 2, 3, 4, 5].forEach(item => NativeModules.ReactSQLite.insertUser('zhl' + item, '12345alalalal' + item, item, 'http://hahaha.com/u.jpg'));
-
-        NativeModules.ReactSQLite.getAll(res => {
-            console.log("本地数据库", res);
+        ReactSQLite.createDatabase('zhl.db');
+        ReactSQLite.addUser("zhl",'123456',1, 'http://mokis.top/pp.jpg');
+        ReactSQLite.getUserInfo(2,function(res){
+            console.log("hahaha",res);
         });
+        ReactSQLite.getAllRecentLoginUsers(res=>{
+            console.log("rss",res); // 这里传不到原生端 早起来修一下
+        })
     }
     state = {
         username: 'hlw',

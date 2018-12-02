@@ -57,9 +57,22 @@ public class ReactSQLiteModule implements ReactPackage{
         }
 
         @ReactMethod
-        public void getUser(String uid){
-            Cursor cursor = db.rawQuery("SELECT * FROM user WHERE uid = "+uid,null);
+        public void getUserInfo(int _uid,Callback suc){
+            Cursor cursor = db.rawQuery("SELECT * FROM user WHERE uid = "+_uid,null);
+            WritableMap map = new WritableNativeMap();
+            while (cursor.moveToNext()){
 
+                String username = cursor.getString(cursor.getColumnIndex("username"));
+                String password = cursor.getString(cursor.getColumnIndex("password"));
+                int uid = cursor.getInt(cursor.getColumnIndex("uid"));
+                String user_pic = cursor.getString(cursor.getColumnIndex("user_pic"));
+                map.putString("username",username);
+                map.putString("password",password);
+                map.putInt("uid",uid);
+                map.putString("user_pic",user_pic);
+                Log.d("zhlsql","single||||username: "+username+" | password: "+password+" | uid: "+uid+" | user_pic: "+user_pic);
+            }
+            suc.invoke(map);
         }
 
         /**
@@ -67,7 +80,7 @@ public class ReactSQLiteModule implements ReactPackage{
          * @param suc
          */
         @ReactMethod
-        public void getAll(Callback suc){
+        public void getAllRecentLoginUsers(Callback suc){
             Cursor cursor = db.rawQuery("SELECT * FROM user",null);
             WritableArray array = new WritableNativeArray();
             while (cursor.moveToNext()){
@@ -87,11 +100,10 @@ public class ReactSQLiteModule implements ReactPackage{
         }
 
         @ReactMethod
-        public void insertUser(String name,String password,int uid,String user_pic){
+        public void addUser(String username,String password,int uid,String user_pic){
+
             // 有就替换 没有就创建 避免异常
-            db.execSQL("REPLACE INTO user(username,password,uid,user_pic) VALUES (?,?,?,?)",new Object[]{name,password,uid,user_pic});
-
-
+            db.execSQL("REPLACE INTO user(username,password,uid,user_pic) VALUES (?,?,?,?)",new Object[]{username,password,uid,user_pic});
         }
         @Override
         public String getName() {

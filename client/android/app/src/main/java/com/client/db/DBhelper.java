@@ -44,9 +44,8 @@ public class DBhelper extends SQLiteOpenHelper {
                 "msg_status integer"+ // 消息状态 1 发送者发送成功 2 发送成功并且接受者接受成功
                 ")";
         String createChatList = "create table chat_list (" +
-                "id integer PRIMARY KEY AUTOINCREMENT NOT NULL," +// 本地序号
+                "uid integer PRIMARY KEY AUTOINCREMENT NOT NULL," +// 用户服务器端id
                 "username varchar, " +// 消息列表项的用户名
-                "uid integer," +// 用户服务器端id
                 "user_pic varchar," +// 用户头像
                 "last_msg_content varchar," +// 最后一条消息的内容
                 "last_msg_time varchar," +// 最后一条消息的时间

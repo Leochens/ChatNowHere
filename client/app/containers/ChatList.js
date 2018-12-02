@@ -15,7 +15,7 @@ class ListItem extends Component {
             content: 'hello world',
             time: '13:01',
             bubble: 1,
-            userPic: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=517389657,4030031755&fm=200&gp=0.jpg'
+            user_pic: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=517389657,4030031755&fm=200&gp=0.jpg'
         }
     }
 
@@ -25,7 +25,7 @@ class ListItem extends Component {
                 from_name,
                 content,
                 time,
-                userPic,
+                user_pic,
                 bubble
             }
         } = this.props;
@@ -37,7 +37,7 @@ class ListItem extends Component {
                 alignItems: 'center',
                 flexDirection: 'row'
             },
-            userPic: {
+            user_pic: {
                 width: 64,
                 height: 64,
                 borderRadius: 32,
@@ -82,8 +82,8 @@ class ListItem extends Component {
                 <View style={styles.item}>
                     <View>
                         <Image
-                            style={styles.userPic}
-                            source={{ uri: userPic }} />
+                            style={styles.user_pic}
+                            source={{ uri: user_pic }} />
                     </View>
                     <View style={styles.middle}>
                         <Text style={styles.username}>{from_name}</Text>
@@ -142,16 +142,19 @@ class ChatList extends Component {
         
         if(from_ids.includes(msg.from_id)){
             let bubble = chatList[idMap[msg.from_id]].bubble;
-            const tmp = this.msgMapToChatItem(msg)
-            console.log('tmp',tmp);
-            chatList[idMap[msg.from_id]] = { 
+            const tmp = this.msgMapToChatItem(msg);
+            const newItem ={ 
                 ...tmp,
                 bubble: bubble+1
-             }
+             };
+            console.log('tmp',newItem);
+            ReactSQLite.updateChatListItem(newItem);
+            chatList[idMap[msg.from_id]] = newItem;
         }else{
             chatList.push(this.msgMapToChatItem(msg));
         }
         ReactSQLite.addMsg(msg);
+        
         this.setState({
             chatList
         });
@@ -163,7 +166,7 @@ class ChatList extends Component {
         content: msg.content,
         time: msg.create_time,
         bubble: 1,
-        userPic: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=517389657,4030031755&fm=200&gp=0.jpg'
+        user_pic: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=517389657,4030031755&fm=200&gp=0.jpg'
     })
 
     getCleanChatList = list => {
@@ -174,15 +177,17 @@ class ChatList extends Component {
             from_ids = chatList.map(msg => msg.from_id); // 获得当前消息列表中用户的每个用户的id
             chatList.forEach((msg, idx) => { idMap[msg.from_id] = idx });// 建立用户id和当前数组id的映射关系 方便查找 
             if (from_ids.includes(msg.from_id)) { // 如果当前列表中有该用户发的消息，那么就覆盖该消息，并把消息数加一
-                chatList[idMap[msg.from_id]] = {
+                const newItem = {
                     ...this.msgMapToChatItem(msg),
                     bubble: chatList[idMap[msg.from_id]].bubble + 1
                 };
+                chatList[idMap[msg.from_id]] = newItem;
+                
             } else {   // 如果没有就添加该消息到消息列表
                 chatList.push(this.msgMapToChatItem(msg));
             }
         });
-
+        
         return chatList;
     }
 
@@ -191,8 +196,12 @@ class ChatList extends Component {
         console.log('fetch newChatList');
         // chatList = newChatList.concat(chatList);
         ReactSQLite.addMsgList(newChatList);
+        const chatList = this.getCleanChatList(newChatList);
+        chatList.forEach(item=>{
+            ReactSQLite.updateChatListItem(item);
+        })
         this.setState({
-            chatList: this.getCleanChatList(newChatList)
+            chatList
         })
         // confirm(); //用户收到信息后回调它告诉服务端确认成功
     }

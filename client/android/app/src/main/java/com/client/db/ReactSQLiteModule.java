@@ -153,6 +153,19 @@ public class ReactSQLiteModule implements ReactPackage{
             }
         }
 
+        // 提供一个用户的uid，更新uid用户的最新消息为chatItem
+        @ReactMethod
+        public void updateChatListItem(ReadableMap chatItem){
+            int uid = chatItem.getInt("from_id");
+            String username = chatItem.getString("from_name");
+            String user_pic = chatItem.getString("user_pic");
+            String last_msg_content = chatItem.getString("content");
+            String last_msg_time = chatItem.getString("time");
+            int new_msg_count = chatItem.getInt("bubble");
+            db.execSQL("REPLACE INTO chat_list(uid,username,user_pic,last_msg_content,last_msg_time,new_msg_count)" +
+                "VALUES(?,?,?,?,?,?)",new Object[]{uid,username,user_pic,last_msg_content,last_msg_time,new_msg_count});
+            Log.d("zhlsql","更新"+username+"的last_msg_content:"+last_msg_content);
+        }
         @Override
         public String getName() {
             return "ReactSQLite";

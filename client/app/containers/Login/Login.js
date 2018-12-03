@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableHighlight, ToastAndroid, NativeModules } from 'react-native';
 import styles from './style';
-
+import {Text, View, ToastAndroid } from 'react-native';
 import ZButton from '../../components/ZButton';
 import ZInputBox from '../../components/ZInputBox';
 import axios from 'axios';

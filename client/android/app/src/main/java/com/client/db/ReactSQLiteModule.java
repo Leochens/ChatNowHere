@@ -125,7 +125,7 @@ public class ReactSQLiteModule implements ReactPackage{
             String friend_name = map.getString("friend_name");
             String create_time = map.getString("create_time");
             String content = map.getString("content");
-            String send_type = map.getString("send_type");
+            int send_type = map.getInt("send_type");
             int type = map.getInt("type");
             int msg_status = map.getInt("msg_status");
 
@@ -134,8 +134,8 @@ public class ReactSQLiteModule implements ReactPackage{
         }
 
         @ReactMethod
-        public void getChatRecords(String _flag,Callback sucCallback){
-            Cursor cursor = db.rawQuery("SELECT * FROM message WHERE flag='"+_flag+"'",null);
+        public void getChatRecords(int _friend_id,Callback sucCallback){
+            Cursor cursor = db.rawQuery("SELECT * FROM message WHERE friend_id="+_friend_id,null);
 
             WritableArray list = new WritableNativeArray();
 
@@ -186,9 +186,9 @@ public class ReactSQLiteModule implements ReactPackage{
             int friend_id = chatItem.getInt("friend_id");
             String friend_name = chatItem.getString("friend_name");
             String friend_pic = chatItem.getString("friend_pic");
-            String last_msg_content = chatItem.getString("content");
-            String last_msg_time = chatItem.getString("time");
-            int new_msg_count = chatItem.getInt("bubble");
+            String last_msg_content = chatItem.getString("last_msg_content");
+            String last_msg_time = chatItem.getString("last_msg_time");
+            int new_msg_count = chatItem.getInt("new_msg_count");
 
             db.execSQL("REPLACE INTO chat_list(friend_id,friend_name,friend_pic,last_msg_content,last_msg_time,new_msg_count) VALUES(?,?,?,?,?,?)",
                     new Object[]{friend_id,friend_name,friend_pic,last_msg_content,last_msg_time,new_msg_count});

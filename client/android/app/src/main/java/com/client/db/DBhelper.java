@@ -22,8 +22,6 @@ public class DBhelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {//创建数据库时,调用此方法
 
         Log.d("zhlsql", "数据库创建成功");
-        //创建一个学生表
-        //1.创建数据库的语句
         //构造建表语句
         String createUser = "create table user (" +
                 "uid integer PRIMARY KEY NOT NULL,"+ // 用户编号 服务器端编号

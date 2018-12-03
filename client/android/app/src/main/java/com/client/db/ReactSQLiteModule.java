@@ -3,6 +3,7 @@ package com.client.db;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.telecom.Call;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -135,13 +136,14 @@ public class ReactSQLiteModule implements ReactPackage{
 
         @ReactMethod
         public void getChatRecords(int _friend_id,Callback sucCallback){
-            Cursor cursor = db.rawQuery("SELECT * FROM message WHERE friend_id="+_friend_id,null);
+            Cursor cursor = db.rawQuery("SELECT * FROM message WHERE friend_id='"+_friend_id+"'",null);
 
             WritableArray list = new WritableNativeArray();
 
             while (cursor.moveToNext()){
                 WritableMap map = new WritableNativeMap();
 
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
                 int friend_id = cursor.getInt(cursor.getColumnIndex("friend_id"));
                 String friend_name = cursor.getString(cursor.getColumnIndex("friend_name"));
                 String create_time = cursor.getString(cursor.getColumnIndex("create_time"));
@@ -150,6 +152,7 @@ public class ReactSQLiteModule implements ReactPackage{
                 int type = cursor.getInt(cursor.getColumnIndex("type"));
                 int msg_status = cursor.getInt(cursor.getColumnIndex("msg_status"));
 
+                map.putInt("id",id);
                 map.putInt("friend_id",friend_id);
                 map.putString("friend_name",friend_name);
                 map.putString("create_time",create_time);
@@ -159,6 +162,7 @@ public class ReactSQLiteModule implements ReactPackage{
                 map.putInt("msg_status",msg_status);
                 list.pushMap(map);
             }
+            Log.d("zhlsql","查询和好友"+_friend_id+"的聊天记录"+list.toString());
             sucCallback.invoke(list);
         }
         @ReactMethod
@@ -189,12 +193,28 @@ public class ReactSQLiteModule implements ReactPackage{
             String last_msg_content = chatItem.getString("last_msg_content");
             String last_msg_time = chatItem.getString("last_msg_time");
             int new_msg_count = chatItem.getInt("new_msg_count");
-
             db.execSQL("REPLACE INTO chat_list(friend_id,friend_name,friend_pic,last_msg_content,last_msg_time,new_msg_count) VALUES(?,?,?,?,?,?)",
                     new Object[]{friend_id,friend_name,friend_pic,last_msg_content,last_msg_time,new_msg_count});
             Log.d("zhlsql","当前登录用户更新了"+friend_name+"的last_msg_content:"+last_msg_content+"当前与此人的未查看消息数为"+new_msg_count);
         }
 
+        // 获得消息列表
+        @ReactMethod
+        public void getChatList(Callback sucCallback){
+            Cursor cursor = db.rawQuery("SELECT * FROM chat_list",null);
+            WritableArray list = new WritableNativeArray();
+            while(cursor.moveToNext()){
+                WritableMap map = new WritableNativeMap();
+                map.putInt("friend_id",cursor.getInt(cursor.getColumnIndex("friend_id")));
+                map.putString("friend_name",cursor.getString(cursor.getColumnIndex("friend_name")));
+                map.putString("friend_pic",cursor.getString(cursor.getColumnIndex("friend_pic")));
+                map.putString("last_msg_content",cursor.getString(cursor.getColumnIndex("last_msg_content")));
+                map.putString("last_msg_time",cursor.getString(cursor.getColumnIndex("last_msg_time")));
+                map.putInt("new_msg_count",cursor.getInt(cursor.getColumnIndex("new_msg_count")));
+                list.pushMap(map);
+            }
+            sucCallback.invoke(list);
+        }
 
         @Override
         public String getName() {

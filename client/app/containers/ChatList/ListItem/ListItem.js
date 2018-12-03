@@ -6,12 +6,14 @@ import { Text, View, Image, TouchableOpacity } from 'react-native';
 
 export default class ListItem extends Component {
     static defaultProps = {
+        navigate: () => { },
         data: {
             friend_name: 'Leochens',
+            friend_id: 0,
             last_msg_content: 'hello world',
             last_msg_time: '13:01',
             new_msg_count: 1,
-            user_pic: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=517389657,4030031755&fm=200&gp=0.jpg'
+            friend_pic: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=517389657,4030031755&fm=200&gp=0.jpg'
         }
     }
     formatTime = timeStr => {
@@ -20,8 +22,16 @@ export default class ListItem extends Component {
         const date = arr[0];
         const time = arr[1].split['.'][0];
         console.log(arr);
-        return date+" "+time;
+        return date + " " + time;
         // return '';
+    }
+    goChat = () => {
+        const { navigate, data } = this.props;
+        if(navigate)
+            navigate("SingleChat", { data });
+        else
+            console.log("local: ListItem; navigate is undefined");
+
     }
     render() {
         const {
@@ -29,18 +39,20 @@ export default class ListItem extends Component {
                 friend_name,
                 last_msg_content,
                 last_msg_time,
-                user_pic,
+                friend_pic,
                 new_msg_count
             }
         } = this.props;
 
         return (
-            <TouchableOpacity>
+            <TouchableOpacity
+                onPress={this.goChat}
+            >
                 <View style={styles.item}>
                     <View>
                         <Image
                             style={styles.user_pic}
-                            source={{ uri: user_pic|| 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=517389657,4030031755&fm=200&gp=0.jpg'}} />
+                            source={{ uri: friend_pic || 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=517389657,4030031755&fm=200&gp=0.jpg' }} />
                     </View>
                     <View style={styles.middle}>
                         <Text style={styles.username}>{friend_name}</Text>
@@ -48,7 +60,7 @@ export default class ListItem extends Component {
                     </View>
                     <View style={styles.right}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 8, paddingTop: 8 }}>
-                            <Text style={{ fontSize: 10, color: '#999' }}>{last_msg_time.split('T')[1].split('.')[0]}</Text>
+                            <Text style={{ fontSize: 10, color: '#999' }}>{last_msg_time}</Text>
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 8, paddingTop: 8 }}>
                             <Text style={[styles.bubble, {

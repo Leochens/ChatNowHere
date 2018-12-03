@@ -175,7 +175,7 @@ function setMessageReceived(ids) {
  * @param {any} filed 查询字段
  * @param {any} value 字段查询置
  */
-function handleGetUserDetails(filed,value) {
+function handleGetUserDetails(filed, value) {
     const sql = `SELECT * FROM users WHERE ${filed} = '${value}'`;
     return new Promise((resolve, reject) => {
         const callback = (err, result) => {
@@ -229,7 +229,7 @@ function onConnectSuc(io, socket) {
      * data = { toName,content,toId}
      */
     socket.on('sayTo', function (data) {
-        const { toName, content,toId } = data;
+        const { toName, content, toId } = data;
         const sockets = io.sockets.sockets;
         console.log("当前用户", socket.username, socket.uid);
         const msgBody = {
@@ -243,14 +243,23 @@ function onConnectSuc(io, socket) {
             create_time: time(),
             flag: `s${toId}_${socket.uid}` // s{from_id}_{to_id} 私聊标识符
         }
-        socket.emit('receive_msg_in_chat',{...msgBody,type:1},function(){
+
+        // 给发送方回传他的消息
+        socket.emit('receive_msg', {
+
+            ...msgBody,
+            from_id: toId, // 把from_id 替换为toId 这样客户端存储的时候就知道自己发给哪个好友了
+            from_name: toName,
+            type: 1
+        }, function () { // 确认函数
             handleSaveMessage({
                 ...msgBody,
-                type:1,
+                type: 1,
                 msg_status: 2
             }).catch(err => console.log(err));
         }); // 把发送者自己的消息传回去 改一下类型
-        
+
+        // 给目标用户发消息
         isUserHasConnection('username', toName)
             .then(res => {
                 const { socket_id } = res;
@@ -264,12 +273,12 @@ function onConnectSuc(io, socket) {
                             }).catch(err => console.log(err));
                             console.log('发送成功');
                         }
-                        );
-                
+                    );
+
                 } catch (e) { // 发送失败
                     console.log(toName + ' 不在线。将此信息存入未发送消息表');
+                    handleSaveMessage(msgBody).catch(err => console.log(err));
                 }
-                handleSaveMessage(msgBody).catch(err => console.log(err));
 
             })
             .catch(err => {

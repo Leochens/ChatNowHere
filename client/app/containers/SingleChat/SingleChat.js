@@ -5,6 +5,7 @@ import SendMsgBox from '../../components/SendMsgBox';
 import ReactSQLite from '../../nativeModules/ReactSQLite';
 import socket from '../../socket';
 import { connect } from 'react-redux';
+import { msgMapToChatItem, msgMapToLocalRecord } from '../../utils/formatMap';
 
 const styles = StyleSheet.create({
     wrapper: {
@@ -16,16 +17,16 @@ const styles = StyleSheet.create({
 
 class MessageItem extends Component {
 
-    
+
     static defaultProps = {
         data: {
-            user_pic: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2778724530,551237406&fm=26&gp=0.jpg',
+            friend_pic: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2778724530,551237406&fm=26&gp=0.jpg',
             content: '你好啊',
-            type: 1,
+            send_type: 1,
         }
     }
     renderFriendMsg = () => {
-        const { content, userPic } = this.props.data;
+        const { content, friend_pic } = this.props.data;
 
         return (
             <View style={{
@@ -35,7 +36,7 @@ class MessageItem extends Component {
                 <Image style={{
                     height: 32, width: 32, borderRadius: 16
                 }}
-                    source={{ uri: userPic }}
+                    source={{ uri: friend_pic }}
                 ></Image>
                 <Text style={{
                     borderRadius: 8,
@@ -53,7 +54,7 @@ class MessageItem extends Component {
         )
     }
     renderMyMsg = () => {
-        const { content, userPic } = this.props.data;
+        const { content, friend_pic } = this.props.data;
         return (
             <View style={{
                 padding: 16,
@@ -62,7 +63,7 @@ class MessageItem extends Component {
                 <Image style={{
                     height: 32, width: 32, borderRadius: 16, alignSelf: 'flex-end'
                 }}
-                    source={{ uri: userPic }}
+                    source={{ uri: friend_pic }}
                 ></Image>
                 <Text style={{
                     borderRadius: 8,
@@ -81,75 +82,108 @@ class MessageItem extends Component {
         );
     }
     render() {
-        const { userPic, content, type } = this.props.data;
+        const { friend_pic, content, send_type } = this.props.data;
         const styles = StyleSheet.create({
 
         })
 
-        return type === 1 ? this.renderMyMsg() : this.renderFriendMsg();
+        return send_type === 1 ? this.renderMyMsg() : this.renderFriendMsg();
     }
 }
 
 
 class SingleChat extends Component {
 
+
     state = {
-        msgList: [],
+        recordList: [],
+        my_id: 0,
+        my_name: '',
+        my_pic: '',
+        friend_id: 0,
+        friend_name: '',
+        friend_pic: '',
     }
+    initPage = () => {
+        const chatItemData = this.props.navigation.getParam('data');
+        const {
+            userinfo: {
+                uid: my_id,
+                user_pic: my_pic,
+                username: my_name
+            }
+        } = this.props;
+        console.log('私聊路由跳转参数', chatItemData);
+        const {
+            friend_id,
+            friend_name,
+            friend_pic,
+            last_msg_time
+        } = chatItemData;
+        this.setState({
+            friend_id, friend_name, friend_pic,
+            my_id, my_name, my_pic
+        })
+    }
+    initListeners = () => {
+        socket.on('receive_msg', this.handleReceiveMsg);
+    }
+    getRecords = () => {
+        const chatItemData = this.props.navigation.getParam('data');
 
-    componentDidMount(){
-        const from_id = this.props.navigation.getParam('from_id');
-        const from_name = this.props.navigation.getParam('from_name');
-        const login_user_id = this.props.navigation.getParam('login_user_id');
-
-        socket.on('receive_msg_in_chat',this.handleReceiveMsg);
-        console.log('私聊路由跳转参数',from_id,from_name,login_user_id);
-        ReactSQLite.getChatRecords("s"+from_id+"_"+login_user_id,res=>{
-            console.log("聊天记录为",res);
+        const { friend_id } = chatItemData;
+        console.log("SingleChat | in getRecords", this.state);
+        ReactSQLite.getChatRecords(friend_id, res => {
+            console.log("聊天记录为", res);
             this.setState({
-                msgList: res
+                recordList: res
             })
         });
     }
 
+    componentDidMount() {
+        this.initPage();
+        this.getRecords();
+        this.initListeners();
+    }
+
     handleReceiveMsg = msg => {
-        const msgList = this.state.msgList.slice();
-        console.log("更新消息",msg);
-        msgList.push(msg);
-        ReactSQLite.addMsg(msg);// 消息存本地
+        console.log("SingelChat=====>get msg : ", msg);
+
+        const recordList = this.state.recordList.slice();
+        const localFormatRecord = msgMapToLocalRecord(msg); // 转成本地存储格式的消息
+
+        console.log("更新消息", msg, "本地格式", localFormatRecord);
+        recordList.push(localFormatRecord);
         this.setState({
-            msgList
+            recordList
         })
     }
 
     handleSendMsg = v => {
-        const from_id = this.props.navigation.getParam('from_id');
-        const from_name = this.props.navigation.getParam('from_name');
-
+        const { friend_id, friend_name } = this.state;
         const msgBody = {
-            toName:  from_name,
+            toId: friend_id,
+            toName: friend_name,
             content: v,
-            toId: from_id
         }
-        socket.emit('sayTo',msgBody);
+        socket.emit('sayTo', msgBody);
     }
     render() {
-        const myPic = this.props.userinfo.user_pic;
-        const from_name = this.props.navigation.getParam('from_name');
-        // const friendPic = 
-        // const login_user_id = this.props.navigation.getParam('from_user_');
+        const { friend_pic, my_pic, friend_name } = this.state;
+
         return (
             <View style={styles.wrapper}>
-                <NavBar title={from_name} />
+                <NavBar title={friend_name} />
                 <FlatList
-                style={{
-                    marginBottom: 80
-                }}
-                    data={this.state.msgList}
+                    style={{
+                        marginBottom: 80
+                    }}
+                    data={this.state.recordList}
                     renderItem={({ item }) => <MessageItem data={
                         {
                             ...item,
-                            user_pic: myPic
+                            friend_pic: item.send_type === 1 ? my_pic : friend_pic
                         }
                     } />}
                 ></FlatList>
@@ -158,11 +192,26 @@ class SingleChat extends Component {
             </View>
         );
     }
+
+    // 为了消除异步任务
+    componentWillUnmount = () => {
+        console.log("卸载组件");
+        socket.on('receive_msg_in_chat', ()=>{});
+
+        // const {recordList} = this.state; 
+        // const unSavedRecords = recordList.filter(item=>!item.id); // 找出没有经过本地编号的 一定是没有存储的记录
+
+        // unSavedRecords.forEach(record=>ReactSQLite.addMsg(record));
+
+        this.setState = (state,callback)=>{
+          return;
+        };
+    }
 }
 
 const mapStateToProps = state => {
     return {
-        userinfo: state.userinfo
+        userinfo: state.userinfo,
     }
 }
 export default connect(mapStateToProps)(SingleChat);

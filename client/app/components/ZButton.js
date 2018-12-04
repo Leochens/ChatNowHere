@@ -9,25 +9,38 @@ class ZButton extends Component {
         const { onClick } = this.props;
         onClick && onClick();
     }
+    renderIcon = () => {
+        const { icon } = this.props;
+        if (!icon)
+            return null;
+        return <FontAwesome style={{ color: icon.color }} name={icon.name} size={icon.size} />
+
+    }
+    renderText = () => {
+        const {text} = this.props;
+        if(!text)
+            return null;
+        return <Text style={{color:'#fff'}}>{text}</Text>
+    }
     render() {
         const { style: pStyle, text, width, align } = this.props;
         return (
 
             <TouchableOpacity
-                style={{
-                    width: 32,
-                    height: 32,
+                style={[{
                     padding: 8,
-                    borderRadius: 16,
+                    width: 48,
                     textAlign: 'center',
-                    borderRadius: 16,
+                    borderRadius: 8,
                     color: '#fff',
-                    margin: 8,
-                    marginRight:0,
-                    backgroundColor:'#9f9fff'
-                }}
+                    backgroundColor: '#9f9fff',
+                    alignSelf:'center',
+                    justifyContent:'center',
+                    alignItems: 'center'
+                }, pStyle]}
                 onPress={this.onBtnClick}>
-                <FontAwesome style={{color:'#fff'}} name="send" size={16} />
+                {this.renderIcon()}
+                {this.renderText()}
             </TouchableOpacity>
         )
     }

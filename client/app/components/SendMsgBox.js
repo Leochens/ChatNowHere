@@ -1,5 +1,5 @@
-import React,{Component} from 'react';
-import {View,Text,StyleSheet,TouchableHighlight,TextInput} from 'react-native';
+import React, { Component } from 'react';
+import { View, Text, StyleSheet, TouchableHighlight, TextInput } from 'react-native';
 import ZInputBox from './ZInputBox';
 import ZButton from './ZButton';
 
@@ -26,7 +26,25 @@ class InputBox extends Component {
                 <ZInputBox
                     onChangeText={this.handleChangeText}
                     value={this.state.v} />
-                <ZButton 
+                <ZButton
+                    icon={{
+                        name: 'send',
+                        size: 16,
+                        color: '#fff'
+                    }}
+                    style={{
+                        width: 32,
+                        height: 32,
+                        padding: 8,
+                        borderRadius: 16,
+                        textAlign: 'center',
+                        borderRadius: 16,
+                        color: '#fff',
+                        margin: 8,
+                        marginRight: 0,
+                        backgroundColor: '#9f9fff'
+                    }
+                    }
                     onClick={this.handleSendMsg}
 
                 />

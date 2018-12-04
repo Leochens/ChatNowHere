@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styles from './style';
-import {Text, View, ToastAndroid } from 'react-native';
+import { Text, View, ToastAndroid, Image } from 'react-native';
 import ZButton from '../../components/ZButton';
 import ZInputBox from '../../components/ZInputBox';
 import axios from 'axios';
@@ -76,10 +76,19 @@ class Login extends Component {
     render() {
         return (
             <View style={styles.main}>
-                <View>
-                    <Text style={styles.title}>「小瓷缸」</Text>
-                </View>
+
                 <View style={styles.formMain}>
+                    <View>
+                        <Image
+                            style={{
+                                width: 72,
+                                height: 72,
+                                borderRadius: 36,
+                                alignSelf: 'center',
+                                margin: 16,
+                            }}
+                            source={{ uri: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=517389657,4030031755&fm=200&gp=0.jpg' }} />
+                    </View>
                     <ZInputBox
                         onChangeText={this.getUsername}
                         textContentType="nickname"
@@ -98,10 +107,22 @@ class Login extends Component {
                     <ZButton
                         text={'登录'}
                         onClick={this.handleLogin}
-                        width={'50%'}
-                        align={'center'}
+                        style={{
+                            width: '60%'
+                        }}
                     />
+                    <ZButton
+                        text={'注册'}
+                        onClick={this.handleLogin}
+                        style={{
+                            width: '60%',
+                            marginTop: 16,
+                            backgroundColor: '#a00'
+                        }}
+                    />
+
                 </View>
+                    <Text style={styles.title}>「小瓷缸」</Text>
             </View>
         )
     }

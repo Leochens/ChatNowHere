@@ -2,28 +2,42 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableHighlight, ToastAndroid } from 'react-native';
 import ZButton from '../../components/ZButton';
 import ZInputBox from '../../components/ZInputBox';
-
-
+import axios from 'axios';
+import config from '../../config';
 class Regist extends Component {
     state = {
         username: '',
-        password: ''
+        password: '',
+        email: '',
+        user_pic:'https://www.botreetechnologies.com/blog/wp-content/uploads/2017/08/logo.png'
     }
     handleRegist = () => {
-        const { navigate } = this.props.navigation; 
-        const {password,username} = this.state;
+        const { navigate } = this.props.navigation;
+        const { password, username, email,user_pic } = this.state;
 
-        if(!username || !password){
-            ToastAndroid.show("请输入完全",ToastAndroid.SHORT);
-            return;
-        }
-        navigate('Index');
+        axios(`${config.host}:${config.port}/dbtest/regist`,{
+            method: 'POST',
+            headers: {
+                'Content-Type':'application/x-www-form-urlencoded'
+            },
+            data: {
+                password,
+                username,
+                email,
+                user_pic
+            }
+        }).then(res=>{
+            if(res.data.status === 200)
+                navigate('Login');
+            else
+                alert(res.data.msg);
 
-        // if(username == 'zhl' && password == '123456'){
-        //     navigate('Index');
-        // }else{
-        //     ToastAndroid.show("用户名或密码错误",ToastAndroid.SHORT);
-        // }
+        })
+        .catch(err=>{
+            alert(err)
+        })
+
+
     }
     getUsername = username => {
         this.setState({
@@ -35,6 +49,12 @@ class Regist extends Component {
             password
         })
     }
+    getEmail = email => {
+        this.setState({
+            email
+        })
+    }
+
     render() {
         return (
             <View style={styles.main}>
@@ -49,8 +69,7 @@ class Regist extends Component {
                         placeholderTextColor={'#888'}
                         style={styles.inputBox} />
                     <ZInputBox
-                        onChangeText={this.getUsername}
-                        textContentType="nickname"
+                        onChangeText={this.getEmail}
                         placeholder={'邮箱'}
                         placeholderTextColor={'#888'}
                         style={styles.inputBox} />
@@ -65,8 +84,9 @@ class Regist extends Component {
                     <ZButton
                         text={'注册'}
                         onClick={this.handleRegist}
-                        width={'50%'}
-                        align={'center'}
+                        style={{
+                            width: '60%'
+                        }}
                     />
                 </View>
             </View>
@@ -78,7 +98,8 @@ const styles = StyleSheet.create({
     main: {
         height: '100%',
         width: '100%',
-        marginTop: 60
+        paddingTop: 60,
+        backgroundColor: '#fff'
     },
     formMain: {
         marginTop: 30

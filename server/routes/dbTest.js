@@ -16,9 +16,7 @@ router.get('/', function (req, res) {
  * password
  */
 router.post('/login', function (req, res) {
-
     const data = JSON.parse(Object.keys(req.body)[0]);
-
     console.log('post|请求参数:', data);
     Handlers.handleLogin(data, res,req);
 })
@@ -32,14 +30,15 @@ router.post('/login', function (req, res) {
  * role 0 | 1
  * pic 
  */
-router.post('/register', function (req, res) {
+router.post('/regist', function (req, res) {
     console.log('post|请求参数:', req.body);
 
-    const data = req.body;
+    const data = JSON.parse(Object.keys(req.body)[0]);
 
 
 
-    Handlers.handleRegister(data, res);
+
+    Handlers.handleRegist(data, res);
 });
 
 module.exports = router;

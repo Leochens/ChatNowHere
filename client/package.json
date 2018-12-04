@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "configureReactBackHome": "node node_modules/react-back-home/configureReactBackHome.js",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest"
   },
@@ -10,6 +11,7 @@
     "axios": "^0.18.0",
     "normalizr": "^3.3.0",
     "react": "16.6.0-alpha.8af6728",
+    "react-back-home": "^0.2.15",
     "react-native": "0.57.4",
     "react-native-exit-app": "^1.0.0",
     "react-native-linear-gradient": "^2.5.2",

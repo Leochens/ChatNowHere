@@ -1,7 +1,7 @@
 const conn = require('../../dbconnect');
 
 
-function handleRegister(data, res) {
+function handleRegist(data, res) {
     const {
         username,
         password,
@@ -34,15 +34,20 @@ function handleRegister(data, res) {
     function callback(error, result, fileds) {
         if (error) {
             console.log(error);
-            let msg = "注册出现错误";
+            const _data = {
+                msg :"注册出现错误",
+                status: 101
+            };
             //ER_DUP_ENTRY
-            if(error.errno === 1062)
-                msg += " 名字重复了"
+            if(error.errno === 1062){
+                _data.msg += " 名字重复了"
+            }
             
-            res.send({msg});
+            res.send(_data);
         }
         else {
             res.send({
+                status: 200,
                 msg: '注册成功'
             });
         }
@@ -50,4 +55,4 @@ function handleRegister(data, res) {
     conn.query(sql, callback);
 }
 
-module.exports = handleRegister;
+module.exports = handleRegist;

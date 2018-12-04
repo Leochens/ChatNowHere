@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList,BackHandler,NativeModules,ToastAndroid } from 'react-native';
 import NavBar from '../../components/NavBar';
 import socket from '../../socket';
 import { connect } from 'react-redux';
@@ -28,6 +28,7 @@ class ChatList extends Component {
     constructor(props) {
         super(props);
         const { username, uid } = props;
+        BackHandler.addEventListener('hardwareBackPress',this.handleback);
         socket.on('fetch_receive_msg', this.handleUpdateMsgList);
         socket.on('apply_socket_suc', this.handleApplySocketSuc);
         socket.on('apply_socket_err', this.handleApplySocketErr);
@@ -38,7 +39,19 @@ class ChatList extends Component {
             socket.emit('join',{username,uid});
           });
     }
-
+    handleback = () => {
+        if(this.props.is_chating)
+            return false;
+            
+        if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+            //最近2秒内按过back键，可以退出应用。
+            BackHandler.exitApp();
+            return;
+        }
+        this.lastBackPressed = Date.now();
+        ToastAndroid.show('再按一次退出应用',ToastAndroid.SHORT);
+        return true;
+    }
     handleInChating = () => {
         const {actionInChating} = this.props;
         actionInChating && actionInChating();
@@ -197,7 +210,8 @@ const mapStateToProps = state => {
         username: state.userinfo.username,
         uid: state.userinfo.uid,
         user_pic: state.userinfo.user_pic,
-        is_chating: state.userinfo.is_chating
+        is_chating: state.userinfo.is_chating,
+        is_login:state.userinfo.is_login
     }
 }
 

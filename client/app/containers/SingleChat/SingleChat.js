@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, FlatList, Image } from 'react-native';
+import { Text, View, StyleSheet, FlatList, Image,BackHandler } from 'react-native';
 import NavBar from '../../components/NavBar';
 import SendMsgBox from '../../components/SendMsgBox';
 import ReactSQLite from '../../nativeModules/ReactSQLite';
@@ -100,6 +100,7 @@ class SingleChat extends Component {
         friend_name: '',
         friend_pic: '',
     }
+
     initPage = () => {
         const chatItemData = this.props.navigation.getParam('data');
         const {
@@ -173,7 +174,7 @@ class SingleChat extends Component {
 
         return (
             <View style={styles.wrapper}>
-                <NavBar title={friend_name} />
+                <NavBar title={friend_name} showBack={true}/>
                 <FlatList
                     style={{
                         marginBottom: 80

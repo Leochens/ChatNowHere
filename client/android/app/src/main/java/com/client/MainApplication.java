@@ -1,6 +1,7 @@
 package com.client;
 
 import android.app.Application;
+import com.backHome.AppReactPackage;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.Toast;
 
@@ -27,7 +28,8 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
+          new MainReactPackage()
+,new AppReactPackage(),
             new VectorIconsPackage(),
             new LinearGradientPackage(),
               new ZHLToast(),
@@ -35,6 +37,7 @@ public class MainApplication extends Application implements ReactApplication {
               new ReactSQLiteModule()
       );
     }
+
 
     @Override
     protected String getJSMainModuleName() {

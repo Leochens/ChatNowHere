@@ -5,13 +5,14 @@ import ZButton from '../../components/ZButton';
 import ZInputBox from '../../components/ZInputBox';
 import axios from 'axios';
 import { connect } from 'react-redux';
+import config from '../../config';
 import { bindActionCreators } from 'redux';
 import ReactSQLite from '../../nativeModules/ReactSQLite';
 import * as ActionCreators from '../../actions';
 
 const doLogin = (username, password) => {
     return axios(
-        'http://192.168.43.17:3001/dbtest/login', {
+        `${config.host}:${config.port}/dbtest/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -27,6 +28,12 @@ const doLogin = (username, password) => {
 
 class Login extends Component {
 
+    constructor(props){
+        super(props);
+        if(props.userinfo.is_login){
+            props.navigation.navigate('ChatList');
+        }
+    }
     state = {
         username: 'hlw',
         password: '123',
@@ -73,6 +80,9 @@ class Login extends Component {
             password
         })
     }
+    toRegist = () => {
+        this.props.navigation.navigate('Regist');
+    }
     render() {
         return (
             <View style={styles.main}>
@@ -113,7 +123,7 @@ class Login extends Component {
                     />
                     <ZButton
                         text={'注册'}
-                        onClick={this.handleLogin}
+                        onClick={this.toRegist}
                         style={{
                             width: '60%',
                             marginTop: 16,
@@ -130,7 +140,9 @@ class Login extends Component {
 
 
 const mapStateToProps = state => {
-    return state;
+    return {
+        userinfo:state.userinfo
+    }
 }
 const mapDispatchToProps = dispatch => {
     return {

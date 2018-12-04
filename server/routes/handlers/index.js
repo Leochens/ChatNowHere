@@ -1,9 +1,9 @@
 const handleLogin = require('./login');
-const handleRegister = require('./register');
+const handleRegist= require('./regist');
 
 
 
 module.exports = {
     handleLogin,
-    handleRegister
+    handleRegist
 }

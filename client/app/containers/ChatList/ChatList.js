@@ -4,7 +4,9 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import NavBar from '../../components/NavBar';
 import socket from '../../socket';
 import { connect } from 'react-redux';
+import {bindActionCreators} from 'redux';
 import ReactSQLite from '../../nativeModules/ReactSQLite';
+import * as ActionCreators from '../../actions';
 import ListItem from './ListItem/ListItem';
 import { msgMapToChatItem, msgMapToLocalRecord } from '../../utils/formatMap';
 
@@ -25,15 +27,45 @@ class ChatList extends Component {
     }
     constructor(props) {
         super(props);
-        const { username, uid } = props;
         socket.on('fetch_receive_msg', this.handleUpdateMsgList);
         socket.on('apply_socket_suc', this.handleApplySocketSuc);
         socket.on('apply_socket_err', this.handleApplySocketErr);
         socket.on('receive_msg', this.handleUpdateMsg);
-        socket.emit('join', { username, uid });
+    }
+
+    handleInChating = () => {
+        const {actionInChating} = this.props;
+        actionInChating && actionInChating();
+    }
+    handleOutChating = () => {
+        const {actionOutChating} = this.props;
+        actionOutChating && actionOutChating();
+    }
+    // 清空未读提醒
+    clearUnreadMsgCount = (friend_id) => {
+        const chatList = this.state.chatList.slice();
+        let itemId = -1;
+        for (let i = 0; i < chatList.length; i++) {
+            if (chatList[i].friend_id === friend_id) {
+                itemId = i;
+            }
+        }
+        if (itemId === -1) return;
+
+        chatList[itemId] = {
+            ...chatList[itemId],
+            new_msg_count: 0
+        };
+        console.log("清空好友" + friend_id + "的未读提醒", chatList[itemId]);
+        this.setState({
+
+            chatList
+        })
     }
 
     componentDidMount() {
+        const { username, uid } = this.props;
+
         ReactSQLite.getChatList(list => {
             if (list) {
                 this.setState({
@@ -41,14 +73,21 @@ class ChatList extends Component {
                 })
             }
         });
+
+        // 获取完本地的再请求加入 然后获取自己在服务器上的未读消息 注意顺序 不然本地的会覆盖网络的
+        socket.emit('join', { username, uid });
+
     }
     handleApplySocketErr = err => console.log(err);
     handleApplySocketSuc = res => {
         console.log(res)
     };
 
+    isISend = msg => msg.type === 1
+
     handleUpdateMsg = (msg, confirm) => {
         console.log("ChatList=====>get msg : ", msg);
+
         const chatList = this.state.chatList.slice();
         const idMap = {};
         let friend_ids = chatList.map(chatItem => chatItem.friend_id); // 获得当前消息列表中用户的每个用户的id
@@ -59,15 +98,19 @@ class ChatList extends Component {
             const tmp = msgMapToChatItem(msg);
             const newItem = {
                 ...tmp,
-                new_msg_count: new_msg_count + 1
+                new_msg_count: this.isISend(msg) ? 0 : new_msg_count + 1
             };
             console.log('tmp', newItem);
-            ReactSQLite.updateChatListItem(msgMapToChatItem(msg));
             chatList[idMap[msg.from_id]] = newItem;
+            ReactSQLite.updateChatListItem(newItem);
+
         } else {
-            chatList.push(msgMapToChatItem(msg));
+            chatList.push({ ...msgMapToChatItem(msg), new_msg_count: 1 });
+            ReactSQLite.updateChatListItem({ ...msgMapToChatItem(msg), new_msg_count: 1 });
+
         }
 
+        // 更新消息列表
         ReactSQLite.addMsg(msgMapToLocalRecord(msg));// 重发、、、
 
         this.setState({
@@ -85,6 +128,9 @@ class ChatList extends Component {
         const chatList = this.state.chatList.slice();
         const idMap = {};
         let friend_ids = chatList.map(msg => msg.friend_id); // 获得当前消息列表中用户的每个用户的id
+
+        console.log("getCleanChatList");
+
         list.forEach(msg => {
             friend_ids = chatList.map(chatItem => chatItem.friend_id); // 获得当前消息列表中用户的每个用户的id
             chatList.forEach((chatItem, idx) => { idMap[chatItem.friend_id] = idx });// 建立用户id和当前数组id的映射关系 方便查找 
@@ -94,8 +140,13 @@ class ChatList extends Component {
                     new_msg_count: chatList[idMap[msg.from_id]].new_msg_count + 1
                 };
                 chatList[idMap[msg.from_id]] = newItem;
+                ReactSQLite.updateChatListItem(newItem);
+
+                console.log("覆盖原来的好友" + newItem.friend_name + "的消息,当前用户的未读消息", newItem.new_msg_count);
             } else {   // 如果没有就添加该消息到消息列表
-                chatList.push(msgMapToChatItem(msg));
+                console.log("添加新的好友消息");
+                chatList.push({ ...msgMapToChatItem(msg), new_msg_count: 1 });
+                ReactSQLite.updateChatListItem({ ...msgMapToChatItem(msg), new_msg_count: 1 });
             }
         });
         return chatList;
@@ -105,21 +156,15 @@ class ChatList extends Component {
     handleUpdateMsgList = (newChatList, confirm) => {
         console.log(newChatList);
         console.log('fetch newChatList');
-        const localFormatChatList = newChatList.map(item => msgMapToLocalRecord(item));
-
-        // 将拉取得未读消息存入sqlite
-        ReactSQLite.addMsgList(localFormatChatList);
         const chatList = this.getCleanChatList(newChatList);
-        // 更新消息列表
-        newChatList.forEach(item => {
-            ReactSQLite.updateChatListItem(msgMapToChatItem(item));
-        })
-
-
         this.setState({
             chatList
         })
 
+
+        // 将拉取得未读消息存入sqlite
+        const localFormatChatList = newChatList.map(item => msgMapToLocalRecord(item));
+        ReactSQLite.addMsgList(localFormatChatList);
         confirm(); //用户收到信息后回调它告诉服务端确认成功
     }
 
@@ -136,7 +181,7 @@ class ChatList extends Component {
                     style={styles.chatList}
                     data={this.state.chatList}
                     // onEndReached={this.onEndOfList}
-                    renderItem={({ item }) => <ListItem data={item} navigate={navigate} />} />
+                    renderItem={({ item }) => <ListItem data={item} navigate={navigate} clearUnreadMsgCount={this.clearUnreadMsgCount} />} />
             </View>
         );
     }
@@ -146,7 +191,15 @@ const mapStateToProps = state => {
     return {
         username: state.userinfo.username,
         uid: state.userinfo.uid,
-        user_pic: state.userinfo.user_pic
+        user_pic: state.userinfo.user_pic,
+        is_chating: state.userinfo.is_chating
     }
 }
-export default connect(mapStateToProps)(ChatList);
+
+const mapDispatchToProps = dispatch => {
+    return {
+        actionInChating: bindActionCreators(ActionCreators.actionInChating,dispatch),
+        actionOutChating: bindActionCreators(ActionCreators.actionOutChating,dispatch),
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(ChatList);

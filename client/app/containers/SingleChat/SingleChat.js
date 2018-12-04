@@ -16,8 +16,6 @@ const styles = StyleSheet.create({
 })
 
 class MessageItem extends Component {
-
-
     static defaultProps = {
         data: {
             friend_pic: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2778724530,551237406&fm=26&gp=0.jpg',
@@ -27,7 +25,6 @@ class MessageItem extends Component {
     }
     renderFriendMsg = () => {
         const { content, friend_pic } = this.props.data;
-
         return (
             <View style={{
                 padding: 16,
@@ -84,7 +81,6 @@ class MessageItem extends Component {
     render() {
         const { friend_pic, content, send_type } = this.props.data;
         const styles = StyleSheet.create({
-
         })
 
         return send_type === 1 ? this.renderMyMsg() : this.renderFriendMsg();
@@ -158,6 +154,7 @@ class SingleChat extends Component {
         this.setState({
             recordList
         })
+        this.clearUnreadMsg();
     }
 
     handleSendMsg = v => {
@@ -192,19 +189,22 @@ class SingleChat extends Component {
             </View>
         );
     }
-
+    clearUnreadMsg = () => { // 防止用户直接在私聊界面关闭
+        // 离开的时候 就把该用户的未读提醒减为0
+        ReactSQLite.clearUnreadMsgCount(this.state.friend_id); // 数据库端把好友的未读提醒清空
+    }
     // 为了消除异步任务
     componentWillUnmount = () => {
-        console.log("卸载组件");
-        socket.on('receive_msg_in_chat', ()=>{});
+        console.log("卸载组件 清空未读");
 
-        // const {recordList} = this.state; 
-        // const unSavedRecords = recordList.filter(item=>!item.id); // 找出没有经过本地编号的 一定是没有存储的记录
+        const clearUnreadMsgCount = this.props.navigation.getParam('clearUnreadMsgCount');
 
-        // unSavedRecords.forEach(record=>ReactSQLite.addMsg(record));
-
-        this.setState = (state,callback)=>{
-          return;
+        socket.on('receive_msg_in_chat', () => { });
+        // 离开的时候 就把该用户的未读提醒减为0
+        ReactSQLite.clearUnreadMsgCount(this.state.friend_id); // 数据库端把好友的未读提醒清空
+        clearUnreadMsgCount(this.state.friend_id); // 界面显示端清空
+        this.setState = (state, callback) => {
+            return;
         };
     }
 }

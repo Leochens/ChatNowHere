@@ -216,6 +216,13 @@ public class ReactSQLiteModule implements ReactPackage{
             sucCallback.invoke(list);
         }
 
+        // 消除
+        @ReactMethod
+        public void clearUnreadMsgCount(int _friend_id){
+
+            db.execSQL("UPDATE chat_list SET new_msg_count = 0 WHERE friend_id='"+_friend_id+"'");
+            Log.d("zhlsql","清空好友"+_friend_id+"的未读提醒");
+        }
         @Override
         public String getName() {
             return "ReactSQLite";

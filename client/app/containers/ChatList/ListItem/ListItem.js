@@ -26,9 +26,9 @@ export default class ListItem extends Component {
         // return '';
     }
     goChat = () => {
-        const { navigate, data } = this.props;
+        const { navigate, data,clearUnreadMsgCount } = this.props;
         if(navigate)
-            navigate("SingleChat", { data });
+            navigate("SingleChat", { data,clearUnreadMsgCount});
         else
             console.log("local: ListItem; navigate is undefined");
 

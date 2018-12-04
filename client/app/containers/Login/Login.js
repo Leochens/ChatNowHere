@@ -30,7 +30,7 @@ class Login extends Component {
     state = {
         username: 'hlw',
         password: '123',
-        user_pic: 'http://img1.imgtn.bdimg.com/it/u=175648863,1057903348&fm=26&gp=0.jpg'
+        user_pic: 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3260609003,3965213395&fm=27&gp=0.jpg'
     }
     checkFiled = () => {
         const { password, username } = this.state;
@@ -49,7 +49,7 @@ class Login extends Component {
             .then(res => {
                 const { username, uid } = res.data;
                 const { password, user_pic } = this.state;
-                ReactSQLite.createDatabase(`${username}_${uid}.db`); // 给新用户建库s
+                ReactSQLite.createDatabase(`${username}_${uid}.db`); // 给新用户建库
                 if (res.data.status === 200) {
                     const userinfo = { username, password, user_pic, uid }; // 打包发给reducer
                     actionLoginSuc(userinfo);// 发登录成功的action

@@ -138,9 +138,11 @@ class SingleChat extends Component {
     }
 
     componentDidMount() {
+        const onInChating = this.props.navigation.getParam('onInChating');
         this.initPage();
         this.getRecords();
         this.initListeners();
+        onInChating();
     }
 
     handleReceiveMsg = msg => {
@@ -195,8 +197,11 @@ class SingleChat extends Component {
     }
     // 为了消除异步任务
     componentWillUnmount = () => {
-        console.log("卸载组件 清空未读");
 
+        const onOutChating = this.props.navigation.getParam('onOutChating');
+        onOutChating();
+        
+        console.log("卸载组件 清空未读");
         const clearUnreadMsgCount = this.props.navigation.getParam('clearUnreadMsgCount');
 
         socket.on('receive_msg_in_chat', () => { });

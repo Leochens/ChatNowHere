@@ -17,7 +17,6 @@ export default class ListItem extends Component {
         }
     }
     formatTime = timeStr => {
-
         const arr = timeStr.split('T');
         const date = arr[0];
         const time = arr[1].split['.'][0];
@@ -26,9 +25,15 @@ export default class ListItem extends Component {
         // return '';
     }
     goChat = () => {
-        const { navigate, data,clearUnreadMsgCount } = this.props;
-        if(navigate)
-            navigate("SingleChat", { data,clearUnreadMsgCount});
+        const {
+            navigate,
+            data,
+            clearUnreadMsgCount,
+            onInChating,
+            onOutChating,
+        } = this.props;
+        if (navigate)
+            navigate("SingleChat", { data, clearUnreadMsgCount, onInChating,onOutChating });
         else
             console.log("local: ListItem; navigate is undefined");
 

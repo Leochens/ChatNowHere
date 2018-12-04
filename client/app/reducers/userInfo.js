@@ -15,6 +15,7 @@ const userinfo = (state = {
             const { username, uid,password,user_pic } = action.data;
             ReactSQLite.setUserInfo({uid,username,password,user_pic});// 登录成功后在sqlite中存储用户信息
             return {
+                ...state,
                 username,
                 uid,
                 user_pic

@@ -23,14 +23,20 @@ const styles = StyleSheet.create({
 
 class ChatList extends Component {
     state = {
-        chatList: []
+        chatList: [],
     }
     constructor(props) {
         super(props);
+        const { username, uid } = props;
         socket.on('fetch_receive_msg', this.handleUpdateMsgList);
         socket.on('apply_socket_suc', this.handleApplySocketSuc);
         socket.on('apply_socket_err', this.handleApplySocketErr);
         socket.on('receive_msg', this.handleUpdateMsg);
+        socket.on('reconnect', function (data) {
+            console.log("ChatList reconnect");
+            // 重连后再发一遍join
+            socket.emit('join',{username,uid});
+          });
     }
 
     handleInChating = () => {
@@ -65,7 +71,6 @@ class ChatList extends Component {
 
     componentDidMount() {
         const { username, uid } = this.props;
-
         ReactSQLite.getChatList(list => {
             if (list) {
                 this.setState({
@@ -73,18 +78,13 @@ class ChatList extends Component {
                 })
             }
         });
-
         // 获取完本地的再请求加入 然后获取自己在服务器上的未读消息 注意顺序 不然本地的会覆盖网络的
         socket.emit('join', { username, uid });
 
     }
+
     handleApplySocketErr = err => console.log(err);
-    handleApplySocketSuc = res => {
-        console.log(res)
-    };
-
-    isISend = msg => msg.type === 1
-
+    handleApplySocketSuc = res => console.log(res);
     handleUpdateMsg = (msg, confirm) => {
         console.log("ChatList=====>get msg : ", msg);
 
@@ -98,7 +98,7 @@ class ChatList extends Component {
             const tmp = msgMapToChatItem(msg);
             const newItem = {
                 ...tmp,
-                new_msg_count: this.isISend(msg) ? 0 : new_msg_count + 1
+                new_msg_count: this.props.is_chating? 0 : new_msg_count + 1
             };
             console.log('tmp', newItem);
             chatList[idMap[msg.from_id]] = newItem;
@@ -107,7 +107,6 @@ class ChatList extends Component {
         } else {
             chatList.push({ ...msgMapToChatItem(msg), new_msg_count: 1 });
             ReactSQLite.updateChatListItem({ ...msgMapToChatItem(msg), new_msg_count: 1 });
-
         }
 
         // 更新消息列表
@@ -181,7 +180,13 @@ class ChatList extends Component {
                     style={styles.chatList}
                     data={this.state.chatList}
                     // onEndReached={this.onEndOfList}
-                    renderItem={({ item }) => <ListItem data={item} navigate={navigate} clearUnreadMsgCount={this.clearUnreadMsgCount} />} />
+                    renderItem={({ item }) => <ListItem 
+                    data={item} 
+                    navigate={navigate} 
+                    clearUnreadMsgCount={this.clearUnreadMsgCount}
+                    onInChating={this.handleInChating}
+                    onOutChating={this.handleOutChating}
+                    />} />
             </View>
         );
     }

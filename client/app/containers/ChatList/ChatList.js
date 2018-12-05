@@ -62,24 +62,8 @@ class ChatList extends Component {
     }
     // 清空未读提醒
     clearUnreadMsgCount = (friend_id) => {
-        const chatList = this.state.chatList.slice();
-        let itemId = -1;
-        for (let i = 0; i < chatList.length; i++) {
-            if (chatList[i].friend_id === friend_id) {
-                itemId = i;
-            }
-        }
-        if (itemId === -1) return;
-
-        chatList[itemId] = {
-            ...chatList[itemId],
-            new_msg_count: 0
-        };
-        console.log("清空好友" + friend_id + "的未读提醒", chatList[itemId]);
-        this.setState({
-
-            chatList
-        })
+        const { actionClearNewMsgCount } = this.props;
+        actionClearNewMsgCount(friend_id)
     }
 
     componentDidMount() {
@@ -87,15 +71,8 @@ class ChatList extends Component {
             socket.connect();
             alert("当前socket已经断开" + socket.connected)
         }
-        const { username, uid,actionGetChatList } = this.props;
+        const { username, uid, actionGetChatList } = this.props;
         actionGetChatList && actionGetChatList();
-        // ReactSQLite.getChatList(list => {
-        //     if (list) {
-        //         this.setState({
-        //             chatList: list
-        //         })
-        //     }
-        // });
         // 获取完本地的再请求加入 然后获取自己在服务器上的未读消息 注意顺序 不然本地的会覆盖网络的
         socket.emit('join', { username, uid });
 
@@ -220,16 +197,10 @@ class ChatList extends Component {
                     renderItem={({ item }) => <ListItem
                         data={item}
                         navigate={navigate}
-                        clearUnreadMsgCount={this.clearUnreadMsgCount}
-                        onInChating={this.handleInChating}
-                        onOutChating={this.handleOutChating}
                     />} />
                 <TabBar
                     navigate={navigate}
                     action={this.createNewChat}
-                    clearUnreadMsgCount={this.clearUnreadMsgCount}
-                    onInChating={this.handleInChating}
-                    onOutChating={this.handleOutChating}
                 />
             </View>
         );
@@ -252,7 +223,8 @@ const mapDispatchToProps = dispatch => {
         actionInChating: bindActionCreators(ActionCreators.ui.actionInChating, dispatch),
         actionOutChating: bindActionCreators(ActionCreators.ui.actionOutChating, dispatch),
         actionLogout: bindActionCreators(ActionCreators.server.actionLogout, dispatch),
-        actionGetChatList: bindActionCreators(ActionCreators.db.actionGetChatList,dispatch),
+        actionGetChatList: bindActionCreators(ActionCreators.db.actionGetChatList, dispatch),
+        actionClearNewMsgCount: bindActionCreators(ActionCreators.ui.actionClearNewMsgCount, dispatch)
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ChatList);

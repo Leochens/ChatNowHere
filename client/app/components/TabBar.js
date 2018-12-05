@@ -7,14 +7,14 @@ import config from '../config';
 class ResultItem extends Component {
 
     toChat = () => {
-        const { data, clearUnreadMsgCount, onInChating, onOutChating } = this.props;
+        const { data } = this.props;
         const _data = {
             friend_id:data.id,
             friend_name: data.username,
             friend_pic:data.user_pic
         }
         const { navigate } = this.props;
-        navigate("SingleChat", { data: _data, clearUnreadMsgCount, onInChating, onOutChating })
+        navigate("SingleChat", { data: _data})
     }
 
     render() {
@@ -146,7 +146,7 @@ export default class TabBar extends Component {
     }
     renderUsers = () => {
         const { userlist } = this.state;
-        const { action, navigate ,onInChating,onOutChating,clearUnreadMsgCount} = this.props;
+        const { action, navigate} = this.props;
 
         return (
             <FlatList
@@ -155,11 +155,7 @@ export default class TabBar extends Component {
                 }}
                 data={userlist}
                 renderItem={({ item }) => (<ResultItem 
-                    
                     navigate={navigate} data={item} 
-                    clearUnreadMsgCount={clearUnreadMsgCount}
-                    onInChating={onInChating}
-                    onOutChating={onOutChating}
                     />)}
             />
         );

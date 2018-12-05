@@ -15,7 +15,16 @@ export const actionOutChating = () => {
 }
 
 
+export const actionClearNewMsgCount = (friend_id) => {
+    return {
+        type: ACTIONS.ACTION_CLEAR_NEW_MSG_COUNT,
+        friend_id
+    }
+}
+
+
 export default ui = {
     actionInChating,
-    actionOutChating
+    actionOutChating,
+    actionClearNewMsgCount
 }

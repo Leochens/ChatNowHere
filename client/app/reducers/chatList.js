@@ -1,4 +1,4 @@
-import { ACTION_GET_CHATLIST } from '../constaints';
+import { ACTION_GET_CHATLIST, ACTION_CLEAR_NEW_MSG_COUNT } from '../constaints';
 import ReactSQLite from '../nativeModules/ReactSQLite';
 
 /*
@@ -19,6 +19,23 @@ const chatList = (state={
             return {
                 ...state,
                 list:res.list
+            }
+        }
+        case ACTION_CLEAR_NEW_MSG_COUNT:{
+            const { friend_id } = action;
+            const list = state.list.slice();
+            list.forEach(item=>{
+                if(item.friend_id === friend_id){
+                    item = {
+                        ...item,
+                        new_msg_count:0
+                    }
+                }
+            })
+            ReactSQLite.clearUnreadMsgCount(friend_id);
+            return {
+                ...state,
+                list
             }
         }
         default: return state

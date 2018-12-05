@@ -28,12 +28,9 @@ export default class ListItem extends Component {
         const {
             navigate,
             data,
-            clearUnreadMsgCount,
-            onInChating,
-            onOutChating,
         } = this.props;
         if (navigate)
-            navigate("SingleChat", { data, clearUnreadMsgCount, onInChating,onOutChating });
+            navigate("SingleChat", { data});
         else
             console.log("local: ListItem; navigate is undefined");
 

@@ -35,7 +35,7 @@ export const ACTION_GET_CHATLIST = 'ACTION_GET_CHATLIST';
 // 保存聊天记录
 export const ACTION_SAVE_RECORD = 'ACTION_SAVE_RECORD';
 
-
-
+// 清除未读提醒
+export const ACTION_CLEAR_NEW_MSG_COUNT = 'ACTION_CLEAR_NEW_MSG_COUNT';
 
 

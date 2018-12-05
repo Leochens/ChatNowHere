@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, FlatList, Image, BackHandler, Dimensions } from 'react-native';
 import NavBar from '../../components/NavBar';
 import SendMsgBox from '../../components/SendMsgBox';
-import ReactSQLite from '../../nativeModules/ReactSQLite';
 import socket from '../../socket';
 import { connect } from 'react-redux';
 import { msgMapToLocalRecord } from '../../utils/formatMap';
@@ -61,7 +60,7 @@ class SingleChat extends Component {
     }
 
     componentDidMount() {
-        const onInChating = this.props.navigation.getParam('onInChating');
+        const {onInChating} = this.props;
         this.initPage();
         this.getRecords();
         this.initListeners();
@@ -78,6 +77,7 @@ class SingleChat extends Component {
 
     handleReceiveMsg = msg => {
         console.log("SingelChat=====>get msg : ", msg);
+        const {clearUnreadMsgCount} = this.props;
 
         const recordList = this.state.recordList.slice();
         const localFormatRecord = msgMapToLocalRecord(msg); // 转成本地存储格式的消息
@@ -87,10 +87,10 @@ class SingleChat extends Component {
         this.setState({
             recordList
         })
-        this.clearUnreadMsg();
+        clearUnreadMsgCount && clearUnreadMsgCount(this.state.friend_id);
     }
     _onEndReached = () => {
-        alert("加载")
+        // alert("加载")
     }
     handleSendMsg = v => {
         const { friend_id, friend_name } = this.state;
@@ -130,26 +130,11 @@ class SingleChat extends Component {
             </View>
         );
     }
-    clearUnreadMsg = () => { // 防止用户直接在私聊界面关闭
-        // 离开的时候 就把该用户的未读提醒减为0
-        ReactSQLite.clearUnreadMsgCount(this.state.friend_id); // 数据库端把好友的未读提醒清空
-    }
-    // 为了消除异步任务
     componentWillUnmount = () => {
-
-        const onOutChating = this.props.navigation.getParam('onOutChating');
+        const {onOutChating,clearUnreadMsgCount} = this.props;
         onOutChating();
-
+        clearUnreadMsgCount(this.state.friend_id); // 清空未读
         console.log("卸载组件 清空未读");
-        const clearUnreadMsgCount = this.props.navigation.getParam('clearUnreadMsgCount');
-
-        socket.on('receive_msg_in_chat', () => { });
-        // 离开的时候 就把该用户的未读提醒减为0
-        ReactSQLite.clearUnreadMsgCount(this.state.friend_id); // 数据库端把好友的未读提醒清空
-        clearUnreadMsgCount(this.state.friend_id); // 界面显示端清空
-        this.setState = (state, callback) => {
-            return;
-        };
     }
 }
 
@@ -162,7 +147,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         actionGetRecord: bindActionCreators(ActionCreators.db.actionGetRecord,dispatch),
-
+        onOutChating:bindActionCreators(ActionCreators.ui.actionOutChating,dispatch),
+        onInChating:bindActionCreators(ActionCreators.ui.actionInChating,dispatch),
+        clearUnreadMsgCount: bindActionCreators(ActionCreators.ui.actionClearNewMsgCount,dispatch)
     }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(SingleChat);

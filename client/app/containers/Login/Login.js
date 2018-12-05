@@ -67,7 +67,7 @@ class Login extends Component {
                     console.log('登录失败');
                 }
             })
-            .catch(err => console.log(err));
+            .catch(err =>{ console.log(err);alert("网络错误")});
 
     }
     getUsername = username => {

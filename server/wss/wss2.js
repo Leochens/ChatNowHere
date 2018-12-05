@@ -205,7 +205,7 @@ function onConnectSuc(io, socket) {
         isUserHasConnection('uid', socket.uid)
             .then(flag => {
                 // 如果当前用户已经存在连接 就释放old连接 重新申请
-                if (flag) handleFreeSocket(socket, socket.uid);
+                // if (flag) handleFreeSocket(socket, socket.uid);
                 handlePeekUnReceivedMessage(socket.uid).then(msgList => {
                     if (Array.isArray(msgList) && msgList.length > 0)
                         socket.emit('fetch_receive_msg', msgList, function () {
@@ -223,7 +223,7 @@ function onConnectSuc(io, socket) {
                 console.log(err);
             })
     });
-
+    
     // 监听私聊事件
     /**
      * data = { toName,content,toId}

@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 8,
         minHeight: 48,
+        // height:48,
         backgroundColor: '#F7F1FF'
         
     }

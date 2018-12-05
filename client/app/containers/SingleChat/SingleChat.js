@@ -195,7 +195,7 @@ class SingleChat extends Component {
             <View style={styles.wrapper}>
                 <NavBar title={friend_name} showBack={true} />
                 <FlatList
-                    onRefresh={() => { alert("刷新") }}
+                    onRefresh={() => {  }}
                     onEndReachedThreshold={2}
                     refreshing={true}
                     ListFooterComponent={<View></View>}

@@ -9,7 +9,7 @@ import ReactSQLite from '../../nativeModules/ReactSQLite';
 import * as ActionCreators from '../../actions';
 import ListItem from './ListItem/ListItem';
 import { msgMapToChatItem, msgMapToLocalRecord } from '../../utils/formatMap';
-
+import TabBar from '../../components/TabBar';
 const styles = StyleSheet.create({
     chatList: {
         backgroundColor: '#fff'
@@ -83,6 +83,10 @@ class ChatList extends Component {
     }
 
     componentDidMount() {
+        if (!socket.connected) {
+            socket.connect();
+            alert("当前socket已经断开" + socket.connected)
+        }
         const { username, uid } = this.props;
         ReactSQLite.getChatList(list => {
             if (list) {
@@ -100,30 +104,38 @@ class ChatList extends Component {
     handleApplySocketSuc = res => console.log(res);
     handleUpdateMsg = (msg, confirm) => {
         console.log("ChatList=====>get msg : ", msg);
-
+        const { is_chating } = this.props;
+        const localChatItem = msgMapToChatItem(msg);; // 把新消息转成聊天列表项
         const chatList = this.state.chatList.slice();
         const idMap = {};
         let friend_ids = chatList.map(chatItem => chatItem.friend_id); // 获得当前消息列表中用户的每个用户的id
         chatList.forEach((chatItem, idx) => { idMap[chatItem.friend_id] = idx });// 建立用户id和当前数组id的映射关系 方便查找
 
         if (friend_ids.includes(msg.from_id)) {
-            let new_msg_count = chatList[idMap[msg.from_id]].new_msg_count;
-            const tmp = msgMapToChatItem(msg);
+            const indexOfTargetChatItem = idMap[msg.from_id];
+            const { new_msg_count } = chatList[indexOfTargetChatItem];
+            // const tmp = msgMapToChatItem(msg);
             const newItem = {
-                ...tmp,
-                new_msg_count: this.props.is_chating ? 0 : new_msg_count + 1
+                ...localChatItem,
+                new_msg_count: is_chating ? 0 : new_msg_count + 1
             };
             console.log('tmp', newItem);
-            chatList[idMap[msg.from_id]] = newItem;
+            chatList[indexOfTargetChatItem] = newItem;
             ReactSQLite.updateChatListItem(newItem);
 
         } else {
-            chatList.push({ ...msgMapToChatItem(msg), new_msg_count: 1 });
-            ReactSQLite.updateChatListItem({ ...msgMapToChatItem(msg), new_msg_count: 1 });
+            chatList.push({
+                ...localChatItem,
+                new_msg_count: 1
+            });
+            ReactSQLite.updateChatListItem({
+                ...localChatItem,
+                new_msg_count: 1
+            });
         }
 
         // 更新消息列表
-        ReactSQLite.addMsg(msgMapToLocalRecord(msg));// 重发、、、
+        ReactSQLite.addMsg(msgMapToLocalRecord(msg));
 
         this.setState({
             chatList
@@ -184,6 +196,9 @@ class ChatList extends Component {
         this.props.navigation.navigate("Login");
         this.props.actionLogout();
     }
+    createNewChat = () => {
+        alert("hello new chat")
+    }
     render() {
         const navigate = this.props.navigation.navigate;
 
@@ -194,7 +209,7 @@ class ChatList extends Component {
                     showBack={false}
                     moreOptions={[
                         {
-                            title: '啦啦啦',
+                            title: '切换账号',
                             onPress: this.changeUser
                         }
                     ]} />
@@ -210,6 +225,10 @@ class ChatList extends Component {
                         onInChating={this.handleInChating}
                         onOutChating={this.handleOutChating}
                     />} />
+                <TabBar
+
+                    action={this.createNewChat}
+                />
             </View>
         );
     }
@@ -229,7 +248,7 @@ const mapDispatchToProps = dispatch => {
     return {
         actionInChating: bindActionCreators(ActionCreators.actionInChating, dispatch),
         actionOutChating: bindActionCreators(ActionCreators.actionOutChating, dispatch),
-        actionLogout: bindActionCreators(ActionCreators.actionLogout,dispatch)
+        actionLogout: bindActionCreators(ActionCreators.actionLogout, dispatch)
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ChatList);

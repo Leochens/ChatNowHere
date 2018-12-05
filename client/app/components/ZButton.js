@@ -7,6 +7,7 @@ class ZButton extends Component {
 
     onBtnClick = () => {
         const { onClick } = this.props;
+        // alert(onClick);
         onClick && onClick();
     }
     renderIcon = () => {
@@ -23,7 +24,7 @@ class ZButton extends Component {
         return <Text style={{color:'#fff'}}>{text}</Text>
     }
     render() {
-        const { style: pStyle, text, width, align } = this.props;
+        const { style: pStyle } = this.props;
         return (
 
             <TouchableOpacity

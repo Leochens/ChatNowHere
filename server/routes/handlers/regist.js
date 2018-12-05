@@ -36,7 +36,7 @@ function handleRegist(data, res) {
             console.log(error);
             const _data = {
                 msg :"注册出现错误",
-                status: 101
+                code: 101
             };
             //ER_DUP_ENTRY
             if(error.errno === 1062){
@@ -47,7 +47,7 @@ function handleRegist(data, res) {
         }
         else {
             res.send({
-                status: 200,
+                code: 200,
                 msg: '注册成功'
             });
         }

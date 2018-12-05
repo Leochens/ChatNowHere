@@ -18,30 +18,32 @@ router.get('/', function (req, res) {
 router.post('/login', function (req, res) {
     const data = JSON.parse(Object.keys(req.body)[0]);
     console.log('post|请求参数:', data);
-    Handlers.handleLogin(data, res,req);
+    Handlers.handleLogin(data, res, req);
 })
 
-router.get('/search/:username',function(req,res){
+router.get('/search/:username', function (req, res) {
 
-    const {username} = req.params;
-    conn.query(`SELECT * FROM users WHERE username LIKE '%${username}%'`,function(err,result){
-        if(err){
+    const { username } = req.params;
+    conn.query(`SELECT * FROM users WHERE username LIKE '%${username}%'`, function (err, result) {
+        if (err) {
             console.log(err);
-            res.send({
+            return res.send({
                 code: 101,
-                msg:'查询用户出现错误'
+                msg: '查询用户出现错误'
             });
         }
-        if(result.length === 0)
-            res.send({
+        if (result.length === 0) {
+
+            return res.send({
                 code: 100,
                 msg: '无匹配结果'
 
             })
-        res.send({
-            code:200,
+        }
+        return res.send({
+            code: 200,
             list: result,
-            msg:'查询成功'
+            msg: '查询成功'
         })
     });
 })

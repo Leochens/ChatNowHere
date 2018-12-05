@@ -1,38 +1,50 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Dimensions, TextInput,FlatList } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, TextInput, FlatList } from 'react-native';
 import ZButton from './ZButton';
-import ZInputBox from './ZInputBox';
 import axios from 'axios';
 import config from '../config';
-class ResultItem extends Component{
-    render(){
-        const {data} = this.props;
+
+class ResultItem extends Component {
+
+    toChat = () => {
+        const { data, clearUnreadMsgCount, onInChating, onOutChating } = this.props;
+        const _data = {
+            friend_id:data.id,
+            friend_name: data.username,
+            friend_pic:data.user_pic
+        }
+        const { navigate } = this.props;
+        navigate("SingleChat", { data: _data, clearUnreadMsgCount, onInChating, onOutChating })
+    }
+
+    render() {
+        const { data } = this.props;
         return (
             <View style={{
                 width: '100%',
                 height: 48,
-                borderTopWidth:1,
+                borderTopWidth: 1,
                 borderTopColor: '#ddd',
-                flexDirection:'row',
-                justifyContent:'space-between'
+                flexDirection: 'row',
+                justifyContent: 'space-between'
             }}>
-
-                {/* <Text>{data.id}</Text> */}
                 <Text style={{
-                    padding:8,
-                    fontSize:16,
+                    padding: 8,
+                    fontSize: 16,
+
 
                 }}>{data.username}</Text>
-                <ZButton 
-                style={{
-                    width: 32,
-                    margin:8
-                }}
-                icon={{
-                    name:'plus',
-                    color:'#fff',
-                    size:8
-                }}/>
+                <ZButton
+                    onClick={this.toChat}
+                    style={{
+                        width: 32,
+                        margin: 8
+                    }}
+                    icon={{
+                        name: 'plus',
+                        color: '#fff',
+                        size: 8
+                    }} />
             </View>
         );
     }
@@ -42,7 +54,7 @@ export default class TabBar extends Component {
     state = {
         isPaneActive: false,
         username: '',
-        userlist:[]
+        userlist: []
 
     }
     showPane = () => {
@@ -54,8 +66,8 @@ export default class TabBar extends Component {
     hidePane = () => {
         this.setState({
             isPaneActive: false,
-            username:'',
-            userlist:[]
+            username: '',
+            userlist: []
         });
     }
     getUsername = username => {
@@ -69,20 +81,20 @@ export default class TabBar extends Component {
         })
     }
     renderMask = () => {
-        const {isPaneActive} = this.state;
-        if(!isPaneActive) return null;
+        const { isPaneActive } = this.state;
+        if (!isPaneActive) return null;
         return (
-            <View 
-            style={{
-                position: 'absolute',
+            <View
+                style={{
+                    position: 'absolute',
 
-                top:-Dimensions.get('window').height,
-                bottom:0,
-                left:0,
-                right:0,
-                backgroundColor: '#000',
-                opacity: 0.6
-            }}></View>
+                    top: -Dimensions.get('window').height,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    backgroundColor: '#000',
+                    opacity: 0.6
+                }}></View>
         );
     }
 
@@ -92,7 +104,7 @@ export default class TabBar extends Component {
             <ZButton
                 onClick={isPaneActive ? this.hidePane : this.showPane}
                 icon={{
-                    name: isPaneActive? 'close':'plus',
+                    name: isPaneActive ? 'close' : 'plus',
                     color: '#fff',
                     size: 24
                 }}
@@ -100,7 +112,7 @@ export default class TabBar extends Component {
 
                     width: '100%',
                     height: 48,
-                    backgroundColor: isPaneActive?'#a00':'#9f9fff',
+                    backgroundColor: isPaneActive ? '#a00' : '#9f9fff',
                     borderRadius: 0,
                     zIndex: 4
                 }}
@@ -133,20 +145,28 @@ export default class TabBar extends Component {
 
     }
     renderUsers = () => {
-        const {userlist} = this.state;
+        const { userlist } = this.state;
+        const { action, navigate ,onInChating,onOutChating,clearUnreadMsgCount} = this.props;
+
         return (
-            <FlatList 
-            style={{
-                width: Dimensions.get('window').width
-            }}
+            <FlatList
+                style={{
+                    width: Dimensions.get('window').width
+                }}
                 data={userlist}
-                renderItem={({item})=>(<ResultItem data={item}/>)}
+                renderItem={({ item }) => (<ResultItem 
+                    
+                    navigate={navigate} data={item} 
+                    clearUnreadMsgCount={clearUnreadMsgCount}
+                    onInChating={onInChating}
+                    onOutChating={onOutChating}
+                    />)}
             />
         );
     }
     renderPane = () => {
-        const { isPaneActive,userlist } = this.state;
-        const { action } = this.props;
+        const { isPaneActive, userlist } = this.state;
+        const { action, navigate } = this.props;
 
         if (!isPaneActive)
             return null;
@@ -156,7 +176,7 @@ export default class TabBar extends Component {
                 borderBottomLeftRadius: 0,
                 borderBottomRightRadius: 0,
                 position: 'absolute',
-                top: userlist.length?-Dimensions.get('window').height+160:-80,
+                top: userlist.length ? -Dimensions.get('window').height/2 : -80,
                 bottom: 48,
                 left: 0,
                 right: 0,
@@ -174,8 +194,9 @@ export default class TabBar extends Component {
                             onChangeText={this.getUsername}
                             style={{
                                 padding: 8,
-                                width: 160,
+                                // width: 160,
                                 height: 48,
+                                flex:1,
                                 borderColor: '#eee'
                             }} />
 

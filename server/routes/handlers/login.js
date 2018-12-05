@@ -12,7 +12,7 @@ function handleLogin(data, res,req) {
         if (error) {
             console.log(error);
             resData.msg = "登录出现错误";
-            resData.status = 101;
+            resData.code = 101;
             res.send(resData);
         }
         else {
@@ -20,9 +20,12 @@ function handleLogin(data, res,req) {
                 resData.msg =  "登录成功" ;
                 resData.uid = result[0].id;
                 resData.username = username;
-                resData.status = 200;
+                resData.user_pic = result[0].user_pic;
+                resData.token = '88759';
+                resData.code = 200;
+                console.log(username+"登录成功")
             } else{
-                resData.status = 100;
+                resData.code = 100;
                 resData.msg = "登录失败";
             }
             res.send(resData);

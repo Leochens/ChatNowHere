@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import config from '../../config';
 import { bindActionCreators } from 'redux';
 import ReactSQLite from '../../nativeModules/ReactSQLite';
-import * as ActionCreators from '../../actions';
+import ActionCreators from '../../actions';
 
 const doLogin = (username, password) => {
     return axios(
@@ -43,31 +43,37 @@ class Login extends Component {
         const { password, username } = this.state;
         return (username && password);
     }
-
+    componentDidUpdate(){
+        if(this.props.userinfo.is_login){
+            this.props.navigation.navigate('ChatList');
+        }
+    }
     handleLogin = () => {
         const { navigate } = this.props.navigation;
         const { password, username } = this.state;
-        const { actionLoginSuc, actionLoginFai } = this.props;
+        const { actionLogin } = this.props;
         if (!this.checkFiled()) {
             ToastAndroid.show("请输入完全", ToastAndroid.SHORT);
             return;
         }
-        doLogin(username, password)
-            .then(res => {
-                const { username, uid } = res.data;
-                const { password, user_pic } = this.state;
-                ReactSQLite.createDatabase(`${username}_${uid}.db`); // 给新用户建库
-                if (res.data.status === 200) {
-                    const userinfo = { username, password, user_pic, uid }; // 打包发给reducer
-                    actionLoginSuc(userinfo);// 发登录成功的action
-                    navigate('ChatList');// 跳转到聊天列表
-                    console.log("登录成功");
-                } else {
-                    actionLoginFai && actionLoginFai();
-                    console.log('登录失败');
-                }
-            })
-            .catch(err =>{ console.log(err);alert("网络错误")});
+        actionLogin && actionLogin({username,password});
+
+        // doLogin(username, password)
+        //     .then(res => {
+        //         const { username, uid } = res.data;
+        //         const { password, user_pic } = this.state;
+                // ReactSQLite.createDatabase(`${username}_${uid}.db`); // 给新用户建库
+        //         if (res.data.status === 200) {
+        //             const userinfo = { username, password, user_pic, uid }; // 打包发给reducer
+        //             actionLoginSuc(userinfo);// 发登录成功的action
+        //             navigate('ChatList');// 跳转到聊天列表
+        //             console.log("登录成功");
+        //         } else {
+        //             actionLoginFai && actionLoginFai();
+        //             console.log('登录失败');
+        //         }
+        //     })
+        //     .catch(err =>{ console.log(err);alert("网络错误")});
 
     }
     getUsername = username => {
@@ -146,8 +152,7 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = dispatch => {
     return {
-        actionLoginSuc: bindActionCreators(ActionCreators.actionLoginSuc, dispatch),
-        actionLoginFai: bindActionCreators(ActionCreators.actionLoginFai, dispatch)
+        actionLogin: bindActionCreators(ActionCreators.server.actionLogin, dispatch),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

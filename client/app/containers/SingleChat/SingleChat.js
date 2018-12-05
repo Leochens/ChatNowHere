@@ -212,10 +212,6 @@ class SingleChat extends Component {
                         }
                     } />}
                 ></FlatList>
-                {/* <RefreshListView
-                    data={this.state.recordList}
-                    renderItem={item => <Text>{item.content}</Text>}
-                /> */}
                 <SendMsgBox
                     onSendMsg={this.handleSendMsg} />
             </View>

@@ -6,7 +6,7 @@ import socket from '../../socket';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ReactSQLite from '../../nativeModules/ReactSQLite';
-import * as ActionCreators from '../../actions';
+import ActionCreators from '../../actions';
 import ListItem from './ListItem/ListItem';
 import { msgMapToChatItem, msgMapToLocalRecord } from '../../utils/formatMap';
 import TabBar from '../../components/TabBar';
@@ -196,9 +196,7 @@ class ChatList extends Component {
         this.props.navigation.navigate("Login");
         this.props.actionLogout();
     }
-    createNewChat = () => {
-        alert("hello new chat")
-    }
+
     render() {
         const navigate = this.props.navigation.navigate;
 
@@ -226,8 +224,11 @@ class ChatList extends Component {
                         onOutChating={this.handleOutChating}
                     />} />
                 <TabBar
-
+                    navigate={navigate}
                     action={this.createNewChat}
+                    clearUnreadMsgCount={this.clearUnreadMsgCount}
+                    onInChating={this.handleInChating}
+                    onOutChating={this.handleOutChating}
                 />
             </View>
         );
@@ -246,9 +247,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        actionInChating: bindActionCreators(ActionCreators.actionInChating, dispatch),
-        actionOutChating: bindActionCreators(ActionCreators.actionOutChating, dispatch),
-        actionLogout: bindActionCreators(ActionCreators.actionLogout, dispatch)
+        actionInChating: bindActionCreators(ActionCreators.ui.actionInChating, dispatch),
+        actionOutChating: bindActionCreators(ActionCreators.ui.actionOutChating, dispatch),
+        actionLogout: bindActionCreators(ActionCreators.server.actionLogout, dispatch)
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ChatList);

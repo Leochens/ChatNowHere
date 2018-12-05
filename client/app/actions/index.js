@@ -39,3 +39,11 @@ export const actionOutChating = () => {
         type: ACTIONS.ACTION_OUT_CHATING
     }
 }
+
+
+export const actionLogout = () => {
+    return {
+        type: ACTIONS.ACTION_LOGOUT
+    }
+}
+

@@ -13,6 +13,10 @@ export const ACTION_IN_CHATING = 'ACTION_IN_CHATING';
 export const ACTION_OUT_CHATING = 'ACTION_OUT_CHATING';
 
 
+// 用户注销登录
+export const ACTION_LOGOUT = 'ACTION_LOGOUT';
+
+
 
 
 

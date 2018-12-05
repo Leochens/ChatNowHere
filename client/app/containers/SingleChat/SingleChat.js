@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, FlatList, Image,BackHandler } from 'react-native';
+import { Text, View, StyleSheet, FlatList, Image, BackHandler, Dimensions } from 'react-native';
 import NavBar from '../../components/NavBar';
 import SendMsgBox from '../../components/SendMsgBox';
 import ReactSQLite from '../../nativeModules/ReactSQLite';
 import socket from '../../socket';
 import { connect } from 'react-redux';
-import { msgMapToChatItem, msgMapToLocalRecord } from '../../utils/formatMap';
+import { msgMapToLocalRecord } from '../../utils/formatMap';
+
+import RefreshListView, { RefreshState } from '../../components/RefreshListView'
 
 const styles = StyleSheet.create({
     wrapper: {
@@ -26,10 +28,11 @@ class MessageItem extends Component {
     renderFriendMsg = () => {
         const { content, friend_pic } = this.props.data;
         return (
-            <View style={{
-                padding: 16,
-                paddingBottom: 0,
-            }}>
+            <View
+                style={{
+                    padding: 16,
+                    paddingBottom: 0,
+                }}>
                 <Image style={{
                     height: 32, width: 32, borderRadius: 16
                 }}
@@ -44,7 +47,8 @@ class MessageItem extends Component {
                     borderWidth: 1,
                     fontSize: 16,
                     width: (content.length) * 24
-                }}>
+                }}
+                >
                     {content}
                 </Text>
             </View>
@@ -133,9 +137,12 @@ class SingleChat extends Component {
         ReactSQLite.getChatRecords(friend_id, res => {
             console.log("聊天记录为", res);
             this.setState({
-                recordList: res
+                recordList: res.reverse()
             })
         });
+        ReactSQLite.getMoreRecords(friend_id, 45, res => {
+            console.log("注意查看45后的消息排序", res)
+        })
     }
 
     componentDidMount() {
@@ -144,6 +151,16 @@ class SingleChat extends Component {
         this.getRecords();
         this.initListeners();
         onInChating();
+
+
+    }
+
+    componentDidUpdate() {
+
+        const len = this.state.recordList.length;
+        if (len) {
+            // this.refs.flatlist.scrollToEnd();
+        }
     }
 
     handleReceiveMsg = msg => {
@@ -159,7 +176,9 @@ class SingleChat extends Component {
         })
         this.clearUnreadMsg();
     }
-
+    _onEndReached = () => {
+        alert("加载")
+    }
     handleSendMsg = v => {
         const { friend_id, friend_name } = this.state;
         const msgBody = {
@@ -171,14 +190,20 @@ class SingleChat extends Component {
     }
     render() {
         const { friend_pic, my_pic, friend_name } = this.state;
-
+        const { height, width } = Dimensions.get('window');
         return (
             <View style={styles.wrapper}>
-                <NavBar title={friend_name} showBack={true}/>
+                <NavBar title={friend_name} showBack={true} />
                 <FlatList
+                    onRefresh={() => { alert("刷新") }}
+                    onEndReachedThreshold={2}
+                    refreshing={true}
+                    ListFooterComponent={<View></View>}
+                    ref="flatlist"
                     style={{
-                        marginBottom: 80
+                        maxHeight: height - 72
                     }}
+                    onEndReached={this._onEndReached}
                     data={this.state.recordList}
                     renderItem={({ item }) => <MessageItem data={
                         {
@@ -187,6 +212,10 @@ class SingleChat extends Component {
                         }
                     } />}
                 ></FlatList>
+                {/* <RefreshListView
+                    data={this.state.recordList}
+                    renderItem={item => <Text>{item.content}</Text>}
+                /> */}
                 <SendMsgBox
                     onSendMsg={this.handleSendMsg} />
             </View>
@@ -201,7 +230,7 @@ class SingleChat extends Component {
 
         const onOutChating = this.props.navigation.getParam('onOutChating');
         onOutChating();
-        
+
         console.log("卸载组件 清空未读");
         const clearUnreadMsgCount = this.props.navigation.getParam('clearUnreadMsgCount');
 

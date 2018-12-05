@@ -1,11 +1,9 @@
 package com.client;
 
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.database.sqlite.SQLiteDatabase;
+
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import com.facebook.react.ReactActivity;
@@ -21,7 +19,20 @@ public class MainActivity extends ReactActivity {
         return "client";
     }
 
-//    @Override
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        Toast.makeText(getApplicationContext(),"create",Toast.LENGTH_SHORT).show();
+
+        super.onCreate(savedInstanceState, persistentState);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Toast.makeText(getApplicationContext(),"destory",Toast.LENGTH_SHORT).show();
+        super.onDestroy();
+    }
+
+    //    @Override
 //    public void invokeDefaultOnBackPressed() {
 //        PackageManager pm = getPackageManager();
 //        ResolveInfo homeInfo =

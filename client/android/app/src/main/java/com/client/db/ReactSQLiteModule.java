@@ -135,8 +135,39 @@ public class ReactSQLiteModule implements ReactPackage{
         }
 
         @ReactMethod
+        public void getMoreRecords(int _friend_id,int initId,Callback sucCallback){
+            Cursor cursor = db.rawQuery("SELECT * FROM message WHERE friend_id='"+_friend_id+"' and id< '"+initId+"'  LIMIT 20",null);
+
+            WritableArray list = new WritableNativeArray();
+
+            while (cursor.moveToNext()){
+                WritableMap map = new WritableNativeMap();
+
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                int friend_id = cursor.getInt(cursor.getColumnIndex("friend_id"));
+                String friend_name = cursor.getString(cursor.getColumnIndex("friend_name"));
+                String create_time = cursor.getString(cursor.getColumnIndex("create_time"));
+                String content = cursor.getString(cursor.getColumnIndex("content"));
+                int send_type = cursor.getInt(cursor.getColumnIndex("send_type"));
+                int type = cursor.getInt(cursor.getColumnIndex("type"));
+                int msg_status = cursor.getInt(cursor.getColumnIndex("msg_status"));
+
+                map.putInt("id",id);
+                map.putInt("friend_id",friend_id);
+                map.putString("friend_name",friend_name);
+                map.putString("create_time",create_time);
+                map.putString("content",content);
+                map.putInt("send_type",send_type);
+                map.putInt("type",type);
+                map.putInt("msg_status",msg_status);
+                list.pushMap(map);
+            }
+            Log.d("zhlsql","查询和好友"+_friend_id+"的聊天记录"+list.toString());
+            sucCallback.invoke(list);
+        }
+        @ReactMethod
         public void getChatRecords(int _friend_id,Callback sucCallback){
-            Cursor cursor = db.rawQuery("SELECT * FROM message WHERE friend_id='"+_friend_id+"'",null);
+            Cursor cursor = db.rawQuery("SELECT * FROM message WHERE friend_id='"+_friend_id+"' order by id desc LIMIT 20",null);
 
             WritableArray list = new WritableNativeArray();
 

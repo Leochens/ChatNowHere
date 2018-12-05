@@ -34,10 +34,6 @@ router.post('/regist', function (req, res) {
     console.log('post|请求参数:', req.body);
 
     const data = JSON.parse(Object.keys(req.body)[0]);
-
-
-
-
     Handlers.handleRegist(data, res);
 });
 

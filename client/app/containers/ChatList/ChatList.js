@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
-import { View, StyleSheet, FlatList,BackHandler,NativeModules,ToastAndroid } from 'react-native';
+import { View, StyleSheet, FlatList, BackHandler, NativeModules, ToastAndroid } from 'react-native';
 import NavBar from '../../components/NavBar';
 import socket from '../../socket';
 import { connect } from 'react-redux';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 import ReactSQLite from '../../nativeModules/ReactSQLite';
 import * as ActionCreators from '../../actions';
 import ListItem from './ListItem/ListItem';
@@ -28,7 +28,7 @@ class ChatList extends Component {
     constructor(props) {
         super(props);
         const { username, uid } = props;
-        BackHandler.addEventListener('hardwareBackPress',this.handleback);
+        BackHandler.addEventListener('hardwareBackPress', this.handleback);
         socket.on('fetch_receive_msg', this.handleUpdateMsgList);
         socket.on('apply_socket_suc', this.handleApplySocketSuc);
         socket.on('apply_socket_err', this.handleApplySocketErr);
@@ -36,28 +36,28 @@ class ChatList extends Component {
         socket.on('reconnect', function (data) {
             console.log("ChatList reconnect");
             // 重连后再发一遍join
-            socket.emit('join',{username,uid});
-          });
+            socket.emit('join', { username, uid });
+        });
     }
     handleback = () => {
-        if(this.props.is_chating)
+        if (this.props.is_chating)
             return false;
-            
+
         if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
             //最近2秒内按过back键，可以退出应用。
             BackHandler.exitApp();
             return;
         }
         this.lastBackPressed = Date.now();
-        ToastAndroid.show('再按一次退出应用',ToastAndroid.SHORT);
+        ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
         return true;
     }
     handleInChating = () => {
-        const {actionInChating} = this.props;
+        const { actionInChating } = this.props;
         actionInChating && actionInChating();
     }
     handleOutChating = () => {
-        const {actionOutChating} = this.props;
+        const { actionOutChating } = this.props;
         actionOutChating && actionOutChating();
     }
     // 清空未读提醒
@@ -111,7 +111,7 @@ class ChatList extends Component {
             const tmp = msgMapToChatItem(msg);
             const newItem = {
                 ...tmp,
-                new_msg_count: this.props.is_chating? 0 : new_msg_count + 1
+                new_msg_count: this.props.is_chating ? 0 : new_msg_count + 1
             };
             console.log('tmp', newItem);
             chatList[idMap[msg.from_id]] = newItem;
@@ -179,7 +179,11 @@ class ChatList extends Component {
         ReactSQLite.addMsgList(localFormatChatList);
         confirm(); //用户收到信息后回调它告诉服务端确认成功
     }
-
+    changeUser = () => {
+        socket.disconnect();
+        this.props.navigation.navigate("Login");
+        this.props.actionLogout();
+    }
     render() {
         const navigate = this.props.navigation.navigate;
 
@@ -187,18 +191,24 @@ class ChatList extends Component {
             <View style={styles.wrapper}>
                 <NavBar
                     title="消息"
-                    showBack={false} />
+                    showBack={false}
+                    moreOptions={[
+                        {
+                            title: '啦啦啦',
+                            onPress: this.changeUser
+                        }
+                    ]} />
                 <FlatList
                     ref="_flatlist"
                     style={styles.chatList}
                     data={this.state.chatList}
                     // onEndReached={this.onEndOfList}
-                    renderItem={({ item }) => <ListItem 
-                    data={item} 
-                    navigate={navigate} 
-                    clearUnreadMsgCount={this.clearUnreadMsgCount}
-                    onInChating={this.handleInChating}
-                    onOutChating={this.handleOutChating}
+                    renderItem={({ item }) => <ListItem
+                        data={item}
+                        navigate={navigate}
+                        clearUnreadMsgCount={this.clearUnreadMsgCount}
+                        onInChating={this.handleInChating}
+                        onOutChating={this.handleOutChating}
                     />} />
             </View>
         );
@@ -211,14 +221,15 @@ const mapStateToProps = state => {
         uid: state.userinfo.uid,
         user_pic: state.userinfo.user_pic,
         is_chating: state.userinfo.is_chating,
-        is_login:state.userinfo.is_login
+        is_login: state.userinfo.is_login
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        actionInChating: bindActionCreators(ActionCreators.actionInChating,dispatch),
-        actionOutChating: bindActionCreators(ActionCreators.actionOutChating,dispatch),
+        actionInChating: bindActionCreators(ActionCreators.actionInChating, dispatch),
+        actionOutChating: bindActionCreators(ActionCreators.actionOutChating, dispatch),
+        actionLogout: bindActionCreators(ActionCreators.actionLogout,dispatch)
     }
 }
-export default connect(mapStateToProps,mapDispatchToProps)(ChatList);
+export default connect(mapStateToProps, mapDispatchToProps)(ChatList);

@@ -1,4 +1,4 @@
-import { ACTION_USER_LOGIN, ACTION_IN_CHATING, ACTION_OUT_CHATING } from '../constaints';
+import { ACTION_USER_LOGIN, ACTION_IN_CHATING, ACTION_OUT_CHATING, ACTION_LOGOUT } from '../constaints';
 import ReactSQLite from '../nativeModules/ReactSQLite';
 
 const userinfo = (state = {
@@ -37,6 +37,12 @@ const userinfo = (state = {
             return {
                 ...state,
                 is_chating: false
+            }
+        }
+        case ACTION_LOGOUT: {
+            return {
+                ...state,
+                is_login: false
             }
         }
         default: return state;

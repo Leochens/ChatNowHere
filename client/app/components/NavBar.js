@@ -10,17 +10,6 @@ class NavBar extends Component {
         title: '标题',
         backAction: () => { },
         moreOptions: [
-            {
-                title: '测试',
-                onPress: () => { alert('测试'); }
-            },
-            {
-                title: '测试',
-                onPress: () => { alert('测试'); }
-            },            {
-                title: '测试',
-                onPress: () => { alert('测试'); }
-            },
         ],
         showBack: true
     }
@@ -46,6 +35,10 @@ class NavBar extends Component {
             isMoreActive: false
         })
     }
+    onOptionPressed = action => {
+        action && action();
+        this.hideMoreOptions();
+    }
     renderMoreOptions = () => {
         const { moreOptions } = this.props;
         if (!this.state.isMoreActive || !Array.isArray(moreOptions) || !moreOptions.length)
@@ -63,7 +56,7 @@ class NavBar extends Component {
                 borderBottomWidth:1,
                 textAlign: 'center',
                 lineHeight: 48,
-            }} key={idx} onPress={item.onPress}>{item.title}</Text>);
+            }} key={idx} onPress={()=>this.onOptionPressed(item.onPress)}>{item.title}</Text>);
         return (
             <View onPress={this.hideMoreOptions}>
                 {options}

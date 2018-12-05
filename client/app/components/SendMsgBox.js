@@ -56,10 +56,10 @@ class InputBox extends Component {
 const styles = StyleSheet.create({
     inputBox: {
 
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
+        // position: 'absolute',
+        // bottom: 0,
+        // left: 0,
+        // right: 0,
 
         flexDirection: 'row',
         alignItems: 'center',

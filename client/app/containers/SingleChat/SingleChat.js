@@ -60,9 +60,13 @@ class SingleChat extends Component {
     }
 
     componentDidMount() {
-        const {onInChating} = this.props;
+        const {onInChating,chat} = this.props;
+        
         this.initPage();
         this.getRecords();
+        this.setState({
+            recordList:chat.recordList
+        })
         this.initListeners();
         onInChating();
     }
@@ -87,6 +91,7 @@ class SingleChat extends Component {
         this.setState({
             recordList
         })
+
         clearUnreadMsgCount && clearUnreadMsgCount(this.state.friend_id);
     }
     _onEndReached = () => {

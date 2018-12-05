@@ -23,8 +23,10 @@ export const actionClearNewMsgCount = (friend_id) => {
 }
 
 
+
 export default ui = {
     actionInChating,
     actionOutChating,
-    actionClearNewMsgCount
+    actionClearNewMsgCount,
+    
 }

@@ -11,6 +11,13 @@ const actionGetChatList = () => {
     }
 }
 
+const actionUpdateChatList = (data) => {
+    return {
+        type: ACTIONS.ACTION_UPDATE_CHATLIST,
+        data
+    }
+}
+
 const actionGetRecord = friend_id => {
 
     return {
@@ -22,8 +29,15 @@ const actionGetRecord = friend_id => {
         }
     }
 }
-
+export const actionUpdateRecord = (msg) => {
+    return{
+        type: ACTIONS.ACTION_UPDATE_RECORD,
+        msg
+    }
+}
 export default db = {
     actionGetChatList,
-    actionGetRecord
+    actionGetRecord,
+    actionUpdateRecord,
+    actionUpdateChatList
 }

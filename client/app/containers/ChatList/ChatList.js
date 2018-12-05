@@ -44,7 +44,7 @@ class ChatList extends Component {
             return false;
 
         if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
-            //最近2秒内按过back键，可以退出应用。
+            //最近2秒内按过back键 可以退出应用
             BackHandler.exitApp();
             return;
         }
@@ -82,42 +82,12 @@ class ChatList extends Component {
     handleApplySocketSuc = res => console.log(res);
     handleUpdateMsg = (msg, confirm) => {
         console.log("ChatList=====>get msg : ", msg);
-        const { is_chating } = this.props;
+        const { is_chating,actionUpdateRecord,actionUpdateChatList} = this.props;
         const localChatItem = msgMapToChatItem(msg);; // 把新消息转成聊天列表项
-        const chatList = this.state.chatList.slice();
-        const idMap = {};
-        let friend_ids = chatList.map(chatItem => chatItem.friend_id); // 获得当前消息列表中用户的每个用户的id
-        chatList.forEach((chatItem, idx) => { idMap[chatItem.friend_id] = idx });// 建立用户id和当前数组id的映射关系 方便查找
-
-        if (friend_ids.includes(msg.from_id)) {
-            const indexOfTargetChatItem = idMap[msg.from_id];
-            const { new_msg_count } = chatList[indexOfTargetChatItem];
-            // const tmp = msgMapToChatItem(msg);
-            const newItem = {
-                ...localChatItem,
-                new_msg_count: is_chating ? 0 : new_msg_count + 1
-            };
-            console.log('tmp', newItem);
-            chatList[indexOfTargetChatItem] = newItem;
-            ReactSQLite.updateChatListItem(newItem);
-
-        } else {
-            chatList.push({
-                ...localChatItem,
-                new_msg_count: 1
-            });
-            ReactSQLite.updateChatListItem({
-                ...localChatItem,
-                new_msg_count: 1
-            });
-        }
-
         // 更新消息列表
-        ReactSQLite.addMsg(msgMapToLocalRecord(msg));
-
-        this.setState({
-            chatList
-        });
+        // ReactSQLite.addMsg(msgMapToLocalRecord(msg));
+        actionUpdateRecord && actionUpdateRecord(msgMapToLocalRecord(msg));
+        actionUpdateChatList && actionUpdateChatList({is_chating,msg:localChatItem});
         confirm();
     }
 
@@ -156,6 +126,7 @@ class ChatList extends Component {
 
     // 用户登录成功时触发 从服务端拉取自己离线时未能收到的消息
     handleUpdateMsgList = (newChatList, confirm) => {
+
         console.log(newChatList);
         console.log('fetch newChatList');
         const chatList = this.getCleanChatList(newChatList);
@@ -212,7 +183,7 @@ const mapStateToProps = state => {
         username: state.userinfo.username,
         uid: state.userinfo.uid,
         user_pic: state.userinfo.user_pic,
-        is_chating: state.userinfo.is_chating,
+        is_chating: state.ui.is_chating,
         is_login: state.ui.is_login,
         list: state.chatList.list
     }
@@ -224,7 +195,9 @@ const mapDispatchToProps = dispatch => {
         actionOutChating: bindActionCreators(ActionCreators.ui.actionOutChating, dispatch),
         actionLogout: bindActionCreators(ActionCreators.server.actionLogout, dispatch),
         actionGetChatList: bindActionCreators(ActionCreators.db.actionGetChatList, dispatch),
-        actionClearNewMsgCount: bindActionCreators(ActionCreators.ui.actionClearNewMsgCount, dispatch)
+        actionClearNewMsgCount: bindActionCreators(ActionCreators.ui.actionClearNewMsgCount, dispatch),
+        actionUpdateRecord: bindActionCreators(ActionCreators.db.actionUpdateRecord, dispatch),
+        actionUpdateChatList: bindActionCreators(ActionCreators.db.actionUpdateChatList, dispatch),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ChatList);

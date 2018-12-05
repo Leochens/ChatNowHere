@@ -3,27 +3,9 @@ import styles from './style';
 import { Text, View, ToastAndroid, Image } from 'react-native';
 import ZButton from '../../components/ZButton';
 import ZInputBox from '../../components/ZInputBox';
-import axios from 'axios';
 import { connect } from 'react-redux';
-import config from '../../config';
 import { bindActionCreators } from 'redux';
-import ReactSQLite from '../../nativeModules/ReactSQLite';
 import ActionCreators from '../../actions';
-
-const doLogin = (username, password) => {
-    return axios(
-        `${config.host}:${config.port}/dbtest/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            data: {
-                username,
-                password
-            }
-        }
-    )
-}
 
 
 class Login extends Component {
@@ -34,6 +16,7 @@ class Login extends Component {
             props.navigation.navigate('ChatList');
         }
     }
+    
     state = {
         username: 'hlw',
         password: '123',
@@ -57,23 +40,6 @@ class Login extends Component {
             return;
         }
         actionLogin && actionLogin({username,password});
-
-        // doLogin(username, password)
-        //     .then(res => {
-        //         const { username, uid } = res.data;
-        //         const { password, user_pic } = this.state;
-                // ReactSQLite.createDatabase(`${username}_${uid}.db`); // 给新用户建库
-        //         if (res.data.status === 200) {
-        //             const userinfo = { username, password, user_pic, uid }; // 打包发给reducer
-        //             actionLoginSuc(userinfo);// 发登录成功的action
-        //             navigate('ChatList');// 跳转到聊天列表
-        //             console.log("登录成功");
-        //         } else {
-        //             actionLoginFai && actionLoginFai();
-        //             console.log('登录失败');
-        //         }
-        //     })
-        //     .catch(err =>{ console.log(err);alert("网络错误")});
 
     }
     getUsername = username => {

@@ -6,8 +6,8 @@ import ReactSQLite from '../../nativeModules/ReactSQLite';
 import socket from '../../socket';
 import { connect } from 'react-redux';
 import { msgMapToLocalRecord } from '../../utils/formatMap';
-
-import RefreshListView, { RefreshState } from '../../components/RefreshListView'
+import ActionCreators from '../../actions';
+import { bindActionCreators } from 'redux';
 
 const styles = StyleSheet.create({
     wrapper: {
@@ -114,7 +114,7 @@ class SingleChat extends Component {
                 username: my_name
             }
         } = this.props;
-        console.log('私聊路由跳转参数', chatItemData);
+        console.log('私聊路由跳转参数////', chatItemData);
         const {
             friend_id,
             friend_name,
@@ -131,18 +131,21 @@ class SingleChat extends Component {
     }
     getRecords = () => {
         const chatItemData = this.props.navigation.getParam('data');
-
+        const {actionGetRecord} = this.props;
+        console.log("=======>",actionGetRecord);
         const { friend_id } = chatItemData;
-        console.log("SingleChat | in getRecords", this.state);
-        ReactSQLite.getChatRecords(friend_id, res => {
-            console.log("聊天记录为", res);
-            this.setState({
-                recordList: res.reverse()
-            })
-        });
-        ReactSQLite.getMoreRecords(friend_id, 45, res => {
-            console.log("注意查看45后的消息排序", res)
-        })
+        actionGetRecord(friend_id);
+
+        // console.log("SingleChat | in getRecords", this.state);
+        // ReactSQLite.getChatRecords(friend_id, res => {
+        //     console.log("聊天记录为", res);
+        //     this.setState({
+        //         recordList: res.reverse()
+        //     })
+        // });
+        // ReactSQLite.getMoreRecords(friend_id, 45, res => {
+        //     console.log("注意查看45后的消息排序", res)
+        // })
     }
 
     componentDidMount() {
@@ -204,7 +207,7 @@ class SingleChat extends Component {
                         maxHeight: height - 72
                     }}
                     onEndReached={this._onEndReached}
-                    data={this.state.recordList}
+                    data={this.props.chat.recordList}
                     renderItem={({ item }) => <MessageItem data={
                         {
                             ...item,
@@ -243,6 +246,13 @@ class SingleChat extends Component {
 const mapStateToProps = state => {
     return {
         userinfo: state.userinfo,
+        chat: state.chat
     }
 }
-export default connect(mapStateToProps)(SingleChat);
+const mapDispatchToProps = dispatch => {
+    return {
+        actionGetRecord: bindActionCreators(ActionCreators.db.actionGetRecord,dispatch),
+
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(SingleChat);

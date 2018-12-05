@@ -87,14 +87,15 @@ class ChatList extends Component {
             socket.connect();
             alert("当前socket已经断开" + socket.connected)
         }
-        const { username, uid } = this.props;
-        ReactSQLite.getChatList(list => {
-            if (list) {
-                this.setState({
-                    chatList: list
-                })
-            }
-        });
+        const { username, uid,actionGetChatList } = this.props;
+        actionGetChatList && actionGetChatList();
+        // ReactSQLite.getChatList(list => {
+        //     if (list) {
+        //         this.setState({
+        //             chatList: list
+        //         })
+        //     }
+        // });
         // 获取完本地的再请求加入 然后获取自己在服务器上的未读消息 注意顺序 不然本地的会覆盖网络的
         socket.emit('join', { username, uid });
 
@@ -214,7 +215,7 @@ class ChatList extends Component {
                 <FlatList
                     ref="_flatlist"
                     style={styles.chatList}
-                    data={this.state.chatList}
+                    data={this.props.list}
                     // onEndReached={this.onEndOfList}
                     renderItem={({ item }) => <ListItem
                         data={item}
@@ -241,7 +242,8 @@ const mapStateToProps = state => {
         uid: state.userinfo.uid,
         user_pic: state.userinfo.user_pic,
         is_chating: state.userinfo.is_chating,
-        is_login: state.userinfo.is_login
+        is_login: state.ui.is_login,
+        list: state.chatList.list
     }
 }
 
@@ -249,7 +251,8 @@ const mapDispatchToProps = dispatch => {
     return {
         actionInChating: bindActionCreators(ActionCreators.ui.actionInChating, dispatch),
         actionOutChating: bindActionCreators(ActionCreators.ui.actionOutChating, dispatch),
-        actionLogout: bindActionCreators(ActionCreators.server.actionLogout, dispatch)
+        actionLogout: bindActionCreators(ActionCreators.server.actionLogout, dispatch),
+        actionGetChatList: bindActionCreators(ActionCreators.db.actionGetChatList,dispatch),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ChatList);

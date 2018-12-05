@@ -1,6 +1,7 @@
 import { ACTION_LOGIN, ACTION_IN_CHATING, ACTION_OUT_CHATING, ACTION_LOGOUT } from '../constaints';
 import ReactSQLite from '../nativeModules/ReactSQLite';
 
+
 const userinfo = (state = {
     username: '',
     uid: '',
@@ -30,22 +31,10 @@ const userinfo = (state = {
             }
         }
         case `${ACTION_LOGIN}_FAI`: { // 登录失败
-
             alert("登录失败");
             return state;
         }
-        case ACTION_IN_CHATING: {
-            return {
-                ...state,
-                is_chating: true
-            }
-        }
-        case ACTION_OUT_CHATING: {
-            return {
-                ...state,
-                is_chating: false
-            }
-        }
+       
         case ACTION_LOGOUT: {
             return {
                 ...state,

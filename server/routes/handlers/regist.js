@@ -20,7 +20,7 @@ function handleRegist(data, res) {
             last_login_ip,
             role,
             status,
-            pic)
+            user_pic)
         VALUES(
             '${username}',
             '${password}',

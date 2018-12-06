@@ -8,7 +8,7 @@ import Regist from './containers/Regist/Regist';
 import Main from './containers/Main/Main';
 import ChatList from './containers/ChatList/ChatList';
 import SingleChat from './containers/SingleChat/SingleChat';
-
+import Slider from './components/SideMenu';
 
 export default Navs = StackNavigator({
     Index: {
@@ -45,6 +45,12 @@ export default Navs = StackNavigator({
     },
     Regist: {
         screen: Regist,
+        navigationOptions: ({navigation})=>({
+            header: null
+        })
+    },
+    Slider: {
+        screen: Slider,
         navigationOptions: ({navigation})=>({
             header: null
         })

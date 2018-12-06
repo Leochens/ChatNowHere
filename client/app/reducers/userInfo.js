@@ -7,7 +7,7 @@ const userinfo = (state = {
     uid: '',
     user_pic: '',
     token:'',
-    is_chating: false,
+    isChating: false,
     is_login: false
 }, action) => {
     switch (action.type) {

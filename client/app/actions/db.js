@@ -35,9 +35,23 @@ export const actionUpdateRecord = (msg) => {
         msg
     }
 }
+
+
+export const actionReceiveMsg = (msg,confirm) => {
+    return{
+        type: ACTIONS.ACTION_RECEIVE_MSG,
+        data:{
+            msg,
+            confirm
+        }
+    }
+}
+
+
 export default db = {
     actionGetChatList,
     actionGetRecord,
     actionUpdateRecord,
-    actionUpdateChatList
+    actionUpdateChatList,
+    actionReceiveMsg
 }

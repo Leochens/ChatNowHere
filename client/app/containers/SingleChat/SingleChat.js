@@ -25,6 +25,7 @@ class SingleChat extends Component {
         friend_id: 0,
         friend_name: '',
         friend_pic: '',
+        flag: false
     }
 
     initPage = () => {
@@ -49,7 +50,10 @@ class SingleChat extends Component {
         })
     }
     initListeners = () => {
-        socket.on('receive_msg', this.handleReceiveMsg);
+        this.setState({
+            flag:true
+        })
+        // socket.on('receive_msg', this.handleReceiveMsg);
     }
     getRecords = () => {
         const chatItemData = this.props.navigation.getParam('data');
@@ -61,14 +65,20 @@ class SingleChat extends Component {
 
     componentDidMount() {
         const {onInChating,chat} = this.props;
-        
+        const chatItemData = this.props.navigation.getParam('data');
+
+        const {friend_id,friend_name,friend_pic} = chatItemData;
         this.initPage();
         this.getRecords();
         this.setState({
             recordList:chat.recordList
         })
         this.initListeners();
-        onInChating();
+        onInChating({
+            friend_id,
+            friend_name,
+            friend_pic
+        });
     }
 
     componentDidUpdate() {
@@ -79,21 +89,7 @@ class SingleChat extends Component {
         }
     }
 
-    handleReceiveMsg = msg => {
-        console.log("SingelChat=====>get msg : ", msg);
-        const {clearUnreadMsgCount} = this.props;
 
-        const recordList = this.state.recordList.slice();
-        const localFormatRecord = msgMapToLocalRecord(msg); // 转成本地存储格式的消息
-
-        console.log("更新消息", msg, "本地格式", localFormatRecord);
-        recordList.push(localFormatRecord);
-        this.setState({
-            recordList
-        })
-
-        clearUnreadMsgCount && clearUnreadMsgCount(this.state.friend_id);
-    }
     _onEndReached = () => {
         // alert("加载")
     }
@@ -108,6 +104,8 @@ class SingleChat extends Component {
     }
     render() {
         const { friend_pic, my_pic, friend_name } = this.state;
+        
+        console.log("this=====",this.state);
         const { height, width } = Dimensions.get('window');
         return (
             <View style={styles.wrapper}>
@@ -139,6 +137,11 @@ class SingleChat extends Component {
         const {onOutChating,clearUnreadMsgCount} = this.props;
         onOutChating();
         clearUnreadMsgCount(this.state.friend_id); // 清空未读
+        this.setState({
+            flag:false
+        })
+        // socket.on('receive_msg', ()=>{});
+        // socket.removeEventListener('receive_msg');
         console.log("卸载组件 清空未读");
     }
 }

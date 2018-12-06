@@ -1,6 +1,6 @@
-import { ACTION_GET_RECORD } from '../constaints';
+import { ACTION_GET_RECORD, ACTION_UPDATE_RECORD, ACTION_IN_CHATING, ACTION_OUT_CHATING, ACTION_LOGIN } from '../constaints';
 import ReactSQLite from '../nativeModules/ReactSQLite';
-
+import { msgMapToLocalRecord } from '../utils/formatMap';
 /*
     friend_id: msg.from_id,
     friend_name: msg.from_name,
@@ -11,25 +11,72 @@ import ReactSQLite from '../nativeModules/ReactSQLite';
     msg_status: msg.msg_status
 
 */
-const chat = (state={
-    chatType:0,
-    friendName:'',
-    friendId:0,
-    friendPic:'',
-    myId:0,
-    myName:'',
-    myPic:'',
-    recordList: []
-},action)=>{
-    switch(action.type){
-        case ACTION_GET_RECORD:{
-            const {res} = action;
+const chat = (state = {
+    chatType: 0,
+    friendName: '',
+    friendId: 0,
+    friendPic: '',
+    myId: 0,
+    myName: '',
+    myPic: '',
+    recordList: [],
+    isChating: false
+}, action) => {
+    switch (action.type) {
+        case ACTION_GET_RECORD: {
+            const { res } = action;
             console.log(res.list);
+            res.list.reverse();
             return {
                 ...state,
-                recordList:res.list
+                recordList: res.list
             }
         }
+        case `${ACTION_LOGIN}_SUC`: {
+            const { username, uid, user_pic, token } = action.response;
+            return {
+                ...state,
+                myName: username,
+                myPic: user_pic,
+                myId: uid
+            }
+        }
+        case ACTION_UPDATE_RECORD: {
+            const { msg } = action;
+
+            console.log("新收到消息", msg);
+            if (!state.isChating
+                || (state.friendId != msg.friend_id)
+            )
+                return state;
+
+
+            const recordList = state.recordList.slice();
+            recordList.push(msg);
+            return {
+                ...state,
+                recordList
+            }
+
+        }
+        case ACTION_IN_CHATING: {
+            const {friend_name,friend_id,friend_pic} = action.data;
+            return {
+                ...state,
+                friendName:friend_name,
+                friendId:friend_id,
+                friendPic:friend_pic,
+                isChating: true
+            }
+        }
+        case ACTION_OUT_CHATING: {
+            return {
+                ...state,
+                isChating: false,
+                recordList: []
+            }
+        }
+
         default: return state
     }
 }

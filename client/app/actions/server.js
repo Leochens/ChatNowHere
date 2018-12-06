@@ -21,6 +21,14 @@ const actionLogin = (data) => {
     }
 }
 
+const actionFetchChatList = (newChatList, confirm) => {
+    return {
+        type: ACTIONS.ACTION_FETCH_CHATLIST,
+        data: {
+            newChatList, confirm
+        }
+    }
+}
 
 
 const actionLogout = () => {
@@ -31,5 +39,6 @@ const actionLogout = () => {
 
 export default server = {
     actionLogin,
-    actionLogout
+    actionLogout,
+    actionFetchChatList
 }

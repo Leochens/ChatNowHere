@@ -1,8 +1,9 @@
 import * as ACTIONS from '../constaints';
 
-export const actionInChating = () => {
+export const actionInChating = (data) => {
     return {
-        type: ACTIONS.ACTION_IN_CHATING
+        type: ACTIONS.ACTION_IN_CHATING,
+        data
     }
 }
 
@@ -18,6 +19,14 @@ export const actionOutChating = () => {
 export const actionClearNewMsgCount = (friend_id) => {
     return {
         type: ACTIONS.ACTION_CLEAR_NEW_MSG_COUNT,
+        friend_id
+    }
+}
+
+
+export const actionUpdataRecord = (friend_id) => {
+    return {
+        type: ACTIONS.ACTION_UPDATE_RECORD,
         friend_id
     }
 }

@@ -1,21 +1,22 @@
-import { ACTION_IN_CHATING,ACTION_OUT_CHATING } from '../constaints';
+import { ACTION_IN_CHATING, ACTION_OUT_CHATING } from '../constaints';
+import ReactSQLite from '../nativeModules/ReactSQLite';
 
 
-const ui = (state={
-    is_chating: false
-},action)=>{
+const ui = (state = {
+    isChating: false
+}, action) => {
 
-    switch(action.type){
+    switch (action.type) {
         case ACTION_IN_CHATING: {
             return {
                 ...state,
-                is_chating: true
+                isChating: true
             }
         }
         case ACTION_OUT_CHATING: {
             return {
                 ...state,
-                is_chating: false
+                isChating: false
             }
         }
         default: return state

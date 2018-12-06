@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, TextInput, ToastAndroid } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import ZButton from '../../components/ZButton';
 import ActionCreators from '../../actions';
 import ImagePicker from 'react-native-image-picker';
+import axios from 'axios';
+import * as qiniu from 'qiniu-js';
 class Slider extends Component {
     state = {
         isEditingCity: false,
@@ -128,23 +129,27 @@ class Slider extends Component {
             title: '上传头像',
             quality: 1.0,
             maxHeight: 300,
-            maxWidth:300,
-            takePhotoButtonTitle:'现场拍一张',
-            chooseFromLibraryButtonTitle:'从相册选择',
-            cancelButtonTitle:'取消上传',
-            storageOptions:{
+            maxWidth: 300,
+            takePhotoButtonTitle: '现场拍一张',
+            chooseFromLibraryButtonTitle: '从相册选择',
+            cancelButtonTitle: '取消上传',
+            storageOptions: {
                 skipBackup: true
             }
-        },res=>{
-            if(res.didCancel){
+        }, res => {
+            if (res.didCancel) {
                 console.log("用户取消")
-            }else if(res.error){
+            } else if (res.error) {
                 console.log("上传出现错误");
-            }else if(res.customButton){
+            } else if (res.customButton) {
                 console.log("用户 custom button");
+            } else {
+                console.log(res)
+                // qiniu.upload(res.uri,res.fileName,)
+                
+
             }
 
-            console.log(res)
         })
     }
     render() {
@@ -157,9 +162,9 @@ class Slider extends Component {
                 paddingTop: 32
             }}>
                 {this.renderWeather()}
-                <ZButton 
-                onClick={this.selectPhoto}
-                text={"上传头像"}></ZButton>
+                {/* <ZButton
+                    onClick={this.selectPhoto}
+                    text={"上传头像"}></ZButton> */}
 
             </View>
         )

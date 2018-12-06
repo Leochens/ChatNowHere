@@ -24,6 +24,18 @@ actionsFilter[ACTIONS.ACTION_GET_RECORD] = params => {
     });
 }
 
+actionsFilter[ACTIONS.ACTION_GET_MORE_RECORD] = params => {
+    const { friend_id,initId } = params;
+    return new Promise((resolve, reject) => {
+        ReactSQLite.getMoreRecords(friend_id,initId,list => {
+            if (list) {
+                return resolve({list});
+            }
+            return reject("查询更多聊天记录失败")
+        });
+    });
+}
+
 export default store => next => action => {
     if (!action.DB_API) {
         return next(action);
@@ -37,7 +49,7 @@ export default store => next => action => {
 
     actionsFilter[type](params).then(res => {
         return next({
-            type,
+            type:`${type}_SUC`,
             res
         })
     }).catch(err => { console.log("DBAPI", err) });

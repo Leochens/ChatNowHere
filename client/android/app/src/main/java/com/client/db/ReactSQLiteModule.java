@@ -136,7 +136,7 @@ public class ReactSQLiteModule implements ReactPackage{
 
         @ReactMethod
         public void getMoreRecords(int _friend_id,int initId,Callback sucCallback){
-            Cursor cursor = db.rawQuery("SELECT * FROM message WHERE friend_id='"+_friend_id+"' and id< '"+initId+"'  LIMIT 20",null);
+            Cursor cursor = db.rawQuery("SELECT * FROM message WHERE friend_id='"+_friend_id+"' and id < '"+initId+"' ORDER BY id DESC LIMIT 20",null);
 
             WritableArray list = new WritableNativeArray();
 
@@ -196,6 +196,7 @@ public class ReactSQLiteModule implements ReactPackage{
             Log.d("zhlsql","查询和好友"+_friend_id+"的聊天记录"+list.toString());
             sucCallback.invoke(list);
         }
+
         @ReactMethod
         public void addMsgList(ReadableArray msgList){
 
@@ -247,6 +248,12 @@ public class ReactSQLiteModule implements ReactPackage{
             sucCallback.invoke(list);
         }
 
+        @ReactMethod
+        public void deleteFriendRecords(int friend_id){
+            db.execSQL("DELETE  FROM message WHERE friend_id ='"+friend_id+"'");
+            db.execSQL("DELETE FROM chat_list WHERE friend_id = '"+friend_id+"'");
+            Toast.makeText(getReactApplicationContext(),"删除成功",Toast.LENGTH_SHORT).show();
+        }
         // 消除
         @ReactMethod
         public void clearUnreadMsgCount(int _friend_id){

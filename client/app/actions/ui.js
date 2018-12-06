@@ -31,11 +31,19 @@ export const actionUpdataRecord = (friend_id) => {
     }
 }
 
+export const actionDeleteFriendRecords = friend_id => {
+    return{
+        type: ACTIONS.ACTION_DELETE_FRIEND_RECORD,
+        friend_id
+    }
+}
+
 
 
 export default ui = {
     actionInChating,
     actionOutChating,
     actionClearNewMsgCount,
+    actionDeleteFriendRecords
     
 }

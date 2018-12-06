@@ -1,4 +1,4 @@
-import { ACTION_GET_RECORD, ACTION_UPDATE_RECORD, ACTION_IN_CHATING, ACTION_OUT_CHATING, ACTION_LOGIN } from '../constaints';
+import { ACTION_GET_RECORD, ACTION_UPDATE_RECORD, ACTION_IN_CHATING, ACTION_OUT_CHATING, ACTION_LOGIN, ACTION_GET_MORE_RECORD } from '../constaints';
 import ReactSQLite from '../nativeModules/ReactSQLite';
 import { msgMapToLocalRecord } from '../utils/formatMap';
 /*
@@ -23,7 +23,7 @@ const chat = (state = {
     isChating: false
 }, action) => {
     switch (action.type) {
-        case ACTION_GET_RECORD: {
+        case `${ACTION_GET_RECORD}_SUC`: {
             const { res } = action;
             console.log(res.list);
             res.list.reverse();
@@ -32,6 +32,18 @@ const chat = (state = {
                 recordList: res.list
             }
         }
+        case `${ACTION_GET_MORE_RECORD}_SUC`: {
+            const { res } = action;
+            const {recordList} = state;
+            console.log(res.list);
+            res.list.reverse();
+
+            return {
+                ...state,
+                recordList: res.list.concat(recordList)
+            }
+        }
+        
         case `${ACTION_LOGIN}_SUC`: {
             const { username, uid, user_pic, token } = action.response;
             return {

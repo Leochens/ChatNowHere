@@ -29,6 +29,21 @@ const actionGetRecord = friend_id => {
         }
     }
 }
+
+
+const actionGetMoreRecord = (friend_id,initId) => {
+
+    return {
+        DB_API:{
+            type: ACTIONS.ACTION_GET_MORE_RECORD,
+            params: {
+                friend_id,
+                initId
+            }
+        }
+    }
+}
+
 export const actionUpdateRecord = (msg) => {
     return{
         type: ACTIONS.ACTION_UPDATE_RECORD,
@@ -53,5 +68,6 @@ export default db = {
     actionGetRecord,
     actionUpdateRecord,
     actionUpdateChatList,
-    actionReceiveMsg
+    actionReceiveMsg,
+    actionGetMoreRecord
 }

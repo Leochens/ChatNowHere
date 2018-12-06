@@ -100,6 +100,7 @@ class ChatList extends Component {
     }
     render() {
         const navigate = this.props.navigation.navigate;
+        const {actionDeleteFriendRecords} = this.props;
         return (
             <SliderMenu
                 menu={<Slider/>}>
@@ -109,10 +110,10 @@ class ChatList extends Component {
                         title="消息"
                         showBack={false}
                         moreOptions={[
-                            {
-                                title: '切换账号',
-                                onPress: this.changeUser
-                            }
+                            // {
+                            //     title: '切换账号',
+                            //     onPress: this.changeUser
+                            // }
                         ]} />
                     <FlatList
                         ref="_flatlist"
@@ -122,6 +123,7 @@ class ChatList extends Component {
                         renderItem={({ item }) => <ListItem
                             data={item}
                             navigate={navigate}
+                            onDelete={actionDeleteFriendRecords}
                         />} />
                     <TabBar
                         navigate={navigate}
@@ -154,6 +156,7 @@ const mapDispatchToProps = dispatch => {
         actionUpdateChatList: bindActionCreators(ActionCreators.db.actionUpdateChatList, dispatch),
         actionFetchChatList: bindActionCreators(ActionCreators.server.actionFetchChatList, dispatch),
         actionReceiveMsg: bindActionCreators(ActionCreators.db.actionReceiveMsg, dispatch),
+        actionDeleteFriendRecords:bindActionCreators(ActionCreators.ui.actionDeleteFriendRecords,dispatch),
 
     }
 }

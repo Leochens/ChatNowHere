@@ -1,4 +1,4 @@
-import { ACTION_GET_CHATLIST, ACTION_CLEAR_NEW_MSG_COUNT, ACTION_UPDATE_RECORD, ACTION_UPDATE_CHATLIST, ACTION_FETCH_CHATLIST, ACTION_RECEIVE_MSG } from '../constaints';
+import { ACTION_GET_CHATLIST, ACTION_CLEAR_NEW_MSG_COUNT, ACTION_UPDATE_RECORD, ACTION_UPDATE_CHATLIST, ACTION_FETCH_CHATLIST, ACTION_RECEIVE_MSG, ACTION_DELETE_FRIEND_RECORD } from '../constaints';
 import ReactSQLite from '../nativeModules/ReactSQLite';
 import { msgMapToChatItem, msgMapToLocalRecord } from '../utils/formatMap';
 /*
@@ -13,7 +13,7 @@ const chatList = (state = {
     list: []
 }, action) => {
     switch (action.type) {
-        case ACTION_GET_CHATLIST: {
+        case `${ACTION_GET_CHATLIST}_SUC`: {
             const { res } = action;
             console.log(res.list);
             return {
@@ -24,7 +24,7 @@ const chatList = (state = {
         case ACTION_CLEAR_NEW_MSG_COUNT: {
             const { friend_id } = action;
             const list = state.list.slice();
-            list.forEach((item,idx) => {
+            list.forEach((item, idx) => {
                 if (item.friend_id === friend_id) {
                     list[idx] = {
                         ...list[idx],
@@ -49,7 +49,7 @@ const chatList = (state = {
                 return state;
             const { msg: localChatItem, isChating } = action.data;
 
-            console.log(localChatItem,action);
+            console.log(localChatItem, action);
             const list = state.list.slice();
             const idMap = {};
             let friend_ids = list.map(chatItem => chatItem.friend_id); // 获得当前消息列表中用户的每个用户的id
@@ -84,8 +84,8 @@ const chatList = (state = {
             const { newChatList, confirm } = action.data;
             console.log(newChatList);
             console.log('new fetch newChatList');
-            const chatList = this.getCleanChatList(state.list,newChatList);
-            
+            const chatList = this.getCleanChatList(state.list, newChatList);
+
 
             // 将拉取得未读消息存入sqlite
             const localFormatChatList = newChatList.map(item => msgMapToLocalRecord(item));
@@ -94,22 +94,44 @@ const chatList = (state = {
 
             return {
                 ...state,
-                list:chatList
+                list: chatList
+            }
+        }
+
+        case ACTION_DELETE_FRIEND_RECORD: {
+            const {friend_id} = action;
+            const list= state.list.slice();
+            let idx = -1;
+            list.forEach((item,id)=>{
+                if(item.friend_id === friend_id){
+                    idx = id;
+                }
+            })
+            if(idx===-1)
+                return state;
+            
+            list.splice(idx,1);
+
+            ReactSQLite.deleteFriendRecords(friend_id);
+            return {
+                ...state,
+                list
             }
         }
 
         default: return state
     }
+
 }
 export default chatList;
 
 
-getCleanChatList = (oldList,list) => {
+getCleanChatList = (oldList, list) => {
     const chatList = oldList;
     const idMap = {};
     let friend_ids = chatList.map(msg => msg.friend_id); // 获得当前消息列表中用户的每个用户的id
 
-    console.log("getCleanChatList",list);
+    console.log("getCleanChatList", list);
 
     list.forEach(msg => {
         friend_ids = chatList.map(chatItem => chatItem.friend_id); // 获得当前消息列表中用户的每个用户的id

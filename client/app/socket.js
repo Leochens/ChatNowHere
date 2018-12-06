@@ -18,14 +18,14 @@ socket.on('connect_failed', function (data) {
 });
 socket.on('error', function (data) {
   console.log("error");
-  alert("连接服务器失败！！！");
+  alert("连接服务器失败");
 });
 socket.on('reconnecting', function (data) {
   console.log("reconnecting");
   global.reconnectFailCount++;
   if (global.reconnectFailCount >= 6) {
 
-    alert("连接服务器失败，请检查您当前的网络");
+    alert("连接服务器失败，请检查您当前的网络,也可能是服务器出错了");
   }
 });
 socket.on('reconnect', function (data) {

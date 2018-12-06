@@ -153,6 +153,7 @@ export default class TabBar extends Component {
                 style={{
                     width: Dimensions.get('window').width
                 }}
+                ListEmptyComponent={<Text style={{width:'100%',height:'100%',textAlign:'center'}}>无匹配项</Text>}
                 data={userlist}
                 renderItem={({ item }) => (<ResultItem 
                     navigate={navigate} data={item} 
@@ -188,6 +189,7 @@ export default class TabBar extends Component {
                         <TextInput
                             placeholder={'搜索用户'}
                             onChangeText={this.getUsername}
+                            onSubmitEditing={this.onBtnClick}
                             style={{
                                 padding: 8,
                                 // width: 160,

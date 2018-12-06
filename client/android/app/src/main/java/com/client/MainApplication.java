@@ -8,13 +8,13 @@ import android.widget.Toast;
 import com.client.db.ReactSQLiteModule;
 import com.facebook.react.ReactApplication;
 import com.imagepicker.ImagePickerPackage;
-import com.github.wumke.RNExitApp.RNExitAppPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.pilloxa.backgroundjob.BackgroundJobPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,14 +32,14 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new ImagePickerPackage(),
-            new RNExitAppPackage()
-,new AppReactPackage(),
+            new AppReactPackage(),
             new VectorIconsPackage(),
             new LinearGradientPackage(),
               new ZHLToast(),
               new ServicePackage(),
               new ReactSQLiteModule(),
-              new GetLocationPackage()
+              new GetLocationPackage(),
+              new BackgroundJobPackage()
       );
     }
 

@@ -80,12 +80,12 @@ class NavBar extends Component {
                 width,
                 backgroundColor: '#000',
                 opacity: 0.6,
-                zIndex: 2
+                zIndex: 100
             }}>
             <Text style={{
                 width: 80,
                 height: 48,
-                backgroundColor: '#7367F0',
+                backgroundColor: '#a00',
                 position: 'absolute',
                 bottom: '10%',
                 borderRadius: 40,
@@ -114,6 +114,7 @@ class NavBar extends Component {
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexDirection: 'row',
+                    // zIndex:2
                     // height: 48
                 }}  >
                 {this.renderMask()}

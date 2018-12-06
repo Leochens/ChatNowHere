@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ZButton from '../../components/ZButton';
 import ActionCreators from '../../actions';
+import ImagePicker from 'react-native-image-picker';
 class Slider extends Component {
     state = {
         isEditingCity: false,
@@ -122,6 +123,30 @@ class Slider extends Component {
             </View>
         );
     }
+    selectPhoto = () => {
+        ImagePicker.showImagePicker({
+            title: '上传头像',
+            quality: 1.0,
+            maxHeight: 300,
+            maxWidth:300,
+            takePhotoButtonTitle:'现场拍一张',
+            chooseFromLibraryButtonTitle:'从相册选择',
+            cancelButtonTitle:'取消上传',
+            storageOptions:{
+                skipBackup: true
+            }
+        },res=>{
+            if(res.didCancel){
+                console.log("用户取消")
+            }else if(res.error){
+                console.log("上传出现错误");
+            }else if(res.customButton){
+                console.log("用户 custom button");
+            }
+
+            console.log(res)
+        })
+    }
     render() {
         return (
             <View style={{
@@ -132,13 +157,10 @@ class Slider extends Component {
                 paddingTop: 32
             }}>
                 {this.renderWeather()}
-                <ZButton text={"哈哈哈哈"}></ZButton>
-                <ZButton text={"哈哈哈哈"}></ZButton>
-                <ZButton text={"哈哈哈哈"}></ZButton>
-                <ZButton text={"哈哈哈哈"}></ZButton>
-                <ZButton text={"哈哈哈哈"}></ZButton>
-                <ZButton text={"哈哈哈哈"}></ZButton>
-                <ZButton text={"哈哈哈哈"}></ZButton>
+                <ZButton 
+                onClick={this.selectPhoto}
+                text={"上传头像"}></ZButton>
+
             </View>
         )
     }

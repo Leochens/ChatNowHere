@@ -7,6 +7,8 @@ import android.widget.Toast;
 
 import com.client.db.ReactSQLiteModule;
 import com.facebook.react.ReactApplication;
+import com.imagepicker.ImagePickerPackage;
+import com.github.wumke.RNExitApp.RNExitAppPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.facebook.react.ReactNativeHost;
@@ -28,7 +30,9 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage()
+          new MainReactPackage(),
+            new ImagePickerPackage(),
+            new RNExitAppPackage()
 ,new AppReactPackage(),
             new VectorIconsPackage(),
             new LinearGradientPackage(),

@@ -148,6 +148,8 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-image-picker')
+    compile project(':react-native-exit-app')
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     compile project(':react-native-vector-icons')
     compile project(':react-native-linear-gradient')

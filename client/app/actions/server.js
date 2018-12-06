@@ -37,8 +37,20 @@ const actionLogout = () => {
     }
 }
 
+
+const actionGetWeather= (params) => {
+    return {
+        WEATHER_API:{
+            type: ACTIONS.ACTION_GET_WEATHER,
+            params
+        }
+    }
+}
+
+
 export default server = {
     actionLogin,
     actionLogout,
-    actionFetchChatList
+    actionFetchChatList,
+    actionGetWeather
 }

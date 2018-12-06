@@ -34,7 +34,8 @@ public class MainApplication extends Application implements ReactApplication {
             new LinearGradientPackage(),
               new ZHLToast(),
               new ServicePackage(),
-              new ReactSQLiteModule()
+              new ReactSQLiteModule(),
+              new GetLocationPackage()
       );
     }
 

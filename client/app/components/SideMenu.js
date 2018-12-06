@@ -28,7 +28,7 @@ export default class App extends Component {
     }
 
     render() {
-        const menu = <Text style={{marginTop: 0}} onPress={() => alert('点击了aaa')}>aaa</Text>;
+        const {menu} = this.props;
         return (
 
             <SideMenu

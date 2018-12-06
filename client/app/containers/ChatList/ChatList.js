@@ -10,7 +10,8 @@ import ActionCreators from '../../actions';
 import ListItem from './ListItem/ListItem';
 import { msgMapToChatItem, msgMapToLocalRecord } from '../../utils/formatMap';
 import TabBar from '../../components/TabBar';
-import Slider from '../../components/SideMenu';
+import SliderMenu from '../../components/SideMenu';
+import Slider from '../Slider/Slider';
 
 const styles = StyleSheet.create({
     chatList: {
@@ -86,23 +87,6 @@ class ChatList extends Component {
 
 
 
-    onTouchStart = e => {
-        console.log(e.nativeEvent.locationX);
-        this.setState({
-            startX: e.nativeEvent.locationX,
-        })
-    }
-    onTouchEnd = e => {
-        const { startX } = this.state;
-        const { locationX: endX } = e.nativeEvent;
-        console.log("endX", endX);
-        console.log('StartX', startX, endX > startX)
-
-        if (endX > startX) {
-            alert("左滑");
-            this.props.navigation.navigate("Slider");
-        }
-    }
     changeUser = () => {
         socket.disconnect();
         this.props.navigation.navigate("Login");
@@ -116,14 +100,10 @@ class ChatList extends Component {
     }
     render() {
         const navigate = this.props.navigation.navigate;
-        const menu = <Text style={{ marginTop: 22 }}>aaa</Text>;
         return (
-            <Slider>
-
+            <SliderMenu
+                menu={<Slider/>}>
                 <View
-                    // onStartShouldSetResponderCapture={this.onStartShouldSetResponderCapture}
-                    // onTouchStart={this.onTouchStart}
-                    // onTouchEnd={this.onTouchEnd}
                     style={styles.wrapper}>
                     <NavBar
                         title="消息"
@@ -149,7 +129,7 @@ class ChatList extends Component {
                     />
 
                 </View>
-            </Slider>
+            </SliderMenu>
         );
     }
 }

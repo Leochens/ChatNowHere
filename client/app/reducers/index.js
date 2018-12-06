@@ -3,6 +3,7 @@ import userinfo from './userInfo';
 import ui from './ui';
 import chatList from './chatList';
 import chat from './chat';
+import weather from './weather';
 const test = (state = {
     v: 16
 }, action) => {
@@ -16,5 +17,6 @@ export default combineReducers({
     userinfo,
     ui,
     chatList,
-    chat
+    chat,
+    weather
 });

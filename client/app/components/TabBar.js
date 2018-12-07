@@ -88,7 +88,7 @@ export default class TabBar extends Component {
                 style={{
                     position: 'absolute',
 
-                    top: -Dimensions.get('window').height,
+                    top: -Dimensions.get('window').height+48,
                     bottom: 0,
                     left: 0,
                     right: 0,
@@ -105,14 +105,16 @@ export default class TabBar extends Component {
                 onClick={isPaneActive ? this.hidePane : this.showPane}
                 icon={{
                     name: isPaneActive ? 'close' : 'plus',
-                    color: '#fff',
+                    color: isPaneActive ? '#a00':'#9f9fff',
                     size: 24
                 }}
                 style={{
 
                     width: '100%',
                     height: 48,
-                    backgroundColor: isPaneActive ? '#a00' : '#9f9fff',
+                    borderTopColor:'#eee',
+                    borderTopWidth:0.5,
+                    backgroundColor: '#fff',
                     borderRadius: 0,
                     zIndex: 4
                 }}
@@ -179,7 +181,7 @@ export default class TabBar extends Component {
                 right: 0,
 
                 alignItems: 'center',
-                backgroundColor: '#F7F1FF'
+                backgroundColor: '#fff'
             }}>
                 <View style={{ flexDirection: 'row' }}>
 

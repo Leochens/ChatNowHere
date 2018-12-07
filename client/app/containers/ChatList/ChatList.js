@@ -46,7 +46,7 @@ class ChatList extends Component {
         });
     }
 
-    async _handleAppStateChange = (nextAppState) => {
+    async _handleAppStateChange(nextAppState){
         const { username, uid } = this.props;
 
         if (nextAppState != null && nextAppState === 'active') {

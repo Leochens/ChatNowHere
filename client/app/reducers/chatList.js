@@ -1,5 +1,6 @@
 import { ACTION_GET_CHATLIST, ACTION_CLEAR_NEW_MSG_COUNT, ACTION_UPDATE_RECORD, ACTION_UPDATE_CHATLIST, ACTION_FETCH_CHATLIST, ACTION_RECEIVE_MSG, ACTION_DELETE_FRIEND_RECORD } from '../constaints';
 import ReactSQLite from '../nativeModules/ReactSQLite';
+import {ToastAndroid} from 'react-native';
 import { msgMapToChatItem, msgMapToLocalRecord } from '../utils/formatMap';
 /*
     friend_id: parseInt(msg.from_id),
@@ -40,6 +41,7 @@ const chatList = (state = {
         }
         case ACTION_UPDATE_RECORD: {
             const { msg } = action;
+            ToastAndroid.show(`${msg.friend_name}:${msg.content}`,ToastAndroid.SHORT);
             ReactSQLite.addMsg(msg);
 
         }
@@ -84,7 +86,7 @@ const chatList = (state = {
             const { newChatList, confirm } = action.data;
             console.log(newChatList);
             console.log('new fetch newChatList');
-            const chatList = this.getCleanChatList(state.list, newChatList);
+            const chatList = this.getCleanChatList(state.list.slice(), newChatList);
 
 
             // 将拉取得未读消息存入sqlite

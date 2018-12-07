@@ -16,6 +16,7 @@
     "react-back-home": "^0.2.15",
     "react-native": "0.57.4",
     "react-native-background-job": "^2.2.0",
+    "react-native-background-task": "^0.2.1",
     "react-native-exit-app": "^1.0.0",
     "react-native-image-picker": "^0.27.1",
     "react-native-linear-gradient": "^2.5.2",

@@ -2,10 +2,19 @@ import config from './config';
 
 import io from 'socket.io-client';
 
-const socket = io(`${config.host}:${config.port}`, {
+let socket = io(`${config.host}:${config.port}`, {
   transports: ['websocket'],
   reconnection: true
 });
+
+
+export function manuReconnect(){
+  socket = io(`${config.host}:${config.port}`, {
+    transports: ['websocket'],
+    reconnection: true
+  });
+}
+
 
 
 socket.on('connect', function (data) {
@@ -34,6 +43,7 @@ socket.on('reconnect', function (data) {
 });
 socket.on('disconnect', function (data) {
   console.log("disconnect");
+  // socket.disconnect();
 });
 
 

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import { View, StyleSheet, FlatList, BackHandler, NativeModules, Text, ToastAndroid } from 'react-native';
+import { View, StyleSheet, FlatList, BackHandler, NativeModules, Text, ToastAndroid, AppState } from 'react-native';
 import NavBar from '../../components/NavBar';
-import socket from '../../socket';
+import socket,{manuReconnect} from '../../socket';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ReactSQLite from '../../nativeModules/ReactSQLite';
@@ -12,7 +12,7 @@ import { msgMapToChatItem, msgMapToLocalRecord } from '../../utils/formatMap';
 import TabBar from '../../components/TabBar';
 import SliderMenu from '../../components/SideMenu';
 import Slider from '../Slider/Slider';
-
+let leaveTime = Date.now();
 const styles = StyleSheet.create({
     chatList: {
         backgroundColor: '#fff'
@@ -33,17 +33,49 @@ class ChatList extends Component {
     constructor(props) {
         super(props);
         const { username, uid, actionFetchChatList, actionReceiveMsg } = props;
+        AppState.addEventListener('change', this._handleAppStateChange)
         BackHandler.addEventListener('hardwareBackPress', this.handleback);
         socket.on('fetch_receive_msg', actionFetchChatList);
         socket.on('apply_socket_suc', this.handleApplySocketSuc);
         socket.on('apply_socket_err', this.handleApplySocketErr);
         socket.on('receive_msg', this.handleUpdateMsg);
-
         socket.on('reconnect', function (data) {
             console.log("ChatList reconnect");
             // 重连后再发一遍join
             socket.emit('join', { username, uid });
         });
+    }
+
+    _handleAppStateChange = (nextAppState) => {
+        const { username, uid } = this.props;
+
+        if (nextAppState != null && nextAppState === 'active') {
+            //如果是true ，表示从后台进入了前台 ，请求数据，刷新页面。或者做其他的逻辑
+            if (this.flage) {
+                //这里的逻辑表示 ，第一次进入前台的时候 ，不会进入这个判断语句中。
+                // 因为初始化的时候是false ，当进入后台的时候 ，flag才是true ，
+                // 当第二次进入前台的时候 ，这里就是true ，就走进来了。
+                //测试通过
+                alert("从后台进入前台");
+                // 这个地方进行网络请求等其他逻辑。
+                console.log("当前socket状态", socket.connected);
+                const enterTime = Date.now();
+                console.log("leav enter ", leaveTime,enterTime);
+                if (enterTime - leaveTime >= 60000) {// 如果连接断开就重连
+                    console.log("进入后台超过十秒,重连");
+                    socket.disconnect();
+                    socket.connect();
+                    socket.emit('join', { username, uid });
+                }
+            }
+            this.flage = false;
+        } else if (nextAppState != null && nextAppState === 'background') {
+            this.flage = true;
+
+            leaveTime = Date.now();
+            console.log("进入后台 leave time",leaveTime);
+        }
+        // console.log(this.flage);
     }
     handleback = () => {
         if (this.props.isChating)
@@ -100,10 +132,10 @@ class ChatList extends Component {
     }
     render() {
         const navigate = this.props.navigation.navigate;
-        const {actionDeleteFriendRecords} = this.props;
+        const { actionDeleteFriendRecords } = this.props;
         return (
             <SliderMenu
-                menu={<Slider/>}>
+                menu={<Slider />}>
                 <View
                     style={styles.wrapper}>
                     <NavBar
@@ -156,7 +188,7 @@ const mapDispatchToProps = dispatch => {
         actionUpdateChatList: bindActionCreators(ActionCreators.db.actionUpdateChatList, dispatch),
         actionFetchChatList: bindActionCreators(ActionCreators.server.actionFetchChatList, dispatch),
         actionReceiveMsg: bindActionCreators(ActionCreators.db.actionReceiveMsg, dispatch),
-        actionDeleteFriendRecords:bindActionCreators(ActionCreators.ui.actionDeleteFriendRecords,dispatch),
+        actionDeleteFriendRecords: bindActionCreators(ActionCreators.ui.actionDeleteFriendRecords, dispatch),
 
     }
 }

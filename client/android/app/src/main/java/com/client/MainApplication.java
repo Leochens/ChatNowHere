@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.client.db.ReactSQLiteModule;
 import com.facebook.react.ReactApplication;
+import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
@@ -31,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new BackgroundTaskPackage(),
             new ImagePickerPackage(),
             new AppReactPackage(),
             new VectorIconsPackage(),
@@ -60,6 +62,7 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
 
     SoLoader.init(this, /* native exopackage */ false);
+    BackgroundTaskPackage.useContext(this);
   }
 
 }

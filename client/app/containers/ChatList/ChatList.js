@@ -46,7 +46,7 @@ class ChatList extends Component {
         });
     }
 
-    _handleAppStateChange = (nextAppState) => {
+    async _handleAppStateChange = (nextAppState) => {
         const { username, uid } = this.props;
 
         if (nextAppState != null && nextAppState === 'active') {
@@ -61,11 +61,11 @@ class ChatList extends Component {
                 console.log("当前socket状态", socket.connected);
                 const enterTime = Date.now();
                 console.log("leav enter ", leaveTime,enterTime);
-                if (enterTime - leaveTime >= 60000) {// 如果连接断开就重连
+                if (enterTime - leaveTime >= 30000) {// 如果连接断开就重连
                     console.log("进入后台超过十秒,重连");
-                    socket.disconnect();
-                    socket.connect();
-                    socket.emit('join', { username, uid });
+                    await socket.disconnect();
+                    await socket.connect();
+                    await socket.emit('join', { username, uid });
                 }
             }
             this.flage = false;

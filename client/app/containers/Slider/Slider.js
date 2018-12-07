@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TextInput, ToastAndroid } from 'react-native';
+import { Text, View, StyleSheet, TextInput, ToastAndroid, ImageBackground, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ActionCreators from '../../actions';
 import ImagePicker from 'react-native-image-picker';
-import axios from 'axios';
-import * as qiniu from 'qiniu-js';
+import ZButton from '../../components/ZButton';
 class Slider extends Component {
     state = {
         isEditingCity: false,
-        city: ''
+        city: '',
+        // bg: 'https://images2017.cnblogs.com/blog/804440/201712/804440-20171201150548758-773795005.png'
     }
     componentDidMount() {
-        const { actionGetWeather } = this.props;
+        const { actionGetWeather, actionGetSiderBgImg } = this.props;
         const initCity = '保定';
         actionGetWeather({ version: 'v1', city: initCity });
+        actionGetSiderBgImg();
         this.setState({
             city: initCity
         })
@@ -125,9 +126,10 @@ class Slider extends Component {
         );
     }
     selectPhoto = () => {
+        const { actionSetSiderBgImg } = this.props;
         ImagePicker.showImagePicker({
             title: '上传头像',
-            quality: 1.0,
+            quality: 1,
             maxHeight: 300,
             maxWidth: 300,
             takePhotoButtonTitle: '现场拍一张',
@@ -145,28 +147,46 @@ class Slider extends Component {
                 console.log("用户 custom button");
             } else {
                 console.log(res)
-                // qiniu.upload(res.uri,res.fileName,)
-                
+                // // qiniu.upload(res.uri,res.fileName,)
+                // this.setState({
+                //     bg: res.uri
+                // });
+                actionSetSiderBgImg(res.uri); // 将用户设置的背景图存下来
 
             }
 
         })
     }
     render() {
+        const { width, height } = Dimensions.get('window');
         return (
-            <View style={{
-                width: '100%',
-                height: '100%',
-                backgroundColor: '#fff',
-                paddingLeft: 16,
-                paddingTop: 32
-            }}>
+            <ImageBackground
+                resizeMode={'cover'}
+                style={{
+                    width,
+                    height,
+                    backgroundColor: '#fff',
+                    paddingLeft: 16,
+                    paddingTop: 32,
+                }}
+                source={{ uri: this.props.siderBgImg }}>
                 {this.renderWeather()}
-                {/* <ZButton
-                    onClick={this.selectPhoto}
-                    text={"上传头像"}></ZButton> */}
+                <ZButton
+                    style={{
+                        backgroundColor: 'transparent',
+                        width: 100,
+                        borderWidth: 1,
+                        borderColor: '#eee',
+                        borderRadius: 8,
+                        alignSelf:'flex-start',
+                        marginTop: 24
 
-            </View>
+                    }}
+                    onClick={this.selectPhoto}
+                    text={"更换背景图"}></ZButton>
+
+            </ImageBackground>
+
         )
     }
 }
@@ -174,12 +194,15 @@ class Slider extends Component {
 
 const mstp = state => {
     return {
-        weather: state.weather
+        weather: state.weather,
+        siderBgImg: state.userinfo.siderBgImg
     }
 }
 const mdtp = dispatch => {
     return {
-        actionGetWeather: bindActionCreators(ActionCreators.server.actionGetWeather, dispatch)
+        actionGetWeather: bindActionCreators(ActionCreators.server.actionGetWeather, dispatch),
+        actionGetSiderBgImg: bindActionCreators(ActionCreators.db.actionGetSiderBgImg, dispatch),
+        actionSetSiderBgImg: bindActionCreators(ActionCreators.db.actionSetSiderBgImg, dispatch),
     }
 }
 export default connect(mstp, mdtp)(Slider);

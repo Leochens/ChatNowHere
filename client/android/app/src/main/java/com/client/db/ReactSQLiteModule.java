@@ -1,8 +1,10 @@
 package com.client.db;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AppCompatActivity;
 import android.telecom.Call;
 import android.util.Log;
 import android.widget.Toast;
@@ -53,8 +55,10 @@ public class ReactSQLiteModule implements ReactPackage{
     class DB extends ReactContextBaseJavaModule {
         private DBhelper dh;//用于创建帮助器对象
         private SQLiteDatabase db;//用于创建数据库对象
+        private Context context;
         public DB(ReactApplicationContext context){
             super(context);
+            this.context = context;
         }
 
         @ReactMethod
@@ -261,6 +265,24 @@ public class ReactSQLiteModule implements ReactPackage{
             db.execSQL("UPDATE chat_list SET new_msg_count = 0 WHERE friend_id='"+_friend_id+"'");
             Log.d("zhlsql","清空好友"+_friend_id+"的未读提醒");
         }
+
+        // 设置侧边栏背景图
+        @ReactMethod
+        public void setSiderBgImage(String filePath){
+            SharedPreferences sharedPreferences = context.getSharedPreferences("config",Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("SiderBgImg",filePath);
+            editor.commit();
+        }
+
+        // 获取侧边栏背景图
+        @ReactMethod
+        public void getSiderBgImage(Callback sucCallback){
+            SharedPreferences sharedPreferences = context.getSharedPreferences("config",Context.MODE_PRIVATE);
+            String bg = sharedPreferences.getString("SiderBgImg","");
+            sucCallback.invoke(bg);
+        }
+
         @Override
         public String getName() {
             return "ReactSQLite";

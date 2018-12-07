@@ -5,7 +5,7 @@ import * as ACTIONS from '../constaints';
 const actionGetChatList = () => {
 
     return {
-        DB_API:{
+        DB_API: {
             type: ACTIONS.ACTION_GET_CHATLIST,
         }
     }
@@ -21,7 +21,7 @@ const actionUpdateChatList = (data) => {
 const actionGetRecord = friend_id => {
 
     return {
-        DB_API:{
+        DB_API: {
             type: ACTIONS.ACTION_GET_RECORD,
             params: {
                 friend_id
@@ -31,10 +31,10 @@ const actionGetRecord = friend_id => {
 }
 
 
-const actionGetMoreRecord = (friend_id,initId) => {
+const actionGetMoreRecord = (friend_id, initId) => {
 
     return {
-        DB_API:{
+        DB_API: {
             type: ACTIONS.ACTION_GET_MORE_RECORD,
             params: {
                 friend_id,
@@ -45,23 +45,37 @@ const actionGetMoreRecord = (friend_id,initId) => {
 }
 
 export const actionUpdateRecord = (msg) => {
-    return{
+    return {
         type: ACTIONS.ACTION_UPDATE_RECORD,
         msg
     }
 }
 
 
-export const actionReceiveMsg = (msg,confirm) => {
-    return{
+export const actionReceiveMsg = (msg, confirm) => {
+    return {
         type: ACTIONS.ACTION_RECEIVE_MSG,
-        data:{
+        data: {
             msg,
             confirm
         }
     }
 }
 
+export const actionGetSiderBgImg = () => {
+    return {
+        DB_API: {
+            type: ACTIONS.ACTION_GET_SIDER_BG_IMG
+        }
+    }
+}
+
+export const actionSetSiderBgImg = (siderBgImg) => {
+    return {
+        type: ACTIONS.ACTION_SET_SIDER_BG_IMG,
+        siderBgImg
+    }
+}
 
 export default db = {
     actionGetChatList,
@@ -69,5 +83,7 @@ export default db = {
     actionUpdateRecord,
     actionUpdateChatList,
     actionReceiveMsg,
-    actionGetMoreRecord
+    actionGetMoreRecord,
+    actionGetSiderBgImg,
+    actionSetSiderBgImg
 }

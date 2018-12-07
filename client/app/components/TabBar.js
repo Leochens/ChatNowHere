@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Dimensions, TextInput, FlatList } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, TextInput, FlatList, Animated } from 'react-native';
 import ZButton from './ZButton';
 import axios from 'axios';
 import config from '../config';
@@ -9,12 +9,12 @@ class ResultItem extends Component {
     toChat = () => {
         const { data } = this.props;
         const _data = {
-            friend_id:data.id,
+            friend_id: data.id,
             friend_name: data.username,
-            friend_pic:data.user_pic
+            friend_pic: data.user_pic
         }
         const { navigate } = this.props;
-        navigate("SingleChat", { data: _data})
+        navigate("SingleChat", { data: _data })
     }
 
     render() {
@@ -54,20 +54,37 @@ export default class TabBar extends Component {
     state = {
         isPaneActive: false,
         username: '',
-        userlist: []
-
+        userlist: [],
+        opacity: new Animated.Value(0)
     }
+
     showPane = () => {
+        Animated.timing(
+            this.state.opacity, {
+                toValue: 0.6,
+                duration: 300
+            }
+        ).start();
+
         this.setState({
-            isPaneActive: true
+            isPaneActive: true,
         });
     }
 
+
+
     hidePane = () => {
+        Animated.timing(
+            this.state.opacity, {
+                toValue: 0,
+                duration: 500
+            }
+        ).start();
         this.setState({
             isPaneActive: false,
             username: '',
-            userlist: []
+            userlist: [],
+            opacity: new Animated.Value(0)
         });
     }
     getUsername = username => {
@@ -84,17 +101,17 @@ export default class TabBar extends Component {
         const { isPaneActive } = this.state;
         if (!isPaneActive) return null;
         return (
-            <View
+            <Animated.View
                 style={{
                     position: 'absolute',
-
-                    top: -Dimensions.get('window').height+48,
+                    zIndex: 4,
+                    top: -Dimensions.get('window').height,
                     bottom: 0,
                     left: 0,
                     right: 0,
                     backgroundColor: '#000',
-                    opacity: 0.6
-                }}></View>
+                    opacity: this.state.opacity
+                }} />
         );
     }
 
@@ -105,18 +122,18 @@ export default class TabBar extends Component {
                 onClick={isPaneActive ? this.hidePane : this.showPane}
                 icon={{
                     name: isPaneActive ? 'close' : 'plus',
-                    color: isPaneActive ? '#a00':'#9f9fff',
+                    color: isPaneActive ? '#a00' : '#9f9fff',
                     size: 24
                 }}
                 style={{
 
                     width: '100%',
                     height: 48,
-                    borderTopColor:'#eee',
-                    borderTopWidth:0.5,
+                    borderTopColor: '#eee',
+                    borderTopWidth: 0.5,
                     backgroundColor: '#fff',
                     borderRadius: 0,
-                    zIndex: 4
+                    zIndex: 5
                 }}
             />
         );
@@ -148,18 +165,20 @@ export default class TabBar extends Component {
     }
     renderUsers = () => {
         const { userlist } = this.state;
-        const { action, navigate} = this.props;
+        const { action, navigate } = this.props;
 
         return (
             <FlatList
                 style={{
-                    width: Dimensions.get('window').width
+                    width: Dimensions.get('window').width,
+                    zIndex: 5
+
                 }}
-                ListEmptyComponent={<Text style={{width:'100%',height:'100%',textAlign:'center'}}>无匹配项</Text>}
+                ListEmptyComponent={<Text style={{ width: '100%', height: '100%', textAlign: 'center' }}>无匹配项</Text>}
                 data={userlist}
-                renderItem={({ item }) => (<ResultItem 
-                    navigate={navigate} data={item} 
-                    />)}
+                renderItem={({ item }) => (<ResultItem
+                    navigate={navigate} data={item}
+                />)}
             />
         );
     }
@@ -175,10 +194,11 @@ export default class TabBar extends Component {
                 borderBottomLeftRadius: 0,
                 borderBottomRightRadius: 0,
                 position: 'absolute',
-                top: userlist.length ? -Dimensions.get('window').height/2 : -80,
+                top: userlist.length ? -Dimensions.get('window').height / 2 : -80,
                 bottom: 48,
                 left: 0,
                 right: 0,
+                zIndex: 5,
 
                 alignItems: 'center',
                 backgroundColor: '#fff'
@@ -196,7 +216,7 @@ export default class TabBar extends Component {
                                 padding: 8,
                                 // width: 160,
                                 height: 48,
-                                flex:1,
+                                flex: 1,
                                 borderColor: '#eee'
                             }} />
 

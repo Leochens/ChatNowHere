@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, FlatList,ToastAndroid, Image, BackHandler, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, FlatList, ToastAndroid, Image, BackHandler, Dimensions } from 'react-native';
 import NavBar from '../../components/NavBar';
 import SendMsgBox from '../../components/SendMsgBox';
 import socket from '../../socket';
@@ -95,9 +95,6 @@ class SingleChat extends Component {
     }
 
 
-    _onEndReached = () => {
-        // alert("加载")
-    }
     handleSendMsg = v => {
         const { friend_id, friend_name } = this.state;
         const msgBody = {
@@ -105,9 +102,9 @@ class SingleChat extends Component {
             toName: friend_name,
             content: v,
         }
-        if(friend_id === this.props.userinfo.uid){
-            ToastAndroid.show("怎么，你想和自己聊天？",ToastAndroid.LONG);
-            return ;
+        if (friend_id === this.props.userinfo.uid) {
+            ToastAndroid.show("怎么，你想和自己聊天？", ToastAndroid.LONG);
+            return;
         }
         socket.emit('sayTo', msgBody);
     }
@@ -127,12 +124,17 @@ class SingleChat extends Component {
     _onPullRelease = (resolve) => {
         const { actionGetMoreRecord } = this.props;
         const { chat: { recordList } } = this.props;
+
+
         const { friend_id } = this.state;
 
-        const initId = recordList[0].id;
         setTimeout(() => {
             resolve();
-            actionGetMoreRecord(friend_id,initId);
+            if (recordList.length) {
+                const initId = recordList[0].id;
+
+                actionGetMoreRecord(friend_id, initId);
+            }
             // this._listRef.setData(this.props.chat.recordList);
         }, 1000);
     }
@@ -147,7 +149,7 @@ class SingleChat extends Component {
         return (
             <View style={styles.wrapper}>
 
-                <NavBar title={friend_name} showBack={true} />
+                <NavBar title={friend_name} showBack={false} />
                 <RefreshList
                     ref={(list) => this._listRef = list}
                     onPullRelease={(resolve) => this._onPullRelease(resolve)}
@@ -166,8 +168,6 @@ class SingleChat extends Component {
         this.setState({
             flag: false
         })
-        // socket.on('receive_msg', ()=>{});
-        // socket.removeEventListener('receive_msg');
         console.log("卸载组件 清空未读");
     }
 }

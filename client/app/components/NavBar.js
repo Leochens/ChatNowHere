@@ -16,7 +16,7 @@ class NavBar extends Component {
     renderMore = () => {
     }
     renderBack = () => {
-        const { showBack } = this.props;
+        const { showBack, moreOptions } = this.props;
         return showBack
             ?
             <View>
@@ -49,14 +49,14 @@ class NavBar extends Component {
             <Text style={{
                 width: 160,
                 height: 48,
-                padding:8,
-                borderRadius:8,
+                padding: 8,
+                borderRadius: 8,
                 backgroundColor: '#fff',
-                borderBottomColor:'#ccc',
-                borderBottomWidth:1,
+                borderBottomColor: '#ccc',
+                borderBottomWidth: 1,
                 textAlign: 'center',
                 lineHeight: 48,
-            }} key={idx} onPress={()=>this.onOptionPressed(item.onPress)}>{item.title}</Text>);
+            }} key={idx} onPress={() => this.onOptionPressed(item.onPress)}>{item.title}</Text>);
         return (
             <View onPress={this.hideMoreOptions}>
                 {options}
@@ -64,7 +64,9 @@ class NavBar extends Component {
         )
     }
     renderMask = () => {
-
+        const { moreOptions } = this.props;
+        if (!moreOptions && !moreOptions.length)
+            return null;
         if (!this.state.isMoreActive)
             return null;
         const { height, width } = Dimensions.get('window');
@@ -91,9 +93,9 @@ class NavBar extends Component {
                 borderRadius: 40,
                 alignSelf: 'center',
                 textAlign: 'center',
-                lineHeight:48,
-                color:'#fff',
-                fontWeight:'500'
+                lineHeight: 48,
+                color: '#fff',
+                fontWeight: '500'
             }} onPress={this.hideMoreOptions}>X</Text>
         </View>
     }
@@ -104,6 +106,7 @@ class NavBar extends Component {
             backAction,
             moreOptions
         } = this.props;
+
         return (
             <LinearGradient
                 colors={['#CE9FFC', '#7367F0']}
@@ -114,7 +117,7 @@ class NavBar extends Component {
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexDirection: 'row',
-                    // zIndex:2
+                    zIndex:2
                     // height: 48
                 }}  >
                 {this.renderMask()}
@@ -131,12 +134,9 @@ class NavBar extends Component {
                         textAlign: 'center'
                     }}>{title}</Text>
                     <FontAwesome
-                        onPress={this.showMoreOptions}
+                        onPress={moreOptions && moreOptions.length ? this.showMoreOptions : null}
                         name="ellipsis-h" size={16} color="#fff" />
                     <View style={{
-                        // width: 160,
-                        // height: 300,
-                        // backgroundColor: "#0f0",
                         position: 'absolute',
                         top: 10,
                         right: 0,

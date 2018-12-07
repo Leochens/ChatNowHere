@@ -36,6 +36,17 @@ actionsFilter[ACTIONS.ACTION_GET_MORE_RECORD] = params => {
     });
 }
 
+actionsFilter[ACTIONS.ACTION_GET_SIDER_BG_IMG] = params => {
+    // const { friend_id,initId } = params;
+    return new Promise((resolve, reject) => {
+        ReactSQLite.getSiderBgImage(bgImg => {
+            if (bgImg) {
+                return resolve({bgImg});
+            }
+            return reject("查询更多聊天记录失败")
+        });
+    });
+}
 export default store => next => action => {
     if (!action.DB_API) {
         return next(action);

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { View, StyleSheet, FlatList, BackHandler, NativeModules, Text, ToastAndroid, AppState } from 'react-native';
 import NavBar from '../../components/NavBar';
-import socket,{manuReconnect} from '../../socket';
+import socket, { manuReconnect } from '../../socket';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ReactSQLite from '../../nativeModules/ReactSQLite';
@@ -46,7 +46,7 @@ class ChatList extends Component {
         });
     }
 
-    async _handleAppStateChange(nextAppState){
+    async _handleAppStateChange(nextAppState) {
         const { username, uid } = this.props;
 
         if (nextAppState != null && nextAppState === 'active') {
@@ -60,7 +60,7 @@ class ChatList extends Component {
                 // 这个地方进行网络请求等其他逻辑。
                 console.log("当前socket状态", socket.connected);
                 const enterTime = Date.now();
-                console.log("leav enter ", leaveTime,enterTime);
+                console.log("leav enter ", leaveTime, enterTime);
                 if (enterTime - leaveTime >= 30000) {// 如果连接断开就重连
                     console.log("进入后台超过十秒,重连");
                     await socket.disconnect();
@@ -73,7 +73,7 @@ class ChatList extends Component {
             this.flage = true;
 
             leaveTime = Date.now();
-            console.log("进入后台 leave time",leaveTime);
+            console.log("进入后台 leave time", leaveTime);
         }
         // console.log(this.flage);
     }
@@ -141,12 +141,7 @@ class ChatList extends Component {
                     <NavBar
                         title="消息"
                         showBack={false}
-                        moreOptions={[
-                            // {
-                            //     title: '切换账号',
-                            //     onPress: this.changeUser
-                            // }
-                        ]} />
+                    />
                     <FlatList
                         ref="_flatlist"
                         style={styles.chatList}
